@@ -1,0 +1,14 @@
+\begin{tikzpicture}
+  [every matrix/.append style={column sep=1cm}]
+  \matrix{  
+    \node[dataflow] (A) {\small in};
+    \& \node[dataflow] (B) {\small bcast};  
+    \& \node[dataflow] (C) {\small merge};
+    \& \node[dataflow] (D) {\small out}; \\
+  };
+  
+  \draw[to] (A) -- node[midway, above] {f1} (B);
+  \draw[to] (B) to[bend left] node[midway, above] {f2} (C);
+  \draw[to] (B) to[bend right] node[midway, below] {f4} (C);
+  \draw[to] (C) -- node[midway, above] {f3} (D);
+\end{tikzpicture} 

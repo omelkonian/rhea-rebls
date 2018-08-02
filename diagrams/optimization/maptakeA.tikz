@@ -1,0 +1,8 @@
+\begin{tikzpicture}
+  [every matrix/.append style={column sep=1cm}]
+  \matrix{    
+    \node[dataflow] (take) {take}; 
+    \& \node[dataflow] (map) {map}; \\  
+  };
+  \draw[to] (take) -- (map);
+\end{tikzpicture}

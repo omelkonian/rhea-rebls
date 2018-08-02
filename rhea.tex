@@ -1,0 +1,835 @@
+%% For double-blind review submission, w/o CCS and ACM Reference (max submission space)
+%\documentclass[sigplan,review,anonymous]{acmart}\settopmatter{printfolios=true,printccs=false,printacmref=false}
+%% For double-blind review submission, w/ CCS and ACM Reference
+\documentclass[sigplan,review,anonymous]{acmart}\settopmatter{printfolios=true}
+%% For single-blind review submission, w/o CCS and ACM Reference (max submission space)
+%\documentclass[sigplan,review]{acmart}\settopmatter{printfolios=true,printccs=false,printacmref=false}
+%% For single-blind review submission, w/ CCS and ACM Reference
+%\documentclass[sigplan,review]{acmart}\settopmatter{printfolios=true}
+%% For final camera-ready submission, w/ required CCS and ACM Reference
+%\documentclass[sigplan]{acmart}\settopmatter{}
+
+
+%% Conference information
+%% Supplied to authors by publisher for camera-ready submission;
+%% use defaults for review submission.
+\acmConference[PL'18]{ACM SIGPLAN Conference on Programming Languages}{January 01--03, 2018}{New York, NY, USA}
+\acmYear{2018}
+\acmISBN{} % \acmISBN{978-x-xxxx-xxxx-x/YY/MM}
+\acmDOI{} % \acmDOI{10.1145/nnnnnnn.nnnnnnn}
+\startPage{1}
+
+%% Copyright information
+%% Supplied to authors (based on authors' rights management selection;
+%% see authors.acm.org) by publisher for camera-ready submission;
+%% use 'none' for review submission.
+\setcopyright{none}
+%\setcopyright{acmcopyright}
+%\setcopyright{acmlicensed}
+%\setcopyright{rightsretained}
+%\copyrightyear{2018}           %% If different from \acmYear
+
+%% Bibliography style
+\bibliographystyle{ACM-Reference-Format}
+%% Citation style
+%\citestyle{acmauthoryear}  %% For author/year citations
+\citestyle{acmnumeric}     %% For numeric citations
+%\setcitestyle{nosort}      %% With 'acmnumeric', to disable automatic
+                            %% sorting of references within a single citation;
+                            %% e.g., \cite{Smith99,Carpenter05,Baker12}
+                            %% rendered as [14,5,2] rather than [2,5,14].
+%\setcitesyle{nocompress}   %% With 'acmnumeric', to disable automatic
+                            %% compression of sequential references within a
+                            %% single citation;
+                            %% e.g., \cite{Baker12,Baker14,Baker16}
+                            %% rendered as [2,3,4] rather than [2-4].
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Note: Authors migrating a paper from traditional SIGPLAN
+%% proceedings format to PACMPL format must update the
+%% '\documentclass' and topmatter commands above; see
+%% 'acmart-pacmpl-template.tex'.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% Some recommended packages.
+\usepackage{booktabs}   %% For formal tables:
+                        %% http://ctan.org/pkg/booktabs
+\usepackage{subcaption} %% For complex figures with subfigures/subcaptions
+                        %% http://ctan.org/pkg/subcaption
+
+\usepackage{enumitem}
+\usepackage{ifthen}
+\usepackage{tabularx}
+\usepackage{ulem}
+
+% Math
+\usepackage{amsfonts}
+
+% Tikz
+\usepackage{smartdiagram}
+\usepackage{tikz}
+\usetikzlibrary{arrows,mindmap,trees,fit,backgrounds,decorations.pathreplacing}
+\usepackage{environ}
+\makeatletter
+\newsavebox{\measure@tikzpicture}
+\NewEnviron{scaletikzpicturetowidth}[1]{%
+  \def\tikz@width{#1}%
+  \def\tikzscale{1}\begin{lrbox}{\measure@tikzpicture}%
+  \BODY
+  \end{lrbox}%
+  \pgfmathparse{#1/\wd\measure@tikzpicture}%
+  \edef\tikzscale{\pgfmathresult}%
+  \BODY
+}
+\makeatother
+
+% Colors
+\usepackage{xcolor}
+\colorlet{myrd}{ACMRed}
+\colorlet{mygr}{ACMGreen}
+\colorlet{mybl}{ACMLightBlue}
+\colorlet{mybr}{ACMOrange}
+\colorlet{myye}{ACMYellow}
+
+% Images
+\usepackage{multicol}
+\graphicspath{ {images/} }
+
+% Code
+\usepackage{minted}
+
+% URL
+\usepackage{url}
+
+\begin{document}
+\input{MACROS.tex}
+
+%% Title information
+\title[RHEA]{RHEA: A Reactive, Heterogeneous, Extensible and Abstract Framework for Dataflow Programming}         %% [Short Title] is optional;
+                                        %% when present, will be used in
+                                        %% header instead of Full Title.
+%\titlenote{with title note}             %% \titlenote is optional;
+                                        %% can be repeated if necessary;
+                                        %% contents suppressed with 'anonymous'
+\subtitle{}                     %% \subtitle is optional
+%\subtitlenote{with subtitle note}       %% \subtitlenote is optional;
+                                        %% can be repeated if necessary;
+                                        %% contents suppressed with 'anonymous'
+
+
+%% Author information
+%% Contents and number of authors suppressed with 'anonymous'.
+%% Each author should be introduced by \author, followed by
+%% \authornote (optional), \orcid (optional), \affiliation, and
+%% \email.
+%% An author may have multiple affiliations and/or emails; repeat the
+%% appropriate command.
+%% Many elements are not rendered, but should be provided for metadata
+%% extraction tools.
+
+%% Orestis.
+\author{Orestis Melkonian}
+\affiliation{
+  \position{MSc Student}
+  \department{Information and Computing Sciences}              %% \department is recommended
+  \institution{Utrecht University}            %% \institution is required
+  \city{Utrecht}
+  \country{Netherlands}                    %% \country is recommended
+}
+\email{o.melkonian@uu.nl}          %% \email is recommended
+
+%% Angelos.
+\author{Angelos Charalambidis}
+%\orcid{nnnn-nnnn-nnnn-nnnn}             %% \orcid is optional
+\affiliation{
+  \position{??}
+  \department{??}              %% \department is recommended
+  \institution{??}            %% \institution is required
+  \city{Athens}
+  \country{Greece}                    %% \country is recommended
+}
+\email{??}          %% \email is recommended
+
+
+%% Abstract
+%% Note: \begin{abstract}...\end{abstract} environment must come
+%% before \maketitle command
+\begin{abstract}
+The dataflow computational model enables writing highly parallel programs, which will be deployed on a heterogeneous network, in a concise and readable way. The main advantage is the fact that the system can be conceptually separated into several independent components that can be run in parallel and deployed on different machines. Therefore, concurrency and distribution is implicit and little or no responsibility is given to the programmer. The framework proposed in this paper constitutes the underlying system that make this style of programming possible in JVM-based languages (e.g. Java, Scala, Closure), while at the same time making it easy to integrate other technologies that rely on the PubSub model, in order to move away from imperative languages and enter a higher level of abstraction. Particular emphasis was put on three domains, namely \textit{Big Data}, \textit{Robotics} and \textit{IoT}.
+\end{abstract}
+
+
+%% 2012 ACM Computing Classification System (CSS) concepts
+%% Generate at 'http://dl.acm.org/ccs/ccs.cfm'.
+\begin{CCSXML}
+<ccs2012>
+<concept>
+<concept_id>10011007.10010940.10010971.10010972.10010545</concept_id>
+<concept_desc>Software and its engineering~Data flow architectures</concept_desc>
+<concept_significance>500</concept_significance>
+</concept>
+<concept>
+<concept_id>10011007.10011006.10011008.10011009.10011016</concept_id>
+<concept_desc>Software and its engineering~Data flow languages</concept_desc>
+<concept_significance>500</concept_significance>
+</concept>
+</ccs2012>
+\end{CCSXML}
+
+\ccsdesc[500]{Software and its engineering~Data flow architectures}
+\ccsdesc[500]{Software and its engineering~Data flow languages}
+%% End of generated code
+
+
+%% Keywords
+%% comma separated list
+\keywords{dataflow programming, stream processing, functional reactive programming (FRP), distributed systems, declarative languages, implicit concurrency, node placement} %% \keywords are mandatory in final camera-ready submission
+
+\maketitle
+
+\section{Introduction}
+
+\subsection{Main concept}
+
+My main contribution is the design and implementation of a framework for dataflow programming to be deployed anywhere, ranging from low-performance robots and sensors to clusters of computer and even the Cloud. 
+
+The main idea is to provide the programmer with a different execution model, the dataflow model, which allows for a more abstract way of thinking and has the advantage of exposing opportunities for parallelism (amongst CPU cores) and distribution (amongst computational machines), which can then be automatically realised by the "intelligent" underlying system. 
+
+Therefore, the programmer will be able to utilize available computational resources without any effort, while at the same time reducing development time/cost and maintaining a much cleaner and easier-to-refactor software system. Resource utilization may appear in the form of faster execution (i.e. by concurrently doing computations on multiple machines) or more robust error-handling (i.e. by using backup machines to rerun nodes that were hosted on a faulty machine). 
+
+\subsection{Motivation}
+
+\subsubsection{Declarative languages}
+
+Software is becoming increasingly more complex each year, as computing capabilities are strengthened and user needs become more and more demanding. Thus the need for higher abstraction becomes imperative, as it provides a more structured, easier to debug and maintainable way of developing software. In other words, abstraction in computer science acts as a mean to overcome complexity. 
+
+In programming languages, the level of the aforementioned abstraction is measured regarding the amount of low-level details a programmer has to specify. Therefore, languages can be divided in two categories: the imperative ones, in which the programmer specifies what needs to be done and how to do it, and the declarative ones, where the programmer only specifies what needs to be done and rely on the underlying compiler/interpreter to produce the exact commands that will realize the desired behaviour. The most well-known declarative programming paradigms are functional and logic programming, each providing higher abstraction in different aspects. My approach was greatly influenced by the functional paradigm.
+
+\subsubsection{Data versus Computation}			
+
+A common problem in heterogeneous systems is that different representations of the same entities/data-types coexist in the same software and, as a consequence, pure computational tasks are intermingled with data-converting tasks. This makes the code less readable and harder to maintain and understand. In the dataflow execution model, where the program is modelled as directed graph of data flowing between operations, there is a clear separation of these two aspects as data (edges) are completely decoupled from computation (nodes). This motivation is strengthened even more, when cross-machine communication is included, and apart from converting data from one representation to another, serialization(i.e. conversion to bytes) is also mandatory.
+
+\subsubsection{Dataflows in Robotics}
+
+In control theory, which is the main background theory used in robotics, most architectures and/or algorithms are represented as dataflow diagrams for the sake of clarity and intuition. Translating these diagrams into common "imperative" software is not an easy task and is usually the source of bugs. Thus, having a dataflow execution model will nullify the need for such a translation.
+
+Specifically, most robotic applications follow the \textit{Robot Perception Architecture (RPA)}, where inputs to system are the robot's sensors, which are then processed by a dataflow graph, whose output is given as commands to the robot actuators.
+
+Moreover, robotics typically involve several different robotic systems, whose combination is even more challenging. If each individual system is represented as a dataflow graph, composing them together is as trivial as connecting inputs with outputs, which is not the case in a traditional architecture, which is not component-based.
+
+\subsubsection{Dataflows in Big Data}
+
+Another reason for following a dataflow approach is the attention that it recently has drawn in the \textit{Big Data} field. As data size is growing exponentially and distribution is not a luxury but a necessity, a more scalable and decentralized architecture was destined to be examined in more depth. As we will discuss in the \textit{Related Work} chapter, there are many recent frameworks that became famous for their scalability due to the fact that they rely on a dataflow approach.
+
+\section{Background}
+
+\subsection{The dataflow computational model}
+The increased interest in parallelism during the 70's gave rise to the dataflow execution model, which is an alternative to the classical "von-Neumann" model. In the dataflow model, everything is represented in a dataflow graph, where nodes are independent computational units  and edges are communication channels between these units. A node/unit is fired immediately when its required inputs are available and therefore no explicit control commands are needed for execution. Figure \ref{fig:nat} shows a dataflow graph enumerating the set $\mathbb{N}$ of natural numbers.
+
+\mydiag{nat}{Natural numbers}	
+
+In the dataflow graph above, we can discern three types of nodes: sources, which do not have any incoming edge and act as value generators to initiate computation, sinks, which do not have any outgoing edges and inner nodes, which transform one or more incoming streams and redirect their output to other nodes. The \textit{zero} node just produces a stream with a single value 0 and then terminates. \textit{Concat} produces a single stream by concatenating the stream produced by \textit{zero} and \textit{increment}, while \textit{increment} transforms its input stream by adding one to its values. Finally, the sink node displays the result, which is the stream of natural numbers.
+
+Streams can be infinite, such as the stream produced by \textit{concat} because it is the concatenation of a single-value stream and an infinite one. Moreover, the graph is cyclic as \textit{concat} feeds input to \textit{increment} and vice versa. The most interesting fact is that there nodes are independent and therefore can run in parallel. For instance, while \textit{increment} is processing value 5 (i.e. to produce value 6), the previous result (i.e. value 5) passes through \textit{concat} to reach the sink node, which can concurrently process it to display it. 
+
+The main advantage of the dataflow model is its implicit parallelism, deriving from the fact that the computational units are totally independent and therefore can be executed in parallel. A possible single-machine implementation could represent edges as in-memory data storage, whereas a multi-machine one could represent them as channels between TCP sockets, allowing communication across the network. Its great flexibility and composability makes it a good candidate for the underlying architecture of a framework with a high level of abstraction.
+
+\subsection{Functional reactive programming}
+
+A relatively recent programming paradigm is \textit{Functional Reactive Programming (FRP)}, which provides a conceptual framework for implementing reactive (i.e. time-varying and responding to external stimuli) behaviour in \textit{hybrid systems} (i.e. containing both continuous and discrete components), such as robots, in functional programming languages. 
+
+To implement such systems in conventional imperative languages, one must use asynchronous \textit{callbacks} (i.e. each change is handled by a registered \textit{callback} function). Although this solution is satisfactory for simple schemes, more complex scenarios eventually lead to highly incoherent code structure, often called \textit{spaghetti code}, in the sense that control rapidly moves between disconnected parts of the system, similar to the notorious \textit{GOTO} command. This phenomenon stems from the unary nature of \textit{callback} functions, which requires some kind of "internal plumbing" in order to achieve 	mechanisms for handling combination of changes (e.g. when multiple changes occur simultaneously). \textit{FRP} provides a solution to this shortcoming of \textit{callback} functions, because changes are represented as variables (\textit{signals}), which can be passed as parameters to arbitrary functions, called \textit{signal functions}.
+
+\textit{FRP} first appeared as a composable library for graphic animations \cite{fran}, but quickly evolved into a generic paradigm \cite{survey_frp,real_frp,pushpull_frp}. Moreover, extensive research has investigated \textit{FRP} as a framework for robotics \cite{arrows_robots,lambda_in_motion}. 
+
+Although appealing at first, \textit{FRP} was not appropriate for systems  with real-time constraints, due to uncontrollable time- and space- leaks \cite{event_frp}. The solution was a generalization of monads called \textit{arrows} \cite{arrows}, which provided the necessary guarantees that the aforementioned common errors do not occur. Let's see the example of calculating a robot's x-coordinate. Here is the mathematical formula drawn from control theory:
+
+$$ x = 1/2 \int (vr + vl) \cos\theta $$ 
+
+Below is the \textit{FRP} code corresponding to the formula above:
+
+\hs{code/frp1.hs}
+
+As the above may seem counter-intuitive and difficult to understand, a new notation was conceived, notably the \textit{arrow notation} \cite{arrows_notation}:
+
+\hs{code/frp2.hs}
+
+The main advantages of \textit{FRP} are its close correspondence to mathematics\cite{survey_frp}, which make it an ideal framework for modelling real-time systems, and its concise representation of time-varying values via \textit{signals}.
+
+\subsection{Publish-Subscribe model}
+
+\textit{Publish/Subscribe (PubSub)} is a messaging pattern that became popular due to the loose coupling of its components, suited for the most recent large-scale distributed applications.
+
+There is no point-to-point communication and no synchronization. \textit{Publishers} advertise messages of a given type to a specific message class or \textit{topic} that is identified by a \textit{keyword}, whereas \textit{subscribers} listen on a specific \textit{topic} without any knowledge of who the publishers are. The component responsible for relaying the messages between machines and/or processes and finding the cheaper dissemination method is called the \textit{message broker}. Figure \ref{fig:pubsub} illustrates an abstract representation of the \textit{PubSub} model.
+
+\mydiag{pubsub}{PubSub typical layout}
+
+\subsection{ROS: Robot Operating System}
+
+\textit{ROS} is an open-source middleware for robot software, which emphasizes large-scale integrative robotics research \cite{ROS}. It provides a \textit{thin} communication layer between heterogeneous computers, from robots to mainframes and it has been widely adopted by the research community around the world, due to its flexibility and maximal support of reusability through packaging and composability. It provides a compact solution to the development complexity introduced by complex robot applications that consist of several modules and require different device drivers for each individual robot. 
+
+It follows a peer-to-peer network topology, implemented using a topic-based \textit{PubSub} messaging protocol and its architecture reflects many sound design principles. Another great property of \textit{ROS} is that it is language-agnostic, meaning that only a minimal specification language for message transaction has been defined, so contributors are free to implement small-size clients in different programming languages, with \textit{roscpp} and \textit{rospy} being the most widely used ones.
+
+A typical development scenario is to write several \textit{nodes}, that subscribe to some topics and, after doing some computation, publish their results on other topics. The main architectural issue here is that subscribing is realized through asynchronous callback functions, so complicated schemes easily lead to unstructured code, which obviously lead to unreadable and hard-to-maintain code. My approach gives a solution to the aforementioned problem.
+ 
+\subsection{Internet of things - MQTT}
+
+The birth of the Internet gave rise to a concept called \textit{Internet of Things (IoT)}, which is essentially the ability of many heterogeneous devices, ranging from low-cost sensors to vehicles with embedded electronics, to collect data and exchange it amongst themselves using the Internet. This gave rise to smart grids, smart homes and eventually smart cities. 
+
+The development of such systems though, due to their heterogeneity, is rather complex and costly. Typical software architectures were not meant to be used in such environments and therefore new tools and concepts needed to be invented. Recent development of a variety of middleware frameworks, showed that a standard protocol of communication is imperative along with supporting tools\cite{iot_middleware}. The most widely spread protocol is \textit{MQTT}, which follows the \textit{PubSub} messaging pattern and provides a very minimal communication layer in order not to put a strain on the resource-bounded system\cite{mqtt}. 
+
+For instance, an \textit{IoT} application could connect to some sensors by subscribing to their corresponding topics, taking decisions that would result in some commands to some actuators, by publishing to their corresponding topics.
+
+Fortunately, the dataflow model seems to be rather fitting for these scenarios\cite{iot_dataflow}, as every node in the graph is completely independent, and consequently can be any "\textit{thing}". This useful property of the model makes it a good architectural choice for such applications. The only thing to consider is how these things will communicate in a standard way, so as to be able to add new types of \textit{things} and integrate it in an effortless way to an existing dataflow network.
+
+\subsection{The Reactive Streams Standard}
+
+\textit{PubSub} is widely used by different frameworks but still lacks standardization. The \textit{Reactive Streams Standard (RSS)} is an initiative to provide a standard for asynchronous stream processing with non-blocking back pressure. This encompasses efforts aimed at runtime environments (JVM and JavaScript) as well as network protocols \cite{rss}.
+
+\textit{RSS} defines two minimal interfaces for the roles of \textit{Subscriber}\site{http://www.reactive-streams.org/reactive-streams-1.0.0-javadoc/org/reactivestreams/Subscriber.html} and \textit{Publisher}\site{http://www.reactive-streams.org/reactive-streams-1.0.0-javadoc/org/reactivestreams/Publisher.html}. A \textit{Subscriber} implementation should define reactions to observed values, including normal and erroneous termination, whereas a \textit{Publisher} implementation should accept requests from \textit{Subscribers} and start emitting values to them.
+
+Below we see a minimal example of using \textit{RSS} to define a publisher that emits values 1..10 and a subscriber that prints all observed values and finally connect them together.
+
+\jvs{code/rss.java}
+
+\section{Requirements}
+
+The design was heavily influenced by principles set out by the FRP and dataflow models. 
+
+\subsection{Reactive}
+
+The system should be \textit{reactive}, as close as possible to the definition of the Reactive Manifesto \cite{manifesto}. 
+
+The system should be \textit{responsive}, meaning it should be able to handle time-sensitive scenarios if at all possible. This is the cornerstone of usability and utility, but more than that, it enables quick error-detection and error-handling.
+
+The system should be \textit{resilient}, meaning it is able to recover robustly and gracefully after a failure, due to the fact that nodes in the dataflow graph are completely independent and recovery of each one can be done in isolation. Another thing to note here is that special error messages are built-in and make it very easy to propagate errors between \textit{components}, in case the error-handling part of a component is decoupled from the computational logic. This leads to much more robust architectures for large-scale systems, where fault-tolerance is mission-critical.
+
+The system should be \textit{elastic}, meaning it will adjust itself depending on the available resources and demanded workload. For instance, the granularity of the graph (i.e. number of nodes) is adjusted so as to match a heuristic-based value (e.g. total number of threads).
+
+The system should be \textit{message-driven}, meaning it relies solely on asynchronous message-passing for inter-component communication leading to loose coupling, isolation, location transparency and the error propagation mentioned above. Location transparency is critical to preserve the semantics whether on a single host or a machine cluster. 
+
+\mydiag{manifesto}{Reactive properties}
+
+\subsection{Heterogeneous}
+
+One of the major concerns while designing the framework was the ability to deploy it anywhere, from low-cost robots to mainframes. Obviously, such attribute would require a very flexible runtime environment. To satisfy this requirement, the strategy design pattern was used for evaluation, meaning that the core system only builds the internal representation of the dataflow graph and partitions it across the available computational resources. From there onwards, each partial graph can be evaluated by a different \textit{EvaluationStrategy} (see Implementation chapter), which could interpret it using the Java 8 Streams library\cite{java_streams} or even compile into CUDA code for execution on a GPU.
+
+Figure \ref{fig:heterogen} illustrates a simple example of a robot application pipeline, where input to the dataflow graph is what the robot's camera senses and, after some image processing and some computation-heavy decision making, a command to an actuator of the robot is executed. Orange nodes are deployed on the robot's on-board computer, the green node is deployed on an off-board GPU and the red node is deployed on the main server.
+
+\mydiag{heterogen}{Heterogeneity pipeline}
+
+\subsection{Extensible}
+
+As the work described in this paper is quite fundamental and ambitious, it seemed highly unlikely that it would reach closure. Therefore, careful consideration was taken to compose the system of different independent modules, which could easily be extended/modified, allowing many future contributions.
+
+With that concept in mind, generality and abstraction were heavily emphasized during both the design and the implementation process. We can say now we are satisfied with the level of abstraction the core system has reached and hope the stressful refactoring that the framework went through will blossom in the form of future contributions.
+
+\subsection{Abstract}
+
+The framework is \textit{abstract} in terms of implementation details, as it is completely agnostic of any machine-specific requirements. It is designed as a unifying conceptual base for further extensions and careful consideration was taken not to restrict in any aspect, architectural or not. This was achieved by making many parts of the core system pluggable, allowing for easy refactoring on most of its internal functionality. Moreover, the internal graph representation does not include information on how a node is executed, but only on its semantics.
+
+\section{Approach}
+This chapter presents the framework's main characteristics and capabilities.
+
+\subsection{System architecture}
+The \textit{RHEA} ecosystem consists of several clearly separated modules, whose interconnection is illustrated in figure \ref{fig:architecture}.
+
+\myimage{architecture}{0.3}{System architecture}
+
+The user writes a program in the provided stream language, which constructs a dataflow graph internally. Afterwards, using information about the available resources in the network, the constructed graph is optimized (i.e. in terms of performance, communication cost and node placement). The optimized graph is then distributed across the available machines for evaluation, maybe using a different technique each time.
+
+The following subsections will present the aforementioned stream language, while the other components, namely \textit{optimization, distribution, evaluation, serialization and network profiling}, will be discussed in chapter 5.
+
+\subsection{Supported dataflow graphs}
+
+The kind of dataflow graph that can be expressed using the framework's stream language are directed cyclic graphs with possibly many inputs and outputs. Figure \ref{fig:graph} depicts such a graph, where inputs and outputs are colored red and green respectively.
+
+\mydiag{graph}{Example of supported graph}
+
+\subsection{Stream language}
+This section presents the framework's language for defining streams and executing them. In the examples that will be demonstrated, only a very small subset of the provided operators will be presented. See the appendix for the complete set of the primitive operators, from which the whole set can be derived (i.e. by combining them).
+
+\subsubsection{The Stream data type}
+
+The data channels (i.e. edges of the dataflow graph) are represented using the \textit{Stream} data type, which is parametric, meaning that it can emit values of any data type, whether built-in or user-defined. The stream produced may terminate, successfully or erroneously, or even be infinite.
+
+\subsubsection{Graph construction syntax}
+
+The construction of the internal dataflow graph is always implicit, through a rich set of operators on the Stream data type. Each \textit{Stream} object contains internally a dataflow graph of type \textit{FlowGraph}, which is only to be accessed and manipulated by the internal module, evaluation strategies and optimizers. Therefore, an application developer only needs to work with the \textit{Stream} type.
+
+Source nodes are constructed using built-in functions of type \textit{Stream}. For instance, \textit{Stream.just(1, 2, 3)} produces the stream that emits just the values 1, 2 and 3. The return variable of these creation function is an object of type \textit{Stream}.
+
+Processing nodes can be divided into two classes: \textit{single input} ones and \textit{multiple input} ones. 
+
+\textit{Single input} nodes are inserted into an existing Stream object, by calling an operator on that object. Figure \ref{fig:singleinput} shows an example of a single input node, namely that of \textit{map}, which transforms the input stream (i.e. just the values 1, 2 and 3) by applying a user-defined function to every emitted value (i.e. $f(x)=x+1$).
+
+\codefig{singleinput}{\jv{code/singleinput.java}}{Single input processing node}
+
+\textit{Multiple input} nodes are constructed by built-in function that take as argument already existing Stream objects. Figure \ref{fig:multipleinput} shows an example of a multiple input node, namely that of \textit{zip}, which transforms the input streams (i.e. two stream that emit the values 1..10) by applying a user-defined function to each emitted pairs of values (i.e. $f(x,y)=x+y$). Here we also see another stream creation function, namely \textit{Stream.range}.
+
+\codefig{multipleinput}{\jv{code/multipleinput.java}}{Multiple input processing node}
+
+The variables returns by all processing nodes are \textit{Stream} objects. These objects can be reused in different parts of the graph to enable splitting a node's output to different processing nodes or outputs. Figure \ref{fig:split} shows such an example, where the \textit{filter} operator only emits values for which the given function returns true.
+
+\codefig{split}{\jv{code/split.java}}{Split example}
+
+Cycle construction is a bit trickier, as no direct manipulation of the internal graph is permitted. Cycles are constructed using the \textit{loop} operator, which is a single input processing node. It requires a function that, given an input stream, constructs a subgraph that redirects its output to that input, therefore creating a feedback loop. Figure \ref{fig:natt} shows an example of the \textit{loop} operator to represent the natural numbers, just as the graph shown earlier in figure \ref{fig:nat}. The \textit{concat} operator is a multiple input node that concatenates its input streams.
+
+\codefig{natt}{\jv{code/natt.java}}{Cyclic example}
+
+\subsubsection{Evaluation syntax}
+
+To evaluate a given dataflow graph and do something with its output values, we need to call the \textit{subscribe} method of the \textit{Stream} object. The argument passed to \textit{subscribe} is either a user-defined action (i.e. function with side-effects) or an object implementing the \textit{Subscriber} interface (see section \ref{external}). Figure \ref{fig:subexample} shows an example of printing the output of the single-input example in figure \ref{fig:singleinput}.
+
+\codefig{subexample}{\jv{code/subexample.java}}{Evaluation example}
+
+\subsubsection{Execution semantics}
+
+As the execution is completely asynchronous, the order of stream declaration and/or evaluation does not matter at all. If there is absolute necessity for control flow management, the programmer can use the altered \textit{BlockingStream} type that blocks program execution to next \textit{subscribes} until the currently subscribed streams terminate successfully. 
+
+Nonetheless, this utility is helpful for rapid prototyping and testing purposes. The source code below shows an example of accumulating the 10 first natural numbers in a list and printing that list. 
+
+\jv{code/block.java}
+
+\section{Implementation}
+This chapter delves deeper into the system's implementation details. 
+
+\subsection{Software structure}
+
+The core system\site{https://github.com/rhea-flow/rhea-core} is organized in the following top-level packages:
+
+\begin{tabularx}{\columnwidth}{rX}
+	\textit{org.rhea\_core.internal} 
+	& all internal functionalities such as graphs, expressions and notifications \\
+	\textit{org.rhea\_core.evaluation}
+	& everything associated with the evaluation of the constructed dataflow graph \\
+	\textit{org.rhea\_core.distribution}
+	& everything associated with distributing the evaluation across the available computational resources \\
+	\textit{org.rhea\_core.optimization}	
+	& includes some built-in optimizers for adjusting the  granularity of the graph \\
+	\textit{org.rhea\_core.network}	
+	& everything associated with networking \\
+	\textit{org.rhea\_core.io}
+	& defines the interfaces that sources/sinks should implement \\
+	\textit{org.rhea\_core.util}
+	& helpful utilities needed throughout the project \\
+\end{tabularx}
+
+\subsection{Internal representation}
+
+For representing the internal structure of the dataflow graph, the \textit{JGrapht} open-source Java library was used, which provides many graph data structures and common graph-theory algorithms\site{http://jgrapht.org/}. The main class representing the internal dataflow graph is \textit{FlowGraph},  which is located in the \textit{org.rhea\_core.internal} package.
+
+\subsection{The Strategy design pattern}
+
+In software engineering, and especially in \textit{object-oriented programming (OOP)}, a \textit{design pattern} is a general repeatable solution to a commonly occurring problem in software design \cite{design}.
+
+One such solution, the \textit{Strategy} design pattern is used when a particular algorithm can be implemented by a variety of behaviours/classes \cite{design}. In such a case, a good idea is to isolate the algorithm in a separate \textit{interface} and allow the system to select the appropriate instantiating classes at runtime.
+
+Figure \ref{fig:strategy} illustrates the basic UML diagram of the strategy design pattern.
+
+To make the system as extensible as possible, most individual critical components are defined using the strategy design pattern (e.g. EvaluationStrategy, DistributionStrategy, etc...) and the current implementation offers one or more default concrete strategies for each one.
+
+\myimage{strategy}{0.07}{Strategy design pattern}
+
+\subsection{Notifications}
+Every value passed through the framework's \textit{streams} is wrapped inside a \textit{Notification} object, which discriminates stream values into three categories: \textit{onNext} (when the stream provides a regular value), \textit{onError} (when an error occurs) and \textit{onComplete} (when the stream completes its output).
+
+\subsection{External Input-Output} \label{external}
+In order to make the framework easy to integrate with other stream and/or dataflow technologies, every input/output node (i.e. publisher/subscriber in the \textit{PubSub} terminology or source/sink in the dataflow terminology) should implement the interfaces that \textit{RSS} defines\site{http://www.reactive-streams.org/reactive-streams-1.0.0-javadoc/org/reactivestreams/}. This also enables users to define new types of sources or sinks, in order to integrate the framework with other general technologies (e.g. system events, HTTP requests, PubSub implementations, etc).
+
+A sink node (output) should implement the Subscriber interface, which essentially defines three methods corresponding to reactions to a \textit{Notification}, one for each of the categories mentioned above. 
+
+A source node (input) should implement the Publisher interface, which defines a single method \textit{subscribe(Subscriber)}, where a Subscriber requests the Publisher to start emitting values. 
+
+Many existing technologies provide these interfaces, or at least adapters from their internal representations, and therefore they are very easy to be integrated to the framework.
+
+\subsection{Evaluation}
+
+Every primitive operator corresponds to an expression implementing the \textit{Transformer} interface, defined in the \textit{org.rhea\_core.internal.expressions} package. 
+
+A complete dataflow is defined by a \textit{Stream} variable and an object implementing the \textit{Output} interface, which can be either an \textit{Action}, a \textit{Sink} or a list of these. 
+
+In order to evaluate a constructed dataflow graph the strategy design pattern is used, therefore a class implementing the \textit{EvaluationStrategy} interface, found in the \textit{org.rhea\_core.evaluation} package, needs to be provided. An \textit{EvaluationStrategy} just takes the \textit{Stream} variable and its corresponding \textit{Output} and executes it, however desired.
+
+The strategies I have implemented so far\cite{rhea} follow:
+
+\begin{description}[style=nextline]
+\item[RxJavaEvaluationStrategy] 
+Uses rxjava\site{https://github.com/ReactiveX/RxJava}, which is a famous and well-maintained library for asynchronous programming using the \textit{Observable} type, which is very close, semantically, to my \textit{Stream} type.
+
+\item[RosEvaluationStrategy] 
+Integrates the \textit{ROS} middleware into the framework, by providing the \textit{RosTopic} class, which implements the \textit{AbstractTopic} interface defined in the \textit{org.rhea\_core.io} package. This strategy's job is to set up a \textit{ROS} client and configure every \textit{RosTopic} used within the dataflow that needs to be evaluated to use this client. After that, evaluation is propagated to a generic strategy (e.g. rxjava).
+
+\item[MqttEvaluationStrategy] 
+Integrates the MQTT middleware into the framework, in the same way \textit{ROS} is intergrated.
+\end{description}
+
+\subsection{Distribution}
+
+An evaluation strategy executes the requested dataflow graph in a single machine, without concern about distribution and resource utilization.
+
+For distribution and cluster management, the strategy design pattern is used again, specifically the \textit{DistributionStrategy} interface, which is defined in the \textit{org.rhea\_core.internal.distribution} package. Its responsibility is to take the whole initial graph that we need to evaluate and, after adjusting its granularity (i.e. size) to fit the available resources (see \textit{Optimization} section), partition it across all computational resources, maybe using different evaluation strategies.
+
+\subsubsection{Hazelcast}
+
+Due to the RSS being in its infant stage, no formal specification, for superimposing a network protocol onto it (e.g. RSS over TCP), exists yet. For this reason, I relied upon the open-source \textit{Hazelcast} library\site{http://hazelcast.org/} to discover and manage multiple machines and used its internal decentralized \textit{PubSub} model to communicate intermediate results across the network. Figure \ref{fig:partition1} illustrates a dataflow graph on the left and the same graph partitioned over several machines on the right, where each machine, except the last one, outputs its result to a \textit{Hazelcast} topic, from which another machine gets its input. \textit{Hazelcast} topics can immediately be used as inputs and outputs, as they implement both the \textit{Subscriber} and \textit{Publisher} interface.
+
+\twofig{partition1}{partition2}{Partitioning}
+
+\subsubsection{Machine configuration}
+
+According to the distribution strategy being used, the available machines will require a certain initial configuration. For the \textit{Hazelcast} case, a little piece of setup code needs to be executed on every member of the cluster, which is together with the main \textit{Strategy} class. Moreover, helpful information can also be added at this step, such as number of CPU cores. It is the distribution strategy's responsibility to ensure that this information is properly distributed and handled.
+
+Apart from this initial configuration, the distribution strategy needs to enable members to declare certain skills that they possess, which are required by specialized nodes. For instance, a source node emitting values from a \textit{ROS} topic must be executed on a machine having \textit{ROS} installed, in order to set up a \textit{ROS} client. In the \textit{Hazelcast} case, these skills are just \textit{strings} and are declared in the initialization code of each machine separately.
+
+\subsection{Serialization}
+
+As communication between machines across a network is mandatory, data types emitted through the streams must be serialized on departure and de-serialized on arrival at each machine. For this reason, each \textit{DistributionStrategy} must be configured with a class implementing the \textit{Serializer} interface, define in the \textit{org.rhea\_core.serialization} package. The byte representation of the objects is parametric for maximum flexibility. 
+
+A default \textit{Serializer} is provided with the core system, which can serialize every class implementing the \textit{Serializable} interface. In addition to that, the JsonIO library\site{https://github.com/jdereg/json-io} is used which allows serialization of many types of classes, but still does not cover every possible one. Figure \ref{fig:serialization} depicts the serialization process in more detail.
+
+\mydiag{serialization}{Serialization process}
+
+\section{Optimization}
+
+This chapter describes three stages of optimization the dataflow graph goes through before being evaluated. To aid extensibility  the strategy design pattern is again used, whose corresponding interface \textit{OptimizationStrategy} resides in the \textit{org.rhea\_core.optimization} package. Figure \ref{fig:optimization} illustrates the optimization stages.
+
+\mydiag{optimization}{Optimization stages}
+
+\textit{Proactive filtering} transforms the graph, by moving filters as earlier in the pipeline as possible, to achieve less data movement between nodes, which results in better performance.
+
+\textit{Granularity adjustment} fuses nodes together to dynamically resize the graph to a granularity that fits the available resources. This step follows \textit{proactive filtering}, as the latter enables many opportunities for node fusion.
+
+\textit{Node placement} decides on which of the available machines each node will be executed, to achieve better utilization of the available resources. This is the last step, because after deploying the nodes to the chosen machines, the structure of the dataflow graph remains static.
+
+Thus, the optimized graph that is the output of the above process is most likely to achieve better performance and utilization of the available resources than the initial one.
+
+\subsection{Proactive filtering}
+
+The first optimization stage is a heuristic one, based on the fact that if a filter operation can be moved earlier (i.e. closer to source nodes) while preserving the original semantics, then there will be benefit concerning computational cost and cross-machine communication overhead. The figures below show the corresponding graph transformations.
+
+\subsubsection{Transformations}
+
+The figures below illustrate one representative example of each general class of graph transformation
+
+\optimization{maptake}{Take/skip/distinct before map}
+\optimization{mapfilter}{Filter before map}
+\optimization{concatdistinct}{Filter/distinct before concat/merge}
+
+\newpage
+\subsubsection{Example}
+
+Figure \ref{fig:proactive} illustrates the \textit{proactive filtering} optimization stage, using the transformation shown in figures \ref{fig:combmapfilter}, \ref{fig:concatdistinct} and \ref{fig:maptake}, in this order. The resulting dataflow graph have much less data movement, leading to less computation overall, but most importantly, less communication overhead, in the case it is deployed on several remote machines.
+
+\optimization{proactive}{Proactive filtering example}
+
+\subsection{Granularity adjustment}
+
+Different nodes of the dataflow graph will be executed on a separate thread/process. The fact that graphs can grow very big, for instance when programming a big swarm of millibots\cite{army}, poses a problem when available computational resources are limited. For this reason, the second optimization stage tries to adjust the granularity of the dataflow graph to a desired value, which is the number of available threads amongst all machines. 
+
+\subsubsection{Transformations}
+
+To reach the desired granularity, the optimizer applies some semantic-preserving transformation, as shown in the figures below (for simplicity, only a single example of each general case is demonstrated). 
+
+\optimization{mergemap}{Merge maps}
+\optimization{embedmap}{Embed map in creation}
+\optimization{embedrepeat}{Embed repeat in creation}
+\optimization{combmapfilter}{Combine map with filter}
+\optimization{combfilterexists}{Combine filter with exists}
+\optimization{combmapexists}{Combine map with exists}
+\optimization{combmapzip}{Combine map with zip}
+\optimization{combzipmap}{Combine zip with map}
+\optimization{meaningless}{Meaningless nevers}
+
+\newpage
+In figure \ref{fig:mergemap} we merge two \textit{map} operations into one \textit{map} operation that uses the composition of the two initial functions, while in figures \ref{fig:embedmap} and \ref{fig:embedrepeat} we utilize Java's built-in stream operators on its collections, namely \textit{map} and \textit{repeat}. In figure \ref{fig:combmapfilter} a \textit{map} followed by a \textit{filter} is substituted by a more complex equivalent operation, namely \textit{filterMap}, while in figures \ref{fig:combfilterexists} and \ref{fig:combmapexists} we apply some simple properties of the boolean functions involved to decrease the number of nodes. In figures \ref{fig:combmapzip} and \ref{fig:combzipmap} we utilize function composition to embed \textit{map} operations into \textit{zip} operations. Lastly, in figure \ref{fig:meaningless} we remove sub-graphs that are not reachable, due to \textit{never} operations.
+
+\subsubsection{Example}
+
+Figure \ref{fig:granularity} illustrates how a dataflow graph of granularity equal to 9 is optimized for execution on a quad-core computer, by applying transformation shown in figures \ref{fig:embedrepeat}, \ref{fig:mergemap}, \ref{fig:combmapzip} and \ref{fig:combzipmap}, in this order. The resulting graph has much lower overhead, caused by thread switching, due to the fact that it takes into account the number of threads available at runtime.
+
+\optimization{granularity}{Granularity adjiustment example}
+
+\subsection{Node placement}
+
+After the first two passes, we have an optimized dataflow graph with fine-tuned granularity. At this stage, nodes are mapped to tasks and are deployed across the available machines. 
+
+If the desired granularity has not been reached yet, the \textit{DistributionStrategy} applies fusion to pairs of tasks until it reaches it, as shown in figure \ref{fig:fusion}.
+
+\optimization{fusion}{Task fusion}
+
+The final decision to be made is where each of these newly constructed tasks will be executed, although some of them need to necessarily be placed on specific machines with certain skills. 
+
+Apart from these hard constraints, we need to minimize communication overhead. For this purpose, the strategy design pattern is again used, namely the \textit{NetworkProfileStrategy} that is defined in the \textit{org.rhea\_core.distribution} package. Its responsibility is to calculate a network distance between each pair of available machines, which is fed as input to the \textit{NodePlacement} optimizer. 
+
+At this stage, we identify the aforementioned network distance as cost and apply brute-force to find the optimal placement of the (groups of) tasks that minimize that cost.
+
+\section{Applications}
+This chapter will demonstrate some use-cases of the framework, which can be found in the framework repository\site{https://github.com/rhea-flow}. At first, a mathematical example is shown, which is followed by three robotic applications. 
+
+\subsection{Hamming numbers}
+Consider the problem of enumerating the \textit{Hamming numbers}, which are generated by the mathematical formula $\mathbb{H} = 2^i3^j5^k$, where $i,j,k \in \mathbb{N}$. There is an intuitive dataflow solution to the above problem, taken from the book of \textit{Lucid}, which is the first functional dataflow language\cite{lucid}. Figure \ref{fig:hamming} shows the dataflow graph on the left and the corresponding \textit{RHEA} code on the right.
+
+\codefig{hamming}{\scalaxs{code/hamming.scala}}{Hamming numbers}
+
+The code is written in Scala to utilize the \textit{Pimp my library} design pattern\cite{pimp}, which is used to easily add new functions to already existing libraries, using Scala's \textit{implicit conversions} (line 28). In the example above, we define two new Stream operators, namely \textit{multiply} (line 10), which just multiplies the stream with a constant, and \textit{mergeSort} (line 13), which produces an ordered stream given two ordered streams as input. We also see the power of the \textit{loop} operator (line 2), which allows us to define cycles in an effortless manner.
+
+\subsection{Camera surveilance}
+
+Moving to a more realistic, but still minimal, use-case, this example demonstrates how cleanly we can express a surveillance application from a robot's camera.
+
+The camera should send frames to be displayed on the screen, only when motion is detected. Figure \ref{fig:surveillance} shows the dataflow graph on the left and the corresponding \textit{RHEA} code on the right.
+
+\codefig{surveillance}{\jvxs{code/surveillance.java}}{Camera surveillance}
+
+In the code above, we can see how easy it is to view a \textit{ROS} topic as a stream, using the \textit{RosEvaluationStrategy} (line 3). Moreover, there is a nice separation between program logic (stream declaration in lines 6-17) and implementation details (\textit{motionDetected} function in line 19).
+
+\subsection{Robot control panel}
+
+This application concerns real-time monitoring of a robot, that is publishing its information and sensor-data to \textit{ROS} topics, through a \textit{graphical user interface (GUI)}.
+
+The \textit{/camera/rgb} topic provides the frames of the robot's camera as coloured images, while the \textit{/camera/depth} provides frames that provide depth information. The \textit{/tf} topic publishes parent-child relations of the internal topics of the robot's configuration, and finally the \textit{/scan/} topic provides information from the robot's laser that gives horizontal depth information in polar coordinates.
+
+The GUI displays the laser data embedded on the camera stream, while allowing for real-time face detection. Additionally, it displays the depth frames and the \textit{tf} relations as a tree. Finally, a mock-up battery bar is displayed to show-case the framework's ability for simulation. Figure \ref{fig:control_panel} illustrates the dataflow solution to the above problem on the left and the corresponding \textit{RHEA} code on the right.
+
+\codefig{control_panel}{\jvxs{code/control_panel.java}}{Robot control panel}
+
+The implementation details (i.e. the visualization class and methods \textit{faceDetect}(line 7), \textit{embedLaser}(line 8) and \textit{toGray}(line 26)) are not shown for brevity's sake. It is evident that this model of programming encourages a clean separation of concerns between the individual components, namely between the sensor data manipulation and the actual visualization on the GUI. 
+
+\subsection{Robot hospital guide}
+
+As a final example, we will examine a more IoT-based application. Consider a robot that guides patients to different parts of a hospital, such as the gym or cafeteria. Assuming map localization , path finding and obstacle avoidance are already implemented, there still remains a problem with calibrating the robot's speed according to the patient's status. 
+
+To keep tract of the patient's distance from the robot, each patient carries a smart-phone that acts as a \textit{bluetooth low-energy (BLE) beacon}. The robot uses its bluetooth receiver to publish the distance from the signal source to an \textit{MQTT} topic, which is then transformed by our stream application to velocity commands for the robot, in the form of slowing down or speeding up.
+
+The first module constitutes the main program logic, where a declared dataflow graph acts as a stream transformation from beacon information to velocity commands to the robot. Figure \ref{fig:hospital} shows the dataflow graph on the left and the corresponding \textit{RHEA} code on the right.
+
+\codefig{hospital}{\jvs{code/hospital.java}}{Robot hospital guide}
+
+The second module just uses the \textit{ReactiveBeacons} library\site{https://github.com/pwittchen/ReactiveBeacons} to get a stream of beacon data via \textit{rxjava}, and then publishes it to a \textit{MQTT} topic, which is the input of the first module. The corresponding \textit{RHEA} code follows:
+\\
+\jvxs{code/rxbeacon.java}
+
+This example clearly show-cases the framework's ability to combine different technologies and act as a high-level, declarative coordination language.
+
+
+
+\section{Related Work}
+
+This section discusses related work in the fields of \textit{Big Data}, \textit{Robotics} and \textit{IoT}.
+
+\subsection{Big Data}
+
+The necessity for implicit parallelism and distribution of more and more applications, dealing with huge and/or complex data, has brought increasingly more attention to the dataflow programming model. The main reason many frameworks have adopted it, is the high level of abstraction it provides with its declarative approach, making it simple to structure and maintain a complex system, while at the same time not losing its expressive power.
+
+\subsubsection{MapReduce}
+
+\textit{MapReduce} was developed by Google and provides a very simple model, and corresponding runtime, that allows automatic concurrency/distribution on a cluster by allowing only a very minimal program structure. First, the user specifies a \textit{map} function that processes a key/value pair to generate a set of intermediate key/value pairs, and a \textit{reduce} function that merges all intermediate values associated with the same intermediate key. Although it was widely adopted at first, quickly many problems that could not be expressed with the above formalism were found and therefore a more expressive model was required.
+
+\subsubsection{Flumejava}
+
+A generalization of the \textit{MapReduce} framework is \textit{FlumeJava}, again developed by Google, which tries to overcome its \textit{MapReduce's } shortcomings, by allowing more expressive pipelines consisting of multiple \textit{MapReduce} stages. Additionally, \textit{FlumeJava} provides some more abstract operations that, when evaluated, are compiled into primitive \textit{MapReduce} steps.
+
+Although \textit{FlumeJava} was more attractive due to its expressibility, still the pipeline constructed could not formulate all problems that are needed in many big-data applications. For instance, the constructed dataflow could not contain cycles, which is an integral part of \textit{incremental computation}, used extensively nowadays for machine learning and data analysis.
+
+\subsubsection{Spark}
+
+A very well-known and well-adapted framework for scalable large-data processing is Apache's \textit{Spark}\site{http://spark.apache.org/}. Although not a dataflow framework, it was developed to overcome the shortcomings of the \textit{MapReduce}, similar to \textit{FlumeJava}, by providing a much more efficient and flexible runtime.
+
+It follows the same general approach as \textit{RHEA}, in the sense that it is completely generic and encourages domain-specific libraries to be built upon it. For instance, \textit{MLib}\site{http://spark.apache.org/mllib/} is a library for machine learning and \textit{GraphX}\site{http://spark.apache.org/graphx/} is a library for iterative graph algorithms, both stacked upon \textit{Spark}.
+
+It offers a rich set of data-parallel operators ($\simeq 80$) that can be used interactively from Scala, Python, Java or R. The code below shows the classic word-counting example in Spark's Scala API.
+
+\scalas{code/spark.scala}
+
+\subsubsection{Cloud Dataflow}
+
+Continuing the search for more expressive models, Google recently released the \textit{Cloud Dataflow} framework\site{https://cloud.google.com/dataflow/}, which is an evolution of \textit{FlumeJava}\cite{flumejava}, allowing cycles and therefore incremental computation.
+
+It is a completely domain-agnostic dataflow framework integrated with many other closely-related technologies from Google\site{https://cloud.google.com}, like Cloud Storage, Cloud PubSub, Cloud Datastore, Cloud Bigtable and BigQuery. 
+
+It is open-source, offers fully automatic resource management that auto-scales for optimal throughput and provides increased reliability and data consistency. Moreover, it provides a unified programming model through its API, while allowing data monitoring and demand-driven execution.
+
+In contrast to \textit{RHEA}, graphs constructed by \textit{Cloud Dataflow} are designed to be deployed only on cloud infrastructures, and therefore no support for complete heterogeneity is provided. In terms of network optimization, namely node placement,  \textit{Cloud Dataflow} lets the cloud system targeted to make all decisions, while \textit{RHEA} profiles the network and decides autonomously. 
+
+\subsubsection{Stratosphere}
+
+In contrast to the, more or less, imperative approach of all preceding frameworks, which enables automatic distribution/concurrency by using immutable data structures. On the other hand, \textit{Stratosphere}\cite{stratosphere}, like \textit{RHEA}, follows a declarative programming approach which enables writing highly parallel code directly from the language's semantics. 
+
+Apart from offering a language of a much higher abstraction level, \textit{Stratosphere} has internalised several interesting and novel approaches to optimization of dataflow graphs, especially concerning cyclic graphs (i.e. incremental computation)\cite{spinning}. These optimizations are generic, in the sense that most frameworks can adopt them without much effort. Integrating these optimization into \textit{RHEA}, as future work, would certainly be of great benefit to the performance of the system.
+
+\subsubsection{Naiad}
+
+Another high-level dataflow system that follows a declarative approach similar to \textit{RHEA} is \textit{Naiad}, which unifies incrementally iterative computations with continuous data ingestion into a new
+technique called differential computation.
+
+Offering the high throughput of batch processors, the low latency of stream processors and the ability to perform iterative and incremental computations at the same time is extremely challenging and none of the aforementioned frameworks manage to provide it. Applications that need all these features need to rely on multiple platforms, at the expense of efficiency, maintainability and simplicity.
+
+\textit{Naiad}\cite{naiad} combines all of these features in a unifying framework, that provides a generic low-level platform, that a wide variety of high-level programming models can be built upon, enabling such diverse tasks as streaming data analysis, iterative machine learning, and interactive graph mining.
+
+Its main contribution is the definition of a new computational model, namely the \textit{Timely Dataflow} model, which is an extension to the dataflow model I introduced in the first chapter, by allowing a more efficient and lightweight coordination mechanism for capturing opportunities for parallelism. This is achieved by enriching the dataflow model with timestamps that represent logical points in the computation.
+
+\subsubsection{Akka}
+
+Definitely one the most mature frameworks for distribution targeting the JVM, \textit{Akka}\site{http://akka.io/} is a toolkit and runtime for highly concurrent, distributed and resilient message-driven applications. It is also one of the founders of the \textit{Reactive Streams}\cite{rss} initiative.
+
+Its approach follows the \textit{Actor} model\cite{actor}, where one perceives abstract computational agents, called actors, that are distributed in space and communicate with point-to-point messages that are buffered in a queue. In reaction to a message, an actor can create more actors, make local decisions, send more messages and determine how to respond to the next message received.
+
+Similar to the problem of \textit{ROS} that my framework solved, which is the inappropriate nature of callbacks for complex scenarios, \textit{Akka} developers also felt the necessity for a more flexible and composable programming model, so they developed the \textit{AkkaStreams} library\site{http://doc.akka.io/docs/akka-stream-and-http-experimental/1.0-M2/scala.html} which provides a convenient API for stream processing and also dataflow graph construction with an interesting DSL. Figure \ref{fig:akka} demonstrates a dataflow graph on the left, generated by the DSL code on the right.
+
+\codefig{akka}{\scala{code/akka.scala}}{Akka DSL}
+
+The main reason \textit{RHEA} offers a more flexible solution to \textit{ROS} shortcomings than \textit{Akka}, is that \textit{Akka} is a pretty heavyweight library, and consequently may prove over-abundant for simple use-cases. On the other hand, \textit{RHEA} offers the ability to choose between several \textit{EvaluationStrategies} to match your application's needs, therefore a simple application would just use a lightweight library like \textit{rxjava}.
+
+\subsubsection{dispel4py}
+
+A less-known framework for Python is \textit{dispel4py}\site{https://github.com/dispel4py}. It provides the ability to describe abstract workflows for distributed data-intensive applications.
+
+Similar to my \textit{EvaluationStrategy} concept, it allows different mappings to enactment systems, such as MPI\site{http://www.mpich.org/} and Apache Storm\site{http://storm.apache.org/}.
+
+Its main disadvantages are that it has only an API for Python and only allows low-level specification of the graph's nodes, through the definition of \textit{Processing Elements}. Therefore, it is inconvenient to compose larger graphs from simpler ones and the source code becomes chaotic and difficult to maintain.
+
+\subsection{Robotics}
+
+It is only natural that the dataflow model would make its way through the field of robotics, as many behaviours in control theory are expressed as dataflow diagrams. 
+
+\subsubsection{roshask}
+
+\textit{Roshask}\cite{roshask} is a binding from the Haskell programming language to the basic \textit{ROS} interfaces. Like \textit{RHEA}, the approach is to overcome the shortcomings of \textit{ROS} callbacks by viewing topics as streams. This allows for, and encourages, a higher level of abstraction in robot programming, while making the fusing, transforming and filtering of streams fully generic and compositional. 
+
+Below is the classic Talker-Listener \textit{ROS} example, where one node publishes messages to a topic and another one listens for them.
+
+\hs{code/roshask.hs}
+
+\subsubsection{Yampa}
+
+\textit{RHEA} and \textit{roshask} were heavily influenced by the work of Hudak's group (Yale Haskell Group) on robot DSLs and FRP in general\cite{fran, arrows_robots,lambda_in_motion,event_frp,real_frp,pushpull_frp}. \textit{Yampa}\site{https://wiki.haskell.org/Yampa} is a DSL embedded in Haskell that realizes the FRP model, using arrows to minimize time-/space- leaks. 
+
+\subsubsection{Flowstone}
+
+\textit{Flowstone}\site{http://www.dsprobotics.com/flowstone.html}  is a programming environment that mixes graphical and text based programming in Ruby that can be used for robotics, image/signal processing and interconnecting heterogeneous sources. It follows a variant of the dataflow model, where applications are built by linking together functional blocks called components. Its main advantage is that it is stand-alone, so no compiling is necessary, which allows for rapid prototyping.
+
+\subsection{Internet of Things}
+
+IoT applications often deal with much heterogeneity, due to the variety of sources that different devices introduce. Therefore, a component-based approach suits well to solve this problem and there are some dataflow frameworks that follow that approach.
+
+\subsubsection{NoFlo}
+
+\textit{NoFlo}\site{http://noflojs.org/} is a JavaScript implementation of \textit{Flow-based Programming}\cite{fbp}, which is a particular form of dataflow programming, based on bounded buffers, information packets with defined lifetimes, named ports and separate definition of connections.
+
+\textit{NoFlo} applications consist of components that are connected together in a graph. This allows for clear separation of control flow from the actual software logic, helping you organize large applications easier than traditional OOP paradigms. You can design \textit{NoFlo} applications using a web-based graph editor\site{https://flowhub.io/}.
+
+\subsubsection{Node-RED}
+
+Another interesting \textit{IoT} tool for JavaScript following a dataflow approach is \textit{Node-RED}\cite{node-red}, which is a visual tool for wiring together hardware devices, APIs and online services in new and interesting ways. 
+
+Applications called flows, are built immediately on a browser, and can be deployed on the Cloud with just a single click. The main advantage of this tool is that it encourages social development, due to the fact that flows are stored in JSON format, which can be easily imported and exported for sharing with others. The online flow library\site{http://flows.nodered.org/} has had a huge number of contributions so far.
+
+\subsection{Miscellaneous}
+
+\subsubsection{TensorFlow}
+
+Another dataflow framework from Google is \textit{TensorFlow}\site{https://www.tensorflow.org/}, which is an open-source polyglot library for machine learning and especially construction of neural networks.
+
+The interesting fact is that, although it started out as a rigid neural network library, it quickly generalized to a dataflow construction library, much similar to my own project, which started out as a robotics library. 
+
+Its main features are its portability to multiple computational architetures (e.g. CPU, GPU, etc...) and multiple language APIs (e.g. C++, Python), although its main advantage are its domain-specific operators for neural nets (i.e. common subgraphs, auto-differentiation).
+
+Through the edges/streams connecting the nodes, only a single but flexible data type is allowed, namely the \textit{Tensor} type, which essentially is a multi-dimensional array that usually represents features or weights. In contrast to \textit{RHEA}'s Streams, \textit{Tensors} cannot be infinite, mainly due to the fact that their size is determined by the dimensionality of the problem being solved, which is, in most cases, a fixed constant.
+
+\subsubsection{Ziria}
+
+The dataflow computational model also found applications in the field of wireless systems programming, particularly in the domain of \textit{software-defined radio (SDR)}. 
+
+\textit{Ziria}\cite{ziria} is a DSL that offers programming abstractions suitable for wireless physical (PHY) layer tasks while emphasizing the pipeline reconfiguration aspects of PHY programming. \textit{Ziria} also implements many specialized optimization steps that enable it to be on par and in many cases outperforms a hand-tuned state-of-the-art C++ implementations on commodity CPUs.
+
+\section{Future Work}
+
+This section discusses interesting topics and ideas for future contribution and extension of the framework.
+
+\subsection{More strategies}
+
+Every component that was initially intended to be replaceable for the sake of flexibility, was implemented using the strategy design pattern. So the definite starting point for contribution would be to implement more concrete strategies.
+
+For evaluation, a good idea would be a low-level implementation in C/C++ to allow compatibility with older/smaller systems, not capable of running the JVM. Additionally, more JVM-based strategies are possible, by using the standard \textit{java.util.Stream} library\site{https://docs.oracle.com/javase/8/docs/api/java/util/stream/package-summary.html}, \textit{Akka Streams} or Scala \textit{Iteratees}\cite{iteratees}.
+
+For distribution, again a more low-level approach written in C/C++ (e.g. using \textit{MPI/OpenMP}) would be beneficial to the variety of systems that are allowed to cooperate freely. Moreover, many frameworks similar to Hazelcast could replace it to allow for easy integration with applications that are already committed to another framework.
+
+\subsection{Dynamic reconfiguration}
+
+A definite shortcoming of \textit{RHEA} is that all configuration takes place initially and remains static throughout execution. This poses a problem for many scenarios, where environment is constantly changing and available resources may be introduced or become obsolete. 
+
+For instance, in a distributed application that controls the behaviour of a \textit{robot swarm} and all communication is done through a \textit{wireless local area network (WLAN)}, a robot may lose signal and become unavailable at runtime. Later on it may rejoin the network, so it is vital that its sensor input and computational power become quickly available to the system. A nice DSL that is used to specify adaptive behaviour in robot navigation can be found on \cite{reconf_robot}.
+
+Apart from robotics, the need for adaptive behaviour of software systems has been evident for a long time\cite{reconf_survey}. There have also been attempts for runtime adaptation of, specifically, stream processing systems, such as the \textit{Flextream} framework\cite{flextream}. 
+
+A JVM-based technology that is relatively easy to integrate into \textit{RHEA} is \textit{HotWave}\cite{reconf_java}, which is an \textit{aspect-oriented programming (AOP)} framework, based on the famous \textit{AspectJ}\site{http://www.eclipse.org/aspectj/} open-source extension of Java, that supports dynamic (re)weaving of previously loaded classes, and ensures that all classes loaded in a JVM can be (re)woven. The contribution idea here is to integrate \textit{HotWave} into the \textit{org.rhea\_core} package and then use it to specify the desired adaptive behaviour for reconfiguring where nodes are executed, what operation they perform, and so forth.
+
+\subsection{Advanced network profiling}
+
+The current strategy for network profiling is based on \textit{round-trip time (RTT)} which is measured explicitly by pinging from each machine to every other one. As the number of machines increase, calculating the \textit{RTT} becomes extremely expensive and may outweigh the benefits of exploiting network proximity. 
+
+To overcome the aforementioned problem, one could estimate, instead of measuring exactly, the \textit{RTT} with less computationally expensive methods. There has been extensive research on \textit{RTT} estimation for \textit{peer-to-peer (P2P)} networks\cite{rtt_survey}. Most of the methods proposed suffer from the constraint that estimation is calculated on a single machine, therefore introducing a central point of failure. This is highly unsuited for distributed system, where a decentralized approach should be used. One such attractive approach is the \textit{Vivaldi} coordinate system\cite{vivaldi}, which is a simple and lightweight algorithm that assigns synthetic coordinates to hosts such that the distance between the coordinates of two hosts accurately predicts the communication latency between them. The algorithm is completely decentralized (i.e. the same piece of code runs on every host) and experiments show that it achieves a median relative error of 11\%, where the error is characterised by the squared-error function:
+
+\[ E =  \sum_i \sum_j (L_{ij}-||x_i - x_j||)^2  \]
+
+where $L_{ij}$ is the actual RTT between nodes $i$ and $j$ and $||x_i - x_j||$ is the euclidean distance between their coordinates.
+
+\subsection{Advanced fault-tolerance}
+
+An aspect that \textit{RHEA} is far behind from most of its competing frameworks is fault-tolerance. Although there is a minimal control on \textit{back-pressure}, available through the small provided set of such operators, still there are no advanced methods for specifying behaviour for graceful error-recovery.
+
+The above is essential for large machine clusters, in which systems it is certain that host failures and other faults will be a common occurrence. The functional nature of the dataflow model enables fault-tolerance, in addition to parallelism, due to the fact that a node can be moved to another machine for execution, while preserving the original semantics.
+
+The extension proposed is to first provide low-level functionality for moving nodes across the network at runtime, and then use that to design high-level error recovery mechanisms. The issue confronted here is that, at the current state of the system, everything is configured statically before evaluation. To enable runtime configuration, it is mandatory to refactor major internal components, as previously noted.
+
+This contribution path can draw heavy influence from recent research on fault-tolerance for stream processing engines\cite{borealis,dstreams,wide_area}. These provide efficient models for availability and data recovery/consistency, by using data replication and even parallel recovery of lost state across the cluster.
+
+\subsection{Integration with other technologies}
+
+An issue that should not be neglected is interoperability with other dataflow frameworks mentioned throughout this paper. Although the usage of \textit{RSS} partly aids that cause, not all frameworks for the JVM support it, especially older ones, and is practically useless concerning non-JVM frameworks.
+
+A nice idea would be an \textit{ExportStrategy} that provides a one-to-one mapping between different dataflow representations. For instance, the \textit{NodeRedExportStrategy} would export a single JSON file ready to be imported into \textit{Node-RED} and deployed immediately. An issue that quickly arises is that of expressibility, meaning that the target platform should be at least as expressible as \textit{RHEA}. This can be solved by providing a mechanism/DSL to specify restricted views of the Stream class, which allow for a subset of the original operation set. 
+
+\subsection{Visual language}
+
+The dataflow programming model also provides a very intuitive graphical representation to the structure of the software system being implemented. Thus, a helpful tool would be a graphical environment, where graph construction can be achieved through the user interface and delegate only the stream declaration part to a text editor. Another useful functionality would be clustering together sub-graphs by zooming out to provide clarity in complex systems.
+
+Another useful utility is to provide visual debugging support, so as to be able to monitor values and errors going through the streams real-time or by playing back the recorded actions. Moreover, if dynamic reconfiguration is supported, the visual debugger could display where each node is being executed at each moment in time and other relative information.
+
+\subsection{Stream reasoning}	
+
+A very helpful extension to any dataflow framework is the ability to reason about, in formal logic, the ever-changing streams of data. This creates the need for a new formal logic that is able to capture this flowing notion, which has also troubled the new \textit{Semantic Web} field\cite{streaming_world}. Fortunately, various sound and efficient logic formalisms have been conceived recently\cite{pdt_logic,asp}.
+
+Stream reasoning has also been researched in the robotics domain\cite{robot_reasoning}, which led to the development of a stream reasoning framework for \textit{ROS} called \textit{DyKnown}\cite{stream_reasoning}. Integrating \textit{DyKnow} with \textit{RHEA}, as they both can support ROS, would certainly be a meaningful contribution.
+
+\section{Conclusions}
+
+The framework described in this paper was designed with extensibility in mind, aiming to act as a fundamental basis, onto which various domain-specific libraries or DSLs will rely in the future. To that end, a constant effort to generalize and make components as abstract as possible was made. 
+
+The set of operators aided expressibility, making it possible to specify any dataflow graph in a concise and readable manner. This disallowed optimizations suitable for less expressive models (e.g. \textit{Map-Reduce}), but recent research has shown that general dataflow topologies have optimization opportunities that are yet to be found\cite{blackbox}. A minimal optimization stage has been implemented, which paves the path to more advanced optimization techniques, such as those used in \textit{Naiad}\cite{naiad} and \textit{Stratosphere}\cite{static_analysis}.
+
+Figure \ref{fig:core} illustrates all the pluggable components of the framework around the core, which are normally deployed in separate libraries.
+
+\mydiag{core}{The \textit{RHEA} ecosystem}
+
+The applications demonstrated the framework's ability to provide a higher level of abstraction, where the language only specifies how different components coordinate, without knowledge of the implementation details. This is exactly what \textit{Ziria} accomplishes in the domain of wireless systems programming\cite{ziria}. The driving force for both frameworks (i.e. \textit{RHEA} and \textit{Ziria}) is that some specific domains have fixated their methods on low-level programming, whereas more satisfactory paradigms can solve many shortcomings.
+
+This is a general notion in computer science, owning its existence to the fact that the problems we are facing are getting increasingly more complex, while resources meet certain realistic bounds, and therefore a higher abstraction layer is mandatory for maintaining readability, efficiency and expressibility.
+
+
+%% Acknowledgments
+\begin{acks}                            %% acks environment is optional
+                                        %% contents suppressed with 'anonymous'
+I would like to thank Angelos Charalambidis for his immensely helpful supervision and guidance throughout the whole period of 6 months that I was present in NCSR. 
+
+I would also like to thank Professor Panos Randogiannis for being a major influence in my current research interests through the undergraduate courses "Theory of Computation" and "Principles of Programming Languages", where I was introduced to a much more declarative way of programming and started appreciating mathematical sensibility in computing.
+\end{acks}
+
+
+%% Bibliography
+\bibliography{rhea}
+
+\end{document}

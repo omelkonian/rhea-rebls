@@ -1,0 +1,34 @@
+\begin{center}
+\begin{scaletikzpicturetowidth}{\columnwidth}
+\begin{tikzpicture}
+  [every matrix/.append style={column sep=1cm, row sep=1cm}, scale=\tikzscale]
+  \matrix{  
+    \& \node[draw, circle, fill=myye, radius=1cm] (a) {}; 
+    \& \node[draw, circle, fill=myye] (b) {}; 
+    \& \node[draw, circle, fill=myye] (c) {}; 
+    \& \node[draw, circle, fill=mygr] (O) {}; 
+    \\  
+    \node[draw, circle, fill=myrd] (I) {};    
+    \& \node[draw, circle, fill=myye] (d) {}; 
+    \& \node[draw, circle, fill=myye] (e) {}; 
+    \& \node[draw, circle, fill=mygr] (OO) {}; 
+    \\  
+    \node[draw, circle, fill=myrd] (II) {};    
+    \& \node[draw, circle, fill=myye] (f) {}; 
+    \\  
+  };
+  \draw[to] (a) -- (b);  
+  \draw[to] (b) -- (c);
+  \draw[to] (c) to[bend right] (a);
+  \draw[to] (c) -- (O);
+  \draw[to] (c) -- (e);
+
+  \draw[to] (I) -- (d);  
+  \draw[to] (d) -- (e);
+  \draw[to] (e) -- (OO);
+
+  \draw[to] (II) -- (f);
+  \draw[to] (f) -- (e);
+\end{tikzpicture}
+\end{scaletikzpicturetowidth}
+\end{center}

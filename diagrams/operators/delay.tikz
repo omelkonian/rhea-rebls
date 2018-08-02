@@ -1,0 +1,13 @@
+\begin{tikzpicture}
+	\stream{2}
+	\onnext{1}{2}{myrd}{}
+	\onnext{2}{2}{mybl}{}
+	\complete{3}{2}
+
+	\op{delay 1s}
+	
+	\stream{0}
+	\onnext{2}{0}{myrd}{}
+	\onnext{3}{0}{mybl}{}
+	\complete{4}{0}
+\end{tikzpicture}

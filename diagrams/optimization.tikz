@@ -1,0 +1,16 @@
+\begin{tikzpicture}
+  [every matrix/.append style={column sep=.4cm}]
+  \matrix{
+    \node (S) {\small initial \\ \small graph};
+    \& \node[dataflow] (A) {\small Proactive \\ \small Filtering}; 
+    \& \node[dataflow] (B) {\small Granularity \\ \small Adjustment};
+    \& \node[dataflow] (C) {\small Node \\ \small Placement};
+    \& \node (D) {\small optimized \\ \small graph}; \\    
+  };
+  
+  \draw[to] (S) -- (A);
+  \draw[to] (A) -- (B);
+  \draw[to] (B) -- (C);
+  \draw[to] (C) -- (D);    
+
+\end{tikzpicture}

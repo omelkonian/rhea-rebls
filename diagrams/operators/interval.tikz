@@ -1,0 +1,8 @@
+\begin{tikzpicture}
+	\op{interval 1s};
+
+	\dotstream{0}{4}
+	\onnext{1}{0}{num}{0}
+	\onnext{2}{0}{num}{1}
+	\onnext{3}{0}{num}{2}
+\end{tikzpicture}

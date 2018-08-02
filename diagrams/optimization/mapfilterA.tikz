@@ -1,0 +1,8 @@
+\begin{tikzpicture}
+  [every matrix/.append style={column sep=1cm}]
+  \matrix{    
+    \node[dataflow] (filter) {filter $f \circ g$}; 
+    \& \node[dataflow] (map) {map $f$}; \\  
+  };
+  \draw[to] (filter) -- (map);
+\end{tikzpicture} 

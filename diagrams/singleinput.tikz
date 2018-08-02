@@ -1,0 +1,8 @@
+\begin{tikzpicture}
+  [every matrix/.append style={column sep=1cm, row sep=0.5cm}]
+  \matrix{
+    \node[dataflow] (just) {\small just [1, 2, 3]}; 
+    \& \node[dataflow] (map) {\small map \{$x + 1$\}};  \\    
+  };
+  \draw[to] (just) -- (map);  
+\end{tikzpicture} 

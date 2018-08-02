@@ -1,0 +1,13 @@
+\begin{tikzpicture}
+	\stream{2}
+	\onnext{1}{2}{myrd}{}
+	\onnext{2}{2}{mybl}{}
+	\onnext{3}{2}{mygr}{}
+	\complete{4}{2}
+
+	\op{skip 2}
+
+	\stream{0}
+	\onnext{3}{0}{mygr}{}	
+	\complete{4}{0}
+\end{tikzpicture}	

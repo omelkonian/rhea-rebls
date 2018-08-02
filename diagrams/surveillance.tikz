@@ -1,0 +1,27 @@
+\begin{tikzpicture}
+  [every matrix/.append style={row sep=.4cm, column sep=.5cm}]
+  \matrix{       
+    \node[dataflow] (cam) {\small camera}; \\
+    \node[dataflow] (con) {\small convert};
+    \& \node[dataflow] (fst) {\small first};     
+    \& \node[dataflow] (rep) {\small repeat}; \\   
+    \node[dataflow] (zip) {\small zip}; \\
+    \node[dataflow] (smp) {\small sample};
+    \& \node[dataflow] (tim) {\small timeout};
+    \& \node[dataflow] (fil) {\small filter \{motion\}}; \\
+    \& \node[dataflow] (img) {\small showImage};
+    \& \node[dataflow] (map) {\small map \{getLeft\}}; \\
+  };
+    
+  \draw[to] (cam) -- (con);
+  \draw[to] (con) -- (fst);
+  \draw[to] (fst) -- (rep);
+  \draw[to] (rep) -- (zip); 
+  \draw[to] (con) -- (zip);  
+  \draw[to] (zip) -- (smp);
+  \draw[to] (smp) -- (tim);
+  \draw[to] (tim) -- (fil);
+  \draw[to] (fil) -- (map);
+  \draw[to] (map) -- (img);
+
+\end{tikzpicture} 

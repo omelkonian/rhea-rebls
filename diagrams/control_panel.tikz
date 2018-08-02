@@ -1,0 +1,49 @@
+\begin{tikzpicture}
+  [every matrix/.append style={row sep=.4cm, column sep=.3cm}]
+  \matrix{       
+    \node[dataflow] (las) {\footnotesize laser}; \\
+    
+    \node[dataflow] (cam) {\footnotesize camera}; 
+    \& \node[dataflow] (dep) {\footnotesize depth}; 
+    \& \node[dataflow] (tf) {\footnotesize tf};
+    \& \node[dataflow] (int) {\footnotesize interval}; \\
+
+    \node[dataflow] (con) {\footnotesize convert}; 
+    \& \node[dataflow] (gra) {\footnotesize toGray}; 
+    \& \node[dataflow] (tak) {\footnotesize take}; 
+    \& \node[dataflow] (map) {\footnotesize map}; \\
+    
+    \node[dataflow] (smp) {\footnotesize sample}; 
+    \& \node[dataflow] (smpp) {\footnotesize sample}; 
+    \& \node[dataflow] (col) {\footnotesize collect}; 
+    \& \node[dataflow] (dba) {\footnotesize display battery}; \\    
+    
+    \node[dataflow] (fac) {\footnotesize face detect}; 
+    \& \node[dataflow] (ddp) {\footnotesize display depth};            
+    \& \node[dataflow] (dtf) {\footnotesize display TF}; \\
+
+    \node[dataflow] (zip) {\footnotesize zip \{embed\}}; \\
+
+    \node[dataflow] (rgb) {\footnotesize display RGB}; \\
+  };
+    
+  \draw[to] (las) to[bend right=60] (zip);
+
+  \draw[to] (cam) -- (con);
+  \draw[to] (con) -- (smp); 
+  \draw[to] (smp) -- (fac);  
+  \draw[to] (fac) -- (zip);
+  \draw[to] (zip) -- (rgb);
+
+  \draw[to] (dep) -- (gra);
+  \draw[to] (gra) -- (smpp);
+  \draw[to] (smpp) -- (ddp);
+
+  \draw[to] (tf) -- (tak);
+  \draw[to] (tak) -- (col);
+  \draw[to] (col) -- (dtf);
+
+  \draw[to] (int) -- (map);
+  \draw[to] (map) -- (dba);
+
+\end{tikzpicture} 

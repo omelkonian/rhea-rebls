@@ -1,0 +1,20 @@
+\begin{tikzpicture}
+	\stream{2}
+	\onnext{1}{2}{myrd}{}
+	\onnext{2}{2}{mybl}{}
+	\onnext{3}{2}{mygr}{}
+	\onnext{4}{2}{mybr}{}
+	\complete{4.5}{0}
+
+	\op{buffer 2}
+
+	\stream{0}
+
+	\llist{1}{2}	
+	\llist{3}{4}	
+	\onnext{1}{0}{myrd}{}
+	\onnext{2}{0}{mybl}{}
+	\onnext{3}{0}{mygr}{}
+	\onnext{4}{0}{mybr}{}
+	\complete{4.5}{0}
+\end{tikzpicture}

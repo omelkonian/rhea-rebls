@@ -1,0 +1,18 @@
+\begin{tikzpicture}
+  [every matrix/.append style={column sep=1cm, row sep=1cm}]  
+  \matrix{    
+  	\node (A) {x}; 
+  	\& \node[dataflow] (filterA) {filter $g$}; \\
+  	\node (B) {y}; 
+  	\& \node[dataflow] (filterB) {filter $g$}; 
+    \& \node[dataflow] (concat) {concat}; \\
+    \node (C) {z}; 
+    \& \node[dataflow] (filterC) {filter $g$}; \\
+  };
+  \draw[to] (A) -- (filterA);
+  \draw[to] (B) -- (filterB);
+  \draw[to] (C) -- (filterC);  
+  \draw[to] (filterA) -- (concat);
+  \draw[to] (filterB) -- (concat);
+  \draw[to] (filterC) -- (concat);
+\end{tikzpicture} 

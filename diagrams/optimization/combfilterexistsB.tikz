@@ -1,0 +1,9 @@
+\begin{tikzpicture}
+  [every matrix/.append style={column sep=1cm, row sep=1cm}]
+  \matrix{    
+  	\node[dataflow] (A) {filter $p_1$}; \&
+  	\node[dataflow] (B) {exists $p_2$}; \\    
+  };
+  \draw[to] (A) -- (B);    
+  \draw[opt, <->] (B) to[bend right] (A);  
+\end{tikzpicture} 

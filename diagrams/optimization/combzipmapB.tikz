@@ -1,0 +1,9 @@
+\begin{tikzpicture}[every matrix/.append style={column sep=1cm, row sep=1cm}]
+  \matrix{    
+  	\node[dataflow] (zip) {zip $f$}; 
+  	\& \node[dataflow] (map) {map $g$}; \\
+  };
+
+  \draw[to]  (zip) -- (map);
+  \draw[opt, <->]  (zip) to[bend left] (map);
+\end{tikzpicture} 

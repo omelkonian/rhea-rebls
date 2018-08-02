@@ -1,0 +1,10 @@
+\begin{tikzpicture}
+  [every matrix/.append style={column sep=1cm}]
+  \matrix{    
+    \node[dataflow] (map) {map}; 
+    \& \node[dataflow] (take) {take}; \\  
+  };
+  \draw[to] (map) -- (take);
+  \draw[opt] (map) to[bend left] (take);
+  \draw[opt] (take) to[bend left] (map);
+\end{tikzpicture}

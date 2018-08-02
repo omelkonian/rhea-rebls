@@ -1,0 +1,18 @@
+\begin{tikzpicture}
+  [every matrix/.append style={column sep=1cm, row sep=1cm}]
+  \matrix{    
+  	\node (A) {x}; \\
+  	\node (B) {y}; 
+    \& \node[dataflow] (concat) {concat}; 
+    \& \node[dataflow] (filter) {filter $g$}; \\  
+    \node (C) {z}; \\
+  };
+  \draw[to] (A) -- (concat);
+  \draw[to] (B) -- (concat);
+  \draw[to] (C) -- (concat);
+  \draw[to] (concat) -- (filter);
+  
+  \draw[opt] (filter) to[bend right] (A);
+  \draw[opt] (filter) to[bend right] (B);
+  \draw[opt] (filter) to[bend left] (C);
+\end{tikzpicture} 

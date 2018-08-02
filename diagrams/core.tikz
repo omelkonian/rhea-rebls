@@ -1,0 +1,10 @@
+\smartdiagramset{bubble center node size = 30mm, bubble node size = 25mm}
+\smartdiagram[bubble diagram]
+{
+  \textit{RHEA},
+  evaluation, 
+  optimization,
+  distribution, 
+  serialization, 
+  network\\profiling  
+}

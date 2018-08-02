@@ -1,0 +1,9 @@
+\begin{tikzpicture}
+	\op{from[1,2,3]}
+
+	\stream{0}	
+	\onnext{1}{0}{num}{1}
+	\onnext{2}{0}{num}{2}
+	\onnext{3}{0}{num}{3}
+	\complete{4}{0}
+\end{tikzpicture}

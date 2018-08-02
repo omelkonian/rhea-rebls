@@ -1,0 +1,30 @@
+\begin{tikzpicture}
+  [every matrix/.append style={row sep=.4cm, column sep=.7cm}]
+  \matrix{   
+    \& \node[dataflow] (sort) {\small merge sort};
+    \& \node[dataflow] (mul) {\small x3};
+    \& \node[dataflow] (mull) {\small x2}; \\    
+    \& \node[dataflow] (sortt) {\small merge sort};    
+    \& \node[dataflow] (mulll) {\small x5}; \\    
+    \node[dataflow] (from) {\small from 1};
+    \& \node[dataflow] (merge) {\small concat}; \\
+    \& \node[point] (p) {};
+    \& \node[point] (pp) {}; 
+    \& \node[point] (ppp) {}; \\    
+    \& \node (pppp) {$\mathbb{H}$}; \\
+  };
+  
+  \draw[to] (mull) to[bend right] (sort);
+  \draw[to] (mul) -- (sort);
+  \draw[to] (mulll) -- (sortt);  
+  \draw[to] (sort) -- (sortt);  
+  \draw[to] (sortt) -- (merge);  
+  \draw[to] (from) -- (merge);  
+  \draw[to] (merge) -- (pppp);  
+
+  \draw[to] (ppp) -- (mull);
+  \draw[to] (pp) to[bend right] (mul);  
+  \draw[to] (pp) -- (mulll);
+  \draw (p) -- (ppp);
+
+\end{tikzpicture} 

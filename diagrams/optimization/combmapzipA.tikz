@@ -1,0 +1,6 @@
+\begin{tikzpicture}
+  [every matrix/.append style={column sep=1cm, row sep=1cm}]
+  \matrix{    
+  	\node[dataflow] {zip $g(f_1(x), f_2(y))$}; \\      	
+  };  
+\end{tikzpicture} 

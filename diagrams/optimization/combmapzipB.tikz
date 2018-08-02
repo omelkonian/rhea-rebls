@@ -1,0 +1,12 @@
+\begin{tikzpicture}
+  [every matrix/.append style={column sep=1cm, row sep=1cm}]
+  \matrix{    
+  	\node[dataflow] (A) {map $f_1$}; \\
+  	\& \node[dataflow] (zip) {zip $g(x, y)$}; \\    
+  	\node[dataflow] (B) {map $f_2$}; \\
+  };
+  \draw[to] (A) -- (zip);    
+  \draw[to] (B) -- (zip);    
+  \draw[opt] (A) to[bend left] (zip);  
+  \draw[opt] (B) to[bend right] (zip);
+\end{tikzpicture} 

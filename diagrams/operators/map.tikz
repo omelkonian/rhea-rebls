@@ -1,0 +1,15 @@
+\begin{tikzpicture}
+	\stream{2}
+	\onnext{1}{2}{num}{1}
+	\onnext{2}{2}{num}{2}
+	\onnext{3}{2}{num}{3}
+	\complete{4}{2}
+
+	\op{map \{$x=x+1$\}}
+
+	\stream{0}
+	\onnext{1}{0}{num}{2}
+	\onnext{2}{0}{num}{3}
+	\onnext{3}{0}{num}{4}
+	\complete{4}{0}
+\end{tikzpicture}

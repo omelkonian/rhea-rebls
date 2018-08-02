@@ -1,0 +1,14 @@
+\begin{tikzpicture}
+	\stream{2}
+	\onnext{1}{2}{mybr}{}
+	\onnext{2}{2}{myrd}{}
+	\onnext{3}{2}{mybl}{}
+	\onnext{4}{2}{mygr}{}
+	\complete{4.5}{2}
+
+	\op{exists \{ is red \}}
+
+	\stream{0}
+	\onnext{2}{0}{mygr}{true}
+	\complete{2.5}{0}
+\end{tikzpicture}	

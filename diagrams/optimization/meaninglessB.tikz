@@ -1,0 +1,11 @@
+\begin{tikzpicture}
+  [every matrix/.append style={column sep=1cm, row sep=1cm}]
+  \matrix{    
+  	\node[dataflow] (never) {never}; \\
+  	\& \node[dataflow] (concat) {concat}; \\
+  	\node (A) {x}; \\    
+  };
+  \draw[to] (never) -- (concat);
+  \draw[to] (A) -- (concat);
+  \draw[opt] (never) to[bend left] (concat);  
+\end{tikzpicture} 

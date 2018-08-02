@@ -1,0 +1,78 @@
+% Dataflow graphs
+\tikzset{
+	dataflow/.style={draw, fill=myye, rounded corners, thick},  	  	
+  	machine/.style={draw, fill=myrd!80, rounded corners, thick, inner sep=.5cm},
+  	task/.style={draw, fill=mygr!80, rounded corners, thick, inner sep=.5cm},
+  	to/.style={->,>=stealth',shorten >=1pt,semithick},
+  	net/.style={to, red, dotted},  	
+  	opt/.style={->,>=stealth',shorten >=1pt,semithick,draw=red},
+  	point/.style={draw, inner sep=0pt, circle, fill=black},
+  	every matrix/.style= 	{ampersand replacement=\&},
+  	every node/.style={align=center, anchor=base}
+}
+
+% General macros
+\newcommand\site[1]{\footnote{\url{#1}}}
+
+\newcommand\xdownarrow[1][.5cm]{%
+   \mathrel{\rotatebox{-90}{$\rightsquigarrow{\rule{#1}{0pt}}$}}
+}
+
+\newcommand\myimage[3]{
+	\begin{figure}[h!] 
+	\centering
+ 	\includegraphics[scale=#2]{#1}
+  	\caption{#3}
+  	\label{fig:#1}
+	\end{figure}
+}
+
+\newcommand\codefig[3]{
+	\begin{figure}[h!]
+	  \begin{center}
+		\input{diagrams/#1.tikz} 
+		\end{center}
+		#2
+		\caption{#3}
+		\label{fig:#1}
+	\end{figure}
+}
+
+\newcommand\mydiag[2]{
+	\begin{figure}[h!] 
+		\centering
+	 	\input{diagrams/#1.tikz}
+	  	\caption{#2}
+	  	\label{fig:#1}
+	\end{figure}
+}
+
+\newcommand\twofig[3]{
+	\begin{figure}[h!]
+		\begin{center} \input{diagrams/#1.tikz} \end{center}
+		$\xdownarrow$
+		\begin{center} \input{diagrams/#2.tikz} \end{center}
+		\caption{#3}
+		\label{fig:#1}
+	\end{figure}
+}
+
+\newcommand\optimization[2]{
+	\begin{figure}[h!]
+	  \begin{center} \input{diagrams/optimization/#1B.tikz} \end{center}
+	  $\xdownarrow$
+	  \begin{center} \input{diagrams/optimization/#1A.tikz} \end{center}
+	\caption{#2}
+	\label{fig:#1}
+	\end{figure}	
+}
+
+% Source Code
+\usemintedstyle{friendly}
+\newmintedfile[hs]{hs}{frame=lines,framesep=0.3cm}
+\newmintedfile[jv]{java}{frame=lines,framesep=0.3cm}
+\newmintedfile[scala]{scala}{frame=lines,framesep=0.3cm}
+\newmintedfile[scalas]{scala}{fontsize=\footnotesize,frame=lines,framesep=0.3cm}
+\newmintedfile[scalaxs]{scala}{fontsize=\tiny,frame=lines,framesep=0.3cm}
+\newmintedfile[jvs]{java}{fontsize=\footnotesize,frame=lines,framesep=0.3cm}
+\newmintedfile[jvxs]{java}{fontsize=\tiny,frame=lines,framesep=0.3cm}

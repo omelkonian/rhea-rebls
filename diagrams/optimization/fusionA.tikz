@@ -1,0 +1,17 @@
+\begin{tikzpicture}
+  [every matrix/.append style={column sep=.5cm}]
+  \matrix{    
+  	\node[dataflow] (A) {op1}; 
+  	\& \node[dataflow] (B) {op2};     
+  	\& \node[dataflow] (C) {op3};
+  	\& \node[dataflow] (D) {op4}; \\
+  };
+  \draw[to] (A) -- (B);
+  \draw[net] (B) -- (C);
+  \draw[to] (C) -- (D);    
+
+  \begin{scope}[on background layer]
+    \node[fill=orange!50, fit=(A) (B), label=above:\small Task1] {};
+    \node[fill=orange!50, fit=(C) (D), label=above:\small Task2] {};
+  \end{scope}
+\end{tikzpicture} 

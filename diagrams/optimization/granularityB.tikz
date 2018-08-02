@@ -1,0 +1,27 @@
+\begin{tikzpicture}
+  [every matrix/.append style={column sep=.1cm, row sep=.5cm}]
+  \matrix{    
+    \node[dataflow] (A) {from L}; 
+    \& \& \node[dataflow] (B) {from}; \\
+
+    \node[dataflow] (rep) {repeat}; 
+    \& \& \node[dataflow] (mapB) {map $f_2$};  \\
+    
+    \node[dataflow] (mapA) {map $f_1$}; 
+    \& \& \node[dataflow] (mapC) {map $f_3$}; \\
+
+    \& \node[dataflow] (zip) {zip $g(x,y)$}; \\
+    \& \node[dataflow] (map) {map $h$}; \\
+    \& \node[dataflow] (dis) {display}; \\   
+  };  
+
+  \draw[to] (A) -- (rep);
+  \draw[to] (rep) -- (mapA);
+  \draw[to] (mapA) -- (zip);
+  \draw[to] (B) -- (mapB);
+  \draw[to] (mapB) -- (mapC);
+  \draw[to] (mapC) -- (zip);
+  \draw[to] (zip) -- (map);
+  \draw[to] (map) -- (dis);
+
+\end{tikzpicture} 

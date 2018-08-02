@@ -1,0 +1,12 @@
+\begin{tikzpicture}
+	\stream{2}
+	\onnext{1}{2}{num}{1}
+	\complete{2}{2}
+
+	\op{loop \{$s \to s.map(+1)$\}}
+
+	\dotstream{0}{4}
+	\onnext{1}{0}{num}{1}
+	\onnext{2}{0}{num}{2}
+	\onnext{3}{0}{num}{3}
+\end{tikzpicture}

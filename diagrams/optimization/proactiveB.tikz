@@ -1,0 +1,21 @@
+\begin{tikzpicture}
+  [every matrix/.append style={column sep=.1cm, row sep=.5cm}]
+  \matrix{    
+    \node (A) {x}; 
+    \& \node (B) {y}; 
+    \& \node (C) {z}; \\    
+
+    \& \node[dataflow] (con) {concat}; \\
+    \& \node[dataflow] (map) {map $f$}; \\
+    \& \node[dataflow] (fil) {filter $g$}; \\
+    \& \node[dataflow] (tak) {take}; \\
+  };  
+
+  \draw[to] (A) -- (con);
+  \draw[to] (B) -- (con);
+  \draw[to] (C) -- (con);
+  \draw[to] (con) -- (map);
+  \draw[to] (map) -- (fil);
+  \draw[to] (fil) -- (tak);
+
+\end{tikzpicture} 

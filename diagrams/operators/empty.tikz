@@ -1,0 +1,6 @@
+\begin{tikzpicture}	
+	\op{empty}
+
+	\stream{0}
+	\complete{4}{0}
+\end{tikzpicture}

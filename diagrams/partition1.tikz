@@ -1,0 +1,10 @@
+\begin{tikzpicture}
+  [every matrix/.append style={column sep=1cm}]
+  \matrix{    
+    \node[dataflow] (ini) {\small{1..10}}; 
+    \& \node[dataflow] (map) {\small{map\{ f \}}}; 
+    \& \node[dataflow] (out) {\small{print}}; \\  
+  };
+  \draw[to] (ini) -- (map);
+  \draw[to] (map) -- (out);
+\end{tikzpicture} 

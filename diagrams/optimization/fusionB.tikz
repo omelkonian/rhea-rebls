@@ -1,0 +1,14 @@
+\begin{tikzpicture}
+  [every matrix/.append style={column sep=.5cm}]
+  \matrix{    
+  	\node[dataflow] (A) {op1}; 
+  	\& \node[dataflow] (B) {op2};     
+  	\& \node[dataflow] (C) {op3};
+  	\& \node[dataflow] (D) {op4}; \\
+  };
+  \draw[to] (A) -- (B);
+  \draw[to] (B) -- (C);
+  \draw[to] (C) -- (D);    
+  \draw[opt, <->] (A) to[bend left] (B);
+  \draw[opt, <->] (C) to[bend right] (D);  
+\end{tikzpicture} 

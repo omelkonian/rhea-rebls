@@ -1,0 +1,19 @@
+\begin{tikzpicture}
+	\stream{3}
+	\onnext{1}{3}{myrd}{}
+	\onnext{3}{3}{myrd}{}
+	\complete{3.9}{3}
+
+	\stream{2}
+	\onnext{2}{2}{mybl}{}
+	\onnext{4}{2}{mybl}{}
+	\complete{4.5}{2}
+
+	\op{merge}
+
+	\stream{0}
+	\onnext{1}{0}{myrd}{}
+	\onnext{2}{0}{mybl}{}
+	\onnext{3}{0}{myrd}{}
+	\complete{3.9}{0}
+\end{tikzpicture}

@@ -1,0 +1,15 @@
+\begin{tikzpicture}
+  [every matrix/.append style={column sep=.1cm, row sep=.5cm}]
+  \matrix{    
+    \node[dataflow] (A) {from \{L.repeat\}}; 
+    \& \& \node[dataflow] (B) {from}; \\ 
+
+    \& \node[dataflow] (zip) {zip $g_{f_1,f_2} \circ h$}; \\
+    \& \node[dataflow] (dis) {display}; \\     
+  };  
+
+  \draw[to] (A) -- (zip);
+  \draw[to] (B) -- (zip);
+  \draw[to] (zip) -- (dis);
+
+\end{tikzpicture} 

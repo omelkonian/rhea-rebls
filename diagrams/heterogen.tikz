@@ -1,0 +1,23 @@
+\begin{center}
+\begin{scaletikzpicturetowidth}{\columnwidth}
+\begin{tikzpicture}[scale=\tikzscale,
+  mindmap, concept color=orange,
+  level 1/.append style={level distance=1.9cm},
+  level 2/.append style={level distance=1.9cm},
+  level 3/.append style={level distance=1.9cm},
+  level 4/.append style={level distance=1.9cm}
+  ]
+  \tikzset{every concept/.style={minimum size=0.5cm, text width=1.2cm}} 
+  \tikzstyle{every node}=[font=\footnotesize]
+  \node[concept] {robot\\camera}
+    child[concept color=orange, grow=right]{ node[concept]{compress\\image}
+      child[concept color=mygr, grow=right]{ node[concept]{process\\image} 
+        child[concept color=myrd, grow=right]{  node[concept]{decision\\making}
+          child[concept color=orange, grow=right]{ node[concept]{robot\\command} } 
+        } 
+      }
+    }; 
+
+\end{tikzpicture}
+\end{scaletikzpicturetowidth}
+\end{center}

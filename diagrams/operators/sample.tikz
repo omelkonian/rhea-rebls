@@ -1,0 +1,14 @@
+\begin{tikzpicture}
+	\stream{2}
+	\onnext{1}{2}{num}{1}
+	\onnext{2}{2}{num}{2}
+	\onnext{3}{2}{num}{3}
+	\complete{4.5}{2}
+
+	\op{sample 1s}
+
+	\stream{0}
+	\onnext{1}{0}{num}{1}
+	\onnext{3}{0}{num}{3}
+	\complete{4.5}{0}
+\end{tikzpicture}

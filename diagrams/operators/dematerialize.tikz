@@ -1,0 +1,17 @@
+\begin{tikzpicture}
+	\stream{2}
+	\mat{1}{2}
+	\mat{2}{2}
+	\mat{3}{2}
+	\onnext{1}{2}{myrd}{}
+	\onnext{2}{2}{mybl}{}
+	\complete{3}{2}
+
+	\op{dematerialize}
+
+	\stream{0}
+	\onnext{1}{0}{myrd}{}
+	\onnext{2}{0}{mybl}{}	
+	\complete{3}{0}
+		
+\end{tikzpicture}
