@@ -1,5 +1,5 @@
 \begin{tikzpicture}
-  [every matrix/.append style={column sep=1cm, row sep=0.5cm}]
+  [every matrix/.append style={column sep=1cm, row sep=0.1cm}]
   \matrix{
     \node[dataflow] (fst) {\small 1..10}; \\
     \& \node[dataflow] (zip) {\small zip \{$x+y$\}};  \\
@@ -7,4 +7,4 @@
   };
   \draw[to] (fst) -- (zip);
   \draw[to] (snd) -- (zip);
-\end{tikzpicture} 
+\end{tikzpicture}

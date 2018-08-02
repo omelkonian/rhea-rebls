@@ -63,6 +63,7 @@
 \usepackage{ifthen}
 \usepackage{tabularx}
 \usepackage{ulem}
+\usepackage{adjustbox}
 
 % Math
 \usepackage{amsfonts}
@@ -250,11 +251,11 @@ $$ x = 1/2 \int (vr + vl) \cos\theta $$
 
 Below is the \textit{FRP} code corresponding to the formula above:
 
-\hs{code/frp1.hs}
+\hssm{code/frp1.hs}
 
 As the above may seem counter-intuitive and difficult to understand, a new notation was conceived, notably the \textit{arrow notation} \cite{arrows_notation}:
 
-\hs{code/frp2.hs}
+\hssm{code/frp2.hs}
 
 The main advantages of \textit{FRP} are its close correspondence to mathematics\cite{survey_frp}, which make it an ideal framework for modelling real-time systems, and its concise representation of time-varying values via \textit{signals}.
 
@@ -365,25 +366,25 @@ Processing nodes can be divided into two classes: \textit{single input} ones and
 
 \textit{Single input} nodes are inserted into an existing Stream object, by calling an operator on that object. Figure \ref{fig:singleinput} shows an example of a single input node, namely that of \textit{map}, which transforms the input stream (i.e. just the values 1, 2 and 3) by applying a user-defined function to every emitted value (i.e. $f(x)=x+1$).
 
-\codefig{singleinput}{\jv{code/singleinput.java}}{Single input processing node}
+\codefig{singleinput}{\jvs{code/singleinput.java}}{Single input processing node}
 
 \textit{Multiple input} nodes are constructed by built-in function that take as argument already existing Stream objects. Figure \ref{fig:multipleinput} shows an example of a multiple input node, namely that of \textit{zip}, which transforms the input streams (i.e. two stream that emit the values 1..10) by applying a user-defined function to each emitted pairs of values (i.e. $f(x,y)=x+y$). Here we also see another stream creation function, namely \textit{Stream.range}.
 
-\codefig{multipleinput}{\jv{code/multipleinput.java}}{Multiple input processing node}
+\codefig{multipleinput}{\jvs{code/multipleinput.java}}{Multiple input processing node}
 
 The variables returns by all processing nodes are \textit{Stream} objects. These objects can be reused in different parts of the graph to enable splitting a node's output to different processing nodes or outputs. Figure \ref{fig:split} shows such an example, where the \textit{filter} operator only emits values for which the given function returns true.
 
-\codefig{split}{\jv{code/split.java}}{Split example}
+\codefig{split}{\jvs{code/split.java}}{Split example}
 
 Cycle construction is a bit trickier, as no direct manipulation of the internal graph is permitted. Cycles are constructed using the \textit{loop} operator, which is a single input processing node. It requires a function that, given an input stream, constructs a subgraph that redirects its output to that input, therefore creating a feedback loop. Figure \ref{fig:natt} shows an example of the \textit{loop} operator to represent the natural numbers, just as the graph shown earlier in figure \ref{fig:nat}. The \textit{concat} operator is a multiple input node that concatenates its input streams.
 
-\codefig{natt}{\jv{code/natt.java}}{Cyclic example}
+\codefig{natt}{\jvs{code/natt.java}}{Cyclic example}
 
 \subsubsection{Evaluation syntax}
 
 To evaluate a given dataflow graph and do something with its output values, we need to call the \textit{subscribe} method of the \textit{Stream} object. The argument passed to \textit{subscribe} is either a user-defined action (i.e. function with side-effects) or an object implementing the \textit{Subscriber} interface (see section \ref{external}). Figure \ref{fig:subexample} shows an example of printing the output of the single-input example in figure \ref{fig:singleinput}.
 
-\codefig{subexample}{\jv{code/subexample.java}}{Evaluation example}
+\codefig{subexample}{\jvs{code/subexample.java}}{Evaluation example}
 
 \subsubsection{Execution semantics}
 
@@ -391,7 +392,7 @@ As the execution is completely asynchronous, the order of stream declaration and
 
 Nonetheless, this utility is helpful for rapid prototyping and testing purposes. The source code below shows an example of accumulating the 10 first natural numbers in a list and printing that list. 
 
-\jv{code/block.java}
+\jvs{code/block.java}
 
 \section{Implementation}
 This chapter delves deeper into the system's implementation details. 
@@ -606,7 +607,7 @@ To keep tract of the patient's distance from the robot, each patient carries a s
 
 The first module constitutes the main program logic, where a declared dataflow graph acts as a stream transformation from beacon information to velocity commands to the robot. Figure \ref{fig:hospital} shows the dataflow graph on the left and the corresponding \textit{RHEA} code on the right.
 
-\codefig{hospital}{\jvs{code/hospital.java}}{Robot hospital guide}
+\codefig{hospital}{\jvxs{code/hospital.java}}{Robot hospital guide}
 
 The second module just uses the \textit{ReactiveBeacons} library\site{https://github.com/pwittchen/ReactiveBeacons} to get a stream of beacon data via \textit{rxjava}, and then publishes it to a \textit{MQTT} topic, which is the input of the first module. The corresponding \textit{RHEA} code follows:
 \\
@@ -677,9 +678,9 @@ Definitely one the most mature frameworks for distribution targeting the JVM, \t
 
 Its approach follows the \textit{Actor} model\cite{actor}, where one perceives abstract computational agents, called actors, that are distributed in space and communicate with point-to-point messages that are buffered in a queue. In reaction to a message, an actor can create more actors, make local decisions, send more messages and determine how to respond to the next message received.
 
-Similar to the problem of \textit{ROS} that my framework solved, which is the inappropriate nature of callbacks for complex scenarios, \textit{Akka} developers also felt the necessity for a more flexible and composable programming model, so they developed the \textit{AkkaStreams} library\site{http://doc.akka.io/docs/akka-stream-and-http-experimental/1.0-M2/scala.html} which provides a convenient API for stream processing and also dataflow graph construction with an interesting DSL. Figure \ref{fig:akka} demonstrates a dataflow graph on the left, generated by the DSL code on the right.
+Similar to the problem of \textit{ROS} that my framework solved, which is the inappropriate nature of callbacks for complex scenarios, \textit{Akka} developers also felt the necessity for a more flexible and composable programming model, so they developed the \textit{AkkaStreams} library, which provides a convenient API for stream processing and also dataflow graph construction with an interesting DSL. Figure \ref{fig:akka} demonstrates a dataflow graph generated by the DSL code below it.
 
-\codefig{akka}{\scala{code/akka.scala}}{Akka DSL}
+\codefig{akka}{\scalas{code/akka.scala}}{Akka DSL}
 
 The main reason \textit{RHEA} offers a more flexible solution to \textit{ROS} shortcomings than \textit{Akka}, is that \textit{Akka} is a pretty heavyweight library, and consequently may prove over-abundant for simple use-cases. On the other hand, \textit{RHEA} offers the ability to choose between several \textit{EvaluationStrategies} to match your application's needs, therefore a simple application would just use a lightweight library like \textit{rxjava}.
 
@@ -701,7 +702,7 @@ It is only natural that the dataflow model would make its way through the field 
 
 Below is the classic Talker-Listener \textit{ROS} example, where one node publishes messages to a topic and another one listens for them.
 
-\hs{code/roshask.hs}
+\hssm{code/roshask.hs}
 
 \subsubsection{Yampa}
 
@@ -765,7 +766,7 @@ For instance, in a distributed application that controls the behaviour of a \tex
 
 Apart from robotics, the need for adaptive behaviour of software systems has been evident for a long time\cite{reconf_survey}. There have also been attempts for runtime adaptation of, specifically, stream processing systems, such as the \textit{Flextream} framework\cite{flextream}. 
 
-A JVM-based technology that is relatively easy to integrate into \textit{RHEA} is \textit{HotWave}\cite{reconf_java}, which is an \textit{aspect-oriented programming (AOP)} framework, based on the famous \textit{AspectJ}\site{http://www.eclipse.org/aspectj/} open-source extension of Java, that supports dynamic (re)weaving of previously loaded classes, and ensures that all classes loaded in a JVM can be (re)woven. The contribution idea here is to integrate \textit{HotWave} into the \textit{org.rhea\_core} package and then use it to specify the desired adaptive behaviour for reconfiguring where nodes are executed, what operation they perform, and so forth.
+A JVM-based technology that is relatively easy to integrate into \textit{RHEA} is \textit{HotWave}\cite{reconf_java}, which is an \textit{aspect-oriented programming (AOP)} framework, based on the famous \textit{AspectJ}\site{http://www.eclipse.org/aspectj/ } open-source extension of Java, that supports dynamic (re)weaving of previously loaded classes, and ensures that all classes loaded in a JVM can be (re)woven. The contribution idea here is to integrate \textit{HotWave} into the \textit{org.rhea\_core} package and then use it to specify the desired adaptive behaviour for reconfiguring where nodes are executed, what operation they perform, and so forth.
 
 \subsection{Advanced network profiling}
 

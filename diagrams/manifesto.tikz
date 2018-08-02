@@ -1,6 +1,8 @@
+\begin{adjustbox}{width=.5\columnwidth}
 \smartdiagramset{bubble center node size = 30mm, bubble node size = 25mm}
 \smartdiagram[bubble diagram]
 {
   reactive,
   responsive, resilient, elastic, message\\driven
 }
+\end{adjustbox}

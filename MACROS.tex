@@ -14,7 +14,7 @@
 % General macros
 \newcommand\site[1]{\footnote{\url{#1}}}
 
-\newcommand\xdownarrow[1][.5cm]{%
+\newcommand\xdownarrow[1][.05cm]{%
    \mathrel{\rotatebox{-90}{$\rightsquigarrow{\rule{#1}{0pt}}$}}
 }
 
@@ -69,10 +69,11 @@
 
 % Source Code
 \usemintedstyle{friendly}
-\newmintedfile[hs]{hs}{frame=lines,framesep=0.3cm}
-\newmintedfile[jv]{java}{frame=lines,framesep=0.3cm}
-\newmintedfile[scala]{scala}{frame=lines,framesep=0.3cm}
-\newmintedfile[scalas]{scala}{fontsize=\footnotesize,frame=lines,framesep=0.3cm}
-\newmintedfile[scalaxs]{scala}{fontsize=\tiny,frame=lines,framesep=0.3cm}
-\newmintedfile[jvs]{java}{fontsize=\footnotesize,frame=lines,framesep=0.3cm}
-\newmintedfile[jvxs]{java}{fontsize=\tiny,frame=lines,framesep=0.3cm}
+\newmintedfile[hs]{hs}{frame=lines, framesep=0.1cm}
+\newmintedfile[hssm]{hs}{fontsize=\footnotesize, frame=lines, framesep=0.1cm}
+\newmintedfile[jv]{java}{frame=lines, framesep=0.1cm}
+\newmintedfile[scala]{scala}{frame=lines, framesep=0.1cm}
+\newmintedfile[scalas]{scala}{fontsize=\footnotesize, frame=lines, framesep=0.1cm}
+\newmintedfile[scalaxs]{scala}{fontsize=\tiny, frame=lines, framesep=0.1cm}
+\newmintedfile[jvs]{java}{fontsize=\footnotesize, frame=lines, framesep=0.1cm}
+\newmintedfile[jvxs]{java}{fontsize=\tiny, frame=lines, framesep=0.1cm}

@@ -1,8 +1,8 @@
 \begin{tikzpicture}
-  [every matrix/.append style={column sep=2cm, row sep=1cm}]
+  [every matrix/.append style={column sep=2cm, row sep=.5cm}]
   \matrix{
     \node[dataflow] (zero) {1};
-    \& \node[dataflow] (concat) {concat}; 
+    \& \node[dataflow] (concat) {concat};
     \& \node[dataflow] (res) {$\mathbb{N}$}; \\
     \& \node[dataflow] (inc) {increment}; \\
   };
@@ -10,4 +10,4 @@
   \draw[to] (concat) -- (res);
   \draw[to] (concat) to[bend left=50] (inc);
   \draw[to] (inc) to[bend left=50] (concat);
-\end{tikzpicture} 
+\end{tikzpicture}

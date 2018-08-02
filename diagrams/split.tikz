@@ -1,10 +1,10 @@
 \begin{tikzpicture}
-  [every matrix/.append style={column sep=1cm, row sep=0.5cm}]       
+  [every matrix/.append style={column sep=1cm, row sep=0.1cm}]
   \matrix{
     \& \node[dataflow] (map) {\small map $f$}; \\
     \node[dataflow] (ini) {\small 1..10}; \\
-    \& \node[dataflow] (fil) {\small filter $g$}; \\    
+    \& \node[dataflow] (fil) {\small filter $g$}; \\
   };
   \draw[to] (ini) -- (map);
-  \draw[to] (ini) -- (fil);  
-\end{tikzpicture} 
+  \draw[to] (ini) -- (fil);
+\end{tikzpicture}
