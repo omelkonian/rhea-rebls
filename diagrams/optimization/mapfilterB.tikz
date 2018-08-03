@@ -1,10 +1,9 @@
 \begin{tikzpicture}
-  [every matrix/.append style={column sep=1cm}]
-  \matrix{    
-    \node[dataflow] (map) {map $f$}; 
-    \& \node[dataflow] (filter) {filter $g$}; \\  
+  \matrix{
+    \node[dataflow] (map) {map $f$};
+    \& \node[dataflow] (filter) {filter $g$}; \\
   };
   \draw[to] (map) -- (filter);
   \draw[opt] (map) to[bend left] (filter);
   \draw[opt] (filter) to[bend left] (map);
-\end{tikzpicture} 
+\end{tikzpicture}

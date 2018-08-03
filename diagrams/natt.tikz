@@ -1,5 +1,5 @@
 \begin{tikzpicture}
-  [every matrix/.append style={column sep=1cm, row sep=.5cm}]
+  [every matrix/.append style={row sep=.5cm}]
   \matrix{
     \node[dataflow] (zero) {0};
     \& \node[dataflow] (concat) {concat};

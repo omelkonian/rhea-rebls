@@ -1,7 +1,7 @@
 \begin{center}
 \begin{scaletikzpicturetowidth}{\columnwidth}
 \begin{tikzpicture}
-  [every matrix/.append style={column sep=1cm, row sep=.5cm}, scale=\tikzscale]
+  [every matrix/.append style={row sep=.5cm}, scale=\tikzscale]
   \matrix{
     \& \node[draw, circle, fill=myye, radius=1cm] (a) {};
     \& \node[draw, circle, fill=myye] (b) {};

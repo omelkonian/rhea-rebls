@@ -1,20 +1,19 @@
 \begin{tikzpicture}
-  [every matrix/.append style={column sep=1cm, row sep=1cm}]
   \matrix{
-    \node[machine] (A) {M1}; 
+    \node[machine] (A) {M1};
     \& \node[dataflow] (m) {\small materialize};
     \& \node[dataflow] (s) {\small serialize}; \\
     \node[machine] (B) {M2};
-    \& \node[dataflow] (dm) {\small de-serialize}; 
-    \& \node[dataflow] (ds) {\small de-materialize}; \\    
+    \& \node[dataflow] (dm) {\small de-serialize};
+    \& \node[dataflow] (ds) {\small de-materialize}; \\
   };
-  
+
   \draw[to] (A) -- (m);
   \draw[to] (m) -- (s);
   \draw[net] (s) -- (ds);
   \draw[to] (ds) -- (dm);
   \draw[to] (dm) -- (B);
-  
+
 
   \begin{scope}[on background layer]
     \node[fill=orange!50, fit=(m) (s), label=above:\small departure] {};

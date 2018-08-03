@@ -1,13 +1,13 @@
 % Dataflow graphs
 \tikzset{
-	dataflow/.style={draw, fill=myye, rounded corners, thick},  	  	
+	dataflow/.style={draw, fill=myye!80, rounded corners, thick},  	  	
   	machine/.style={draw, fill=myrd!80, rounded corners, thick, inner sep=.5cm},
   	task/.style={draw, fill=mygr!80, rounded corners, thick, inner sep=.5cm},
   	to/.style={->,>=stealth',shorten >=1pt,semithick},
   	net/.style={to, red, dotted},  	
   	opt/.style={->,>=stealth',shorten >=1pt,semithick,draw=red},
   	point/.style={draw, inner sep=0pt, circle, fill=black},
-  	every matrix/.style= 	{ampersand replacement=\&},
+  	every matrix/.style= 	{ampersand replacement=\&, column sep=.8cm, row sep=.35cm},
   	every node/.style={align=center, anchor=base}
 }
 
@@ -20,18 +20,16 @@
 
 \newcommand\myimage[3]{
 	\begin{figure}[h!] 
-	\centering
- 	\includegraphics[scale=#2]{#1}
-  	\caption{#3}
-  	\label{fig:#1}
+		\centering
+	 	\includegraphics[scale=#2]{#1}
+	  	\caption{#3}
+	  	\label{fig:#1}
 	\end{figure}
 }
 
 \newcommand\codefig[3]{
 	\begin{figure}[h!]
-	  \begin{center}
-		\input{diagrams/#1.tikz} 
-		\end{center}
+	  \begin{center} \input{diagrams/#1.tikz} \end{center}
 		#2
 		\caption{#3}
 		\label{fig:#1}
@@ -62,18 +60,29 @@
 	  \begin{center} \input{diagrams/optimization/#1B.tikz} \end{center}
 	  $\xdownarrow$
 	  \begin{center} \input{diagrams/optimization/#1A.tikz} \end{center}
-	\caption{#2}
-	\label{fig:#1}
+		\caption{#2}
+		\label{fig:#1}
+	\end{figure}	
+}
+
+\newcommand\optimizationh[2]{
+	\begin{figure}[h!]
+	  \input{diagrams/optimization/#1B.tikz}
+	  $\rightsquigarrow$
+	  \input{diagrams/optimization/#1A.tikz}
+		\caption{#2}
+		\label{fig:#1}
 	\end{figure}	
 }
 
 % Source Code
 \usemintedstyle{friendly}
-\newmintedfile[hs]{hs}{frame=lines, framesep=0.1cm}
-\newmintedfile[hssm]{hs}{fontsize=\footnotesize, frame=lines, framesep=0.1cm}
-\newmintedfile[jv]{java}{frame=lines, framesep=0.1cm}
-\newmintedfile[scala]{scala}{frame=lines, framesep=0.1cm}
-\newmintedfile[scalas]{scala}{fontsize=\footnotesize, frame=lines, framesep=0.1cm}
-\newmintedfile[scalaxs]{scala}{fontsize=\tiny, frame=lines, framesep=0.1cm}
-\newmintedfile[jvs]{java}{fontsize=\footnotesize, frame=lines, framesep=0.1cm}
-\newmintedfile[jvxs]{java}{fontsize=\tiny, frame=lines, framesep=0.1cm}
+\newcommand\mintedfs{0.2cm}
+\newmintedfile[hs]{hs}{frame=lines, framesep=\mintedfs}
+\newmintedfile[hssm]{hs}{fontsize=\footnotesize, frame=lines, framesep=\mintedfs}
+\newmintedfile[jv]{java}{frame=lines, framesep=\mintedfs}
+\newmintedfile[scala]{scala}{frame=lines, framesep=\mintedfs}
+\newmintedfile[scalas]{scala}{fontsize=\footnotesize, frame=lines, framesep=\mintedfs}
+\newmintedfile[scalaxs]{scala}{fontsize=\tiny, frame=lines, framesep=\mintedfs}
+\newmintedfile[jvs]{java}{fontsize=\footnotesize, frame=lines, framesep=\mintedfs}
+\newmintedfile[jvxs]{java}{fontsize=\tiny, frame=lines, framesep=\mintedfs}

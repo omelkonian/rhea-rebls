@@ -1,5 +1,5 @@
 \begin{tikzpicture}
-  [every matrix/.append style={column sep=1cm, row sep=0.1cm}]
+  [every matrix/.append style={row sep=0.1cm}]
   \matrix{
     \& \node[dataflow] (map) {\small map $f$}; \\
     \node[dataflow] (ini) {\small 1..10}; \\

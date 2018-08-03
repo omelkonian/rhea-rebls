@@ -1,6 +1,5 @@
 \begin{tikzpicture}
-  [every matrix/.append style={column sep=1cm, row sep=1cm}]
-  \matrix{    
-  	\node[dataflow] (A) {filterMap \{$f,g$\}}; \\  	
-  };  
-\end{tikzpicture} 
+  \matrix{
+  	\node[dataflow] (A) {filterMap \{$f,g$\}}; \\
+  };
+\end{tikzpicture}

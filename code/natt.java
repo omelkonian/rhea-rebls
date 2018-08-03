@@ -1,1 +1,1 @@
-Stream.just(1).loop(s -> s.map(i -> i + 1));
+Stream.just(0).loop(s -> s.map(i -> i + 1));

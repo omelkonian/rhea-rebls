@@ -1,17 +1,16 @@
 \begin{tikzpicture}
-  [every matrix/.append style={column sep=1cm, row sep=1cm}]
   \matrix{
-    \& \node[dataflow] (ini) {\small{1..10}}; 
+    \& \node[dataflow] (ini) {\small{1..10}};
     \& \node[dataflow] (iniA) {\small{ topic1 }}; \\
-    
+
     \node[dataflow] (mapB) {\small{ from\{ topic1 \} }};
-    \& \node[dataflow] (map) {\small{map\{ f \}}}; 
+    \& \node[dataflow] (map) {\small{map\{ f \}}};
     \& \node[dataflow] (mapA) {\small{ topic2 }}; \\
 
     \node[dataflow] (outB) {\small{ from\{ topic2 \} }};
     \& \node[dataflow] (out) {\small{print}}; \\
   };
-  
+
   \draw[to] (ini) -- (iniA);
   \draw[to, red, thick, dotted] (iniA) to[out=-40,in=140] (mapB);
   \draw[to] (mapB) -- (map);
@@ -24,4 +23,4 @@
     \node[fill=orange!50, fit=(mapB) (map) (mapA), label=left:\textbf{M2}] {};
     \node[fill=orange!50, fit=(outB) (out), label=left:\textbf{M3}] {};
   \end{scope}
-\end{tikzpicture} 
+\end{tikzpicture}

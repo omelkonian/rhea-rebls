@@ -1,6 +1,5 @@
 \begin{tikzpicture}
-  [every matrix/.append style={column sep=1cm, row sep=1cm}]
-  \matrix{    
+  \matrix{
   	\node[dataflow] (A) {from \{L.repeat(n)\}}; \\
-  };  
-\end{tikzpicture} 
+  };
+\end{tikzpicture}
