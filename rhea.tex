@@ -582,7 +582,7 @@ To evaluate a given dataflow graph and do something with its output values, we
 need to call the \textit{subscribe} method of the \textit{Stream} object. The
 argument passed to \textit{subscribe} is either a user-defined action (i.e.
 function with side-effects) or an object implementing the \textit{Subscriber}
-interface (see Section \ref{external}). Figure \ref{fig:subexample} shows an
+interface. Figure \ref{fig:subexample} shows an
 example of printing the output of the single-input example in figure
 \ref{fig:singleinput}.
 
@@ -605,53 +605,29 @@ numbers in a list and printing that list.
 
 \section{Implementation} \label{sec:implementation}
 
-Figure \ref{fig:core} illustrates all the pluggable components of the framework
-around the core, which are normally deployed in separate libraries.
-
+Since extensibility is a major design priority, most individual critical
+components are defined using the \textit{Strategy design pattern}, isolating the desired
+functionality in a separate \textit{interface} and allowing the system to select the
+appropriate instantiating classes at runtime. Figure \ref{fig:core} illustrates all the
+pluggable components of the framework around the core, which are normally deployed in separate libraries
+and for which default implementations are already provided by the current implementation.
 \mydiag{core}{The \textsc{RHEA} ecosystem}
 
-\subsection{Internal representation}
-
+\paragraph{Internal representation}
 For representing the internal structure of the dataflow graph, the
 \textit{JGrapht} open-source Java library was used, which provides many graph
-data structures and common graph-theory algorithms\site{http://jgrapht.org/}.
-The main class representing the internal dataflow graph is \textit{FlowGraph},
-which is located in the \textit{rhea\_core.internal} package.
+data structures and common graph-theoretic algorithms\site{http://jgrapht.org/}.
 
-\subsection{The Strategy design pattern}
-
-In software engineering, and especially in \textit{object-oriented programming
-(OOP)}, a \textit{design pattern} is a general repeatable solution to a commonly
-occurring problem in software design\cite{design}.
-
-One such solution, the \textit{Strategy} design pattern is used when a
-particular algorithm can be implemented by a variety of implementations. In such
-a case, a good idea is to isolate the algorithm in a separate \textit{interface}
-and allow the system to select the appropriate instantiating classes at runtime.
-Figure \ref{fig:strategy} illustrates the basic UML diagram of the strategy
-design pattern.
-
-To make the system as extensible as possible, most individual critical
-components are defined using the strategy design pattern (e.g.
-EvaluationStrategy, DistributionStrategy, etc...) and the current implementation
-offers one or more default concrete strategies for each one.
-
-\myimage{strategy}{0.07}{Strategy design pattern}
-
-\subsection{Notifications}
-
+\paragraph{Notifications}
 Every value passed through the framework's
 \textit{streams} is wrapped inside a \textit{Notification} object, which
 discriminates stream values into three categories: \textit{onNext} (when the
 stream provides a regular value), \textit{onError} (when an error occurs) and
 \textit{onComplete} (when the stream completes its output).
 
-\subsection{External Input-Output} \label{external}
-
+\paragraph{External Input-Output}
 In order to make the framework easy to integrate with other stream and/or
-dataflow technologies, every input/output node (i.e. publisher/subscriber in
-the \textit{PubSub}
-terminology or source/sink in the dataflow terminology) should implement the
+dataflow technologies, every input/output node should implement the
 interfaces that \textit{RSS} defines. This also enables users to define new
 types of sources or sinks, in order to integrate the framework with other
 general technologies (e.g. system events, HTTP requests, PubSub implementations,
@@ -672,21 +648,13 @@ integrated to the framework.
 \subsection{Evaluation}
 
 Every primitive operator corresponds to an expression implementing the
-\textit{Transformer} interface, defined in the
-\textit{rhea\_core.internal.expressions} package.
-
-A complete dataflow is defined by a \textit{Stream} variable and an object
-implementing the \textit{Output} interface, which can be either an
-\textit{Action}, a \textit{Sink} or a list of these.
-
-In order to evaluate a constructed dataflow graph the strategy design pattern is
-used, therefore a class implementing the \textit{EvaluationStrategy} interface,
-found in the \textit{rhea\_core.evaluation} package, needs to be provided. An
-\textit{EvaluationStrategy} just takes the \textit{Stream} variable and its
+\textit{Transformer} interface and a complete dataflow is defined by a
+\textit{Stream} variable and an object implementing the \textit{Output} interface,
+which can be either an \textit{Action}, a \textit{Sink} or a list of these.
+An \textit{EvaluationStrategy} just takes the \textit{Stream} variable and its
 corresponding \textit{Output} and executes it, however desired.
 
 The strategies we have implemented so far follow:
-
 \begin{description}[style=nextline]
 \item[RxJavaEvaluationStrategy] Uses
 rxjava\site{https://github.com/ReactiveX/RxJava}, which is a famous and well-
@@ -694,9 +662,7 @@ maintained library for asynchronous programming using the \textit{Observable}
 type, which is very close, semantically, to our \textit{Stream} type.
 
 \item[RosEvaluationStrategy] Integrates the \textit{ROS} middleware into the
-framework, by providing the \textit{RosTopic} class, which implements the
-\textit{AbstractTopic} interface defined in the \textit{rhea\_core.io} package.
-This strategy's job is to set up a \textit{ROS} client and configure every
+framework. This strategy's job is to set up a \textit{ROS} client and configure every
 \textit{RosTopic} used within the dataflow that needs to be evaluated to use
 this client. After that, evaluation is propagated to a generic strategy (e.g.
 rxjava).
@@ -709,32 +675,23 @@ in the same way \textit{ROS} is intergrated. \end{description}
 An evaluation strategy executes the requested dataflow graph in a single
 machine, without concern about distribution and resource utilization.
 
-For distribution and cluster management, the strategy design pattern is used
-again, specifically the \textit{DistributionStrategy} interface, which is
-defined in the \textit{rhea\_core.internal.distribution} package. Its
-responsibility is to take the whole initial graph that we need to evaluate and,
-after adjusting its granularity (i.e. size) to fit the available resources (see
-\textit{Optimization} section), partition it across all computational resources,
-maybe using different evaluation strategies.
+For distribution and cluster management, one needs to implement
+the \textit{DistributionStrategy} interface by adjusting the granularity (i.e. size) of 
+the graph to evaluate to fit the available resources (see \textit{Optimization} section)
+and partition it across all computational resources, maybe using different evaluation strategies.
 
-\subsubsection{Hazelcast}
-
-Due to the RSS being in its infant stage, no formal specification, for
-superimposing a network protocol onto it (e.g. RSS over TCP), exists yet. For
-this reason, we relied upon the open-source \textit{Hazelcast}
-library\site{http://hazelcast.org/} to discover and manage multiple machines and
-used its internal decentralized \textit{PubSub} model to communicate
+\paragraph{Hazelcast}
+The default \textit{DistributionStrategy} shipped with the framework uses
+the \textit{Hazelcast}\site{http://hazelcast.org/} library to discover and
+manage multiple machines and used its internal decentralized \textit{PubSub} model to communicate
 intermediate results across the network. Figure \ref{fig:partition1} illustrates
-a dataflow graph on the top and the same graph partitioned over several machines
-on the bottom, where each machine, except the last one, outputs its result to a
-\textit{Hazelcast} topic, from which another machine gets its input.
-\textit{Hazelcast} topics can immediately be used as inputs and outputs, as they
-implement both the \textit{Subscriber} and \textit{Publisher} interface.
+the partitioning of a dataflow graph over several machines, where each machin
+- except the last one - outputs its result to a \textit{Hazelcast} topic, from which
+another machine gets its input.
 
 \twofig{partition1}{partition2}{Partitioning}
 
-\subsubsection{Machine configuration}
-
+\paragraph{Machine configuration}
 According to the distribution strategy being used, the available machines will
 require a certain initial configuration. For the \textit{Hazelcast} case, a
 little piece of setup code needs to be executed on every member of the cluster,
@@ -751,51 +708,24 @@ in order to set up a \textit{ROS} client. In the \textit{Hazelcast} case, these
 skills are just \textit{strings} and are declared in the initialization code of
 each machine separately.
 
-\subsection{Serialization}
-
+\paragraph{Serialization}
 As communication between machines across a network is mandatory, data types
 emitted through the streams must be serialized on departure and de-serialized on
 arrival at each machine. For this reason, each \textit{DistributionStrategy}
 must be configured with a class implementing the \textit{Serializer} interface,
-define in the \textit{rhea\_core.serialization} package. The byte representation
-of the objects is parametric for maximum flexibility.
-
-A default \textit{Serializer} is provided with the core system, which can
-serialize every class implementing the \textit{Serializable} interface. In
-addition to that, the JsonIO library\site{https://github.com/jdereg/json-io} is
-used which allows serialization of many types of classes, but still does not
-cover every possible one. Figure \ref{fig:serialization} depicts the
-serialization process in more detail.
+but we also provide a default one that covers most datatypes. Figure \ref{fig:serialization}
+depicts the serialization process in more detail.
 
 \mydiag{serialization}{Serialization process}
 
 \section{Optimization} \label{sec:optimization}
 
 This section describes three stages of optimization the dataflow graph goes
-through before being evaluated. To aid extensibility  the strategy design
-pattern is again used, whose corresponding interface
-\textit{OptimizationStrategy} resides in the \textit{rhea\_core.optimization}
-package. Figure \ref{fig:optimization} illustrates the optimization stages.
+through before being evaluated, which are illustrated in Figure \ref{fig:optimization}.
+The purpose of the optimization graph is to achieve better performance and
+utilization of the available resources.
 
 \mydiag{optimization}{Optimization stages}
-
-\textit{Proactive filtering} transforms the graph, by moving filters as earlier
-in the pipeline as possible, to achieve less data movement between nodes, which
-results in better performance.
-
-\textit{Granularity adjustment} fuses nodes together to dynamically resize the
-graph to a granularity that fits the available resources. This step follows
-\textit{proactive filtering}, as the latter enables many opportunities for node
-fusion.
-
-\textit{Node placement} decides on which of the available machines each node
-will be executed, to achieve better utilization of the available resources.
-This is the last step, because after deploying the nodes to the chosen
-machines, the structure of the dataflow graph remains static.
-
-Thus, the optimized graph that is the output of the above process is most likely
-to achieve better performance and utilization of the available resources than
-the initial one.
 
 \subsection{Proactive filtering}
 
@@ -805,8 +735,7 @@ preserving the original semantics, then there will be benefit concerning
 computational cost and cross-machine communication overhead. The figures below
 show the corresponding graph transformations.
 
-\subsubsection{Transformations}
-
+\paragraph{Transformations}
 The figures below illustrate one representative example of each general class of
 graph transformation
 
@@ -814,28 +743,16 @@ graph transformation
 \optimization{mapfilter}{Filter before map}
 \optimization{concatdistinct}{Filter/distinct before concat/merge}
 
-\subsubsection{Example}
-
-Figure \ref{fig:proactive} illustrates the \textit{proactive filtering}
-optimization stage, using the transformation shown in figures
-\ref{fig:mapfilter}, \ref{fig:concatdistinct} and \ref{fig:maptake}, in this
-order. The resulting dataflow graph have much less data movement, leading to
-less computation overall, but most importantly, less communication overhead, in
-the case it is deployed on several remote machines.
-
-\optimization{proactive}{Proactive filtering example}
-
 \subsection{Granularity adjustment}
 
 Different nodes of the dataflow graph will be executed on a separate
 thread/process. The fact that graphs can grow very big, for instance when
-programming a big swarm of millibots\cite{army}, poses a problem when available
+programming a swarm of robots, poses a problem when available
 computational resources are limited. For this reason, the second optimization
 stage tries to adjust the granularity of the dataflow graph to a desired value,
-which is the number of available threads amongst all machines.
+which is normally the number of available threads amongst all machines.
 
-\subsubsection{Transformations}
-
+\paragraph{Transformations}
 To reach the desired granularity, the optimizer applies some semantic-preserving
 transformation, as shown in the figures below (for simplicity, only a single
 example of each general case is demonstrated).
@@ -863,22 +780,11 @@ involved to decrease the number of nodes. In figures \ref{fig:combmapzip} and
 operations into \textit{zip} operations. Lastly, in figure \ref{fig:meaningless}
 we remove sub-graphs that are not reachable, due to \textit{never} operations.
 
-\subsubsection{Example}
-
-Figure \ref{fig:granularity} illustrates how a dataflow graph of granularity
-equal to 9 is optimized for execution on a quad-core computer, by applying
-transformation shown in figures \ref{fig:embedrepeat}, \ref{fig:mergemap},
-\ref{fig:combmapzip} and \ref{fig:combzipmap}, in this order. The resulting
-graph has much lower overhead, caused by thread switching, due to the fact that
-it takes into account the number of threads available at runtime.
-
-\optimization{granularity}{Granularity adjiustment example}
-
 \subsection{Node placement}
 
 After the first two passes, we have an optimized dataflow graph with fine-tuned
 granularity. At this stage, nodes are mapped to tasks and are deployed across
-the available machines.
+the available machines, keeping resource utilization in mind.
 
 If the desired granularity has not been reached yet, the
 \textit{DistributionStrategy} applies fusion to pairs of tasks until it reaches
@@ -891,10 +797,8 @@ will be executed, although some of them need to necessarily be placed on
 specific machines with certain skills.
 
 Apart from these hard constraints, we need to minimize communication overhead.
-For this purpose, the strategy design pattern is again used, namely the
-\textit{NetworkProfileStrategy} that is defined in the
-\textit{rhea\_core.distribution} package. Its responsibility is to calculate a
-network distance between each pair of available machines, which is fed as input
+For this purpose, one must implement the \textit{NetworkProfileStrategy} by providing
+a way to calculate network distance between available machines, which is then fed as input
 to the \textit{NodePlacement} optimizer.
 
 At this stage, we identify the aforementioned network distance as cost and apply
