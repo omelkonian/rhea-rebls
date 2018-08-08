@@ -852,7 +852,7 @@ technologies and act as a high-level, declarative coordination language.
 This section discusses related work in the fields of \textit{Big Data},
 \textit{Robotics} and \textit{IoT}.
 
-\subsection{Big Data}
+\subsection{Dataflow systems}
 
 The necessity for implicit parallelism and distribution of more and more
 applications, dealing with huge and/or complex data, has brought increasingly
@@ -861,32 +861,7 @@ frameworks have adopted it, is the high level of abstraction it provides with
 its declarative approach, making it simple to structure and maintain a complex
 system, while at the same time not losing its expressive power.
 
-\paragraph{MapReduce}
-\textit{MapReduce} was developed by Google and provides a very simple model, and
-corresponding runtime, that allows automatic concurrency/distribution on a
-cluster by allowing only a very minimal program structure. First, the user
-specifies a \textit{map} function that processes a key/value pair to generate a
-set of intermediate key/value pairs, and a \textit{reduce} function that merges
-all intermediate values associated with the same intermediate key. Although it
-was widely adopted at first, quickly many problems that could not be expressed
-with the above formalism were found and therefore a more expressive model was
-required.
-
-\paragraph{Flumejava}
-A generalization of the \textit{MapReduce} framework is \textit{FlumeJava},
-again developed by Google, which tries to overcome its \textit{MapReduce's }
-shortcomings, by allowing more expressive pipelines consisting of multiple
-\textit{MapReduce} stages. Additionally, \textit{FlumeJava} provides some more
-abstract operations that, when evaluated, are compiled into primitive
-\textit{MapReduce} steps.
-
-Although \textit{FlumeJava} was more attractive due to its expressibility, still
-the pipeline constructed could not formulate all problems that are needed in
-many big-data applications. For instance, the constructed dataflow could not
-contain cycles, which is an integral part of \textit{incremental computation},
-used extensively nowadays for machine learning and data analysis.
-
-\paragraph{Spark}
+%\paragraph{Spark}
 A very well-known and well-adapted framework for scalable large-data processing
 is Apache's \textit{Spark}\site{http://spark.apache.org/}. Although not a
 dataflow framework, it was developed to overcome the shortcomings of the
@@ -900,70 +875,7 @@ For instance, \textit{MLib} is a library for machine learning and
 \textit{GraphX} is a library for iterative graph algorithms, both stacked upon
 \textit{Spark}.
 
-\paragraph{Cloud Dataflow}
-Continuing the search for more expressive models, Google recently released the
-\textit{Cloud Dataflow} framework\site{https://cloud.google.com/dataflow/},
-which is an evolution of \textit{FlumeJava}\cite{flumejava}, allowing cycles and
-therefore incremental computation.
-
-It is a completely domain-agnostic dataflow framework integrated with many other
-closely-related technologies from Google, like Cloud Storage, Cloud PubSub,
-Cloud Datastore, Cloud Bigtable and BigQuery.
-
-It is open-source, offers fully automatic resource management that auto-scales
-for optimal throughput and provides increased reliability and data consistency.
-Moreover, it provides a unified programming model through its API, while
-allowing data monitoring and demand-driven execution.
-
-In contrast to \textsc{RHEA}, graphs constructed by \textit{Cloud Dataflow} are
-designed to be deployed only on cloud infrastructures, and therefore no support
-for complete heterogeneity is provided. In terms of network optimization, namely
-node placement,  \textit{Cloud Dataflow} lets the cloud system targeted to make
-all decisions, while \textsc{RHEA} profiles the network and decides
-autonomously.
-
-\paragraph{Stratosphere}
-The frameworks discussed so far follow, more or less, an imperative approach,
-which enables automatic distribution/concurrency by using immutable data
-structures. \textit{Stratosphere}\cite{stratosphere}, on the other hand, follows
-a declarative programming approach similar to \textsc{RHEA}, which enables
-writing highly parallel code directly from the language's semantics.
-
-Apart from offering a language of a much higher abstraction level,
-\textit{Stratosphere} has internalised several interesting and novel approaches
-to optimization of dataflow graphs, especially concerning cyclic graphs (i.e.
-incremental computation)\cite{spinning}. These optimizations are generic, in the
-sense that most frameworks can adopt them without much effort. Integrating these
-optimization into \textsc{RHEA}, as future work, would certainly be of great
-benefit to the performance of the system.
-
-\paragraph{Naiad}
-Another high-level dataflow system that follows a declarative approach similar
-to \textsc{RHEA} is \textit{Naiad}, which unifies incrementally iterative
-computations with continuous data ingestion into a new technique called
-differential computation.
-
-Offering the high throughput of batch processors, the low latency of stream
-processors and the ability to perform iterative and incremental computations at
-the same time is extremely challenging and none of the aforementioned frameworks
-manage to provide it. Applications that need all these features need to rely on
-multiple platforms, at the expense of efficiency, maintainability and
-simplicity.
-
-\textit{Naiad}cite{naiad} combines all of these features in a unifying
-framework, that provides a generic low-level platform, that a wide variety of
-high-level programming models can be built upon, enabling such diverse tasks as
-streaming data analysis, iterative machine learning, and interactive graph
-mining.
-
-Its main contribution is the definition of a new computational model, namely the
-\textit{Timely Dataflow} model, which is an extension to the dataflow model we
-introduced in the first section, by allowing a more efficient and lightweight
-coordination mechanism for capturing opportunities for parallelism. This is
-achieved by enriching the dataflow model with timestamps that represent logical
-points in the computation.
-
-\paragraph{Akka}
+%\paragraph{Akka}
 Definitely one the most mature frameworks for distribution targeting the JVM,
 \textit{Akka}\site{http://akka.io/} is a toolkit and runtime for highly
 concurrent, distributed and resilient message-driven applications. It is also
@@ -989,7 +901,31 @@ other hand, \textsc{RHEA} offers the ability to choose between several
 \textit{EvaluationStrategies} to match your application's needs, therefore a
 simple application would just use a lightweight library like \textit{rxjava}.
 
-\paragraph{dispel4py}
+\paragraph{Unified dataflow languages}
+
+%\paragraph{Cloud Dataflow}
+Continuing the search for more expressive models, Google recently released the
+\textit{Cloud Dataflow} framework\site{https://cloud.google.com/dataflow/},
+which is an evolution of \textit{FlumeJava}\cite{flumejava}, allowing cycles and
+therefore incremental computation.
+
+It is a completely domain-agnostic dataflow framework integrated with many other
+closely-related technologies from Google, like Cloud Storage, Cloud PubSub,
+Cloud Datastore, Cloud Bigtable and BigQuery.
+
+It is open-source, offers fully automatic resource management that auto-scales
+for optimal throughput and provides increased reliability and data consistency.
+Moreover, it provides a unified programming model through its API, while
+allowing data monitoring and demand-driven execution.
+
+In contrast to \textsc{RHEA}, graphs constructed by \textit{Cloud Dataflow} are
+designed to be deployed only on cloud infrastructures, and therefore no support
+for complete heterogeneity is provided. In terms of network optimization, namely
+node placement,  \textit{Cloud Dataflow} lets the cloud system targeted to make
+all decisions, while \textsc{RHEA} profiles the network and decides
+autonomously.
+
+%\paragraph{dispel4py}
 A less-known framework for Python is
 \textit{dispel4py}\site{https://github.com/dispel4py}. It provides the ability
 to describe abstract workflows for distributed data-intensive applications.
@@ -1004,13 +940,13 @@ low-level specification of the graph's nodes, through the definition of
 graphs from simpler ones and the source code becomes chaotic and difficult to
 maintain.
 
-\subsection{Robotics}
+\subsection{Robotics and IoT}
 
 It is only natural that the dataflow model would make its way through the field
 of robotics, as many behaviours in control theory are expressed as dataflow
 diagrams.
 
-\paragraph{roshask}
+%\paragraph{roshask}
 \textit{Roshask}\cite{roshask} is a binding from the Haskell programming language
 to the basic \textit{ROS} interfaces. Like \textsc{RHEA}, the approach is to
 overcome the shortcomings of \textit{ROS} callbacks by viewing topics as
@@ -1018,20 +954,20 @@ streams. This allows for, and encourages, a higher level of abstraction in
 robot programming, while making the fusing, transforming and filtering of
 streams fully generic and compositional.
 
-\paragraph{Yampa}
+%\paragraph{Yampa}
 \textsc{RHEA} and \textit{roshask} were heavily influenced by the work of Hudak's
 group (Yale Haskell Group) on robot DSLs and FRP in general\cite{fran,arrows_robots,lambda_in_motion}.
 \textit{Yampa}\site{https://wiki.haskell.org/Yampa} is a DSL embedded in Haskell
 that realizes the FRP model, using arrows to minimize time-/space- leaks.
 
-\subsection{Internet of Things}
+%\subsection{Internet of Things}
 
 IoT applications often deal with much heterogeneity, due to the variety of
 sources that different devices introduce. Therefore, a component-based approach
 suits well to solve this problem and there are some dataflow frameworks that
 follow that approach.
 
-\paragraph{Node-RED}
+%\paragraph{Node-RED}
 Another interesting \textit{IoT} tool for JavaScript following a dataflow
 approach is \textit{Node-RED}\cite{node-red}, which is a visual tool for wiring
 together hardware devices, APIs and online services in new and interesting ways.
@@ -1043,9 +979,26 @@ in JSON format, which can be easily imported and exported for sharing with
 others. The online flow library\site{http://flows.nodered.org/} has had a huge
 number of contributions so far.
 
-\subsection{Miscellaneous}
+\paragraph{Dataflow optimization}
 
-\paragraph{TensorFlow}
+%\paragraph{Stratosphere}
+The frameworks discussed so far follow, more or less, an imperative approach,
+which enables automatic distribution/concurrency by using immutable data
+structures. \textit{Stratosphere}\cite{stratosphere}, on the other hand, follows
+a declarative programming approach similar to \textsc{RHEA}, which enables
+writing highly parallel code directly from the language's semantics.
+
+Apart from offering a language of a much higher abstraction level,
+\textit{Stratosphere} has internalised several interesting and novel approaches
+to optimization of dataflow graphs, especially concerning cyclic graphs (i.e.
+incremental computation)\cite{spinning}. These optimizations are generic, in the
+sense that most frameworks can adopt them without much effort. Integrating these
+optimization into \textsc{RHEA}, as future work, would certainly be of great
+benefit to the performance of the system.
+
+\paragraph{Heterogeneous data processing}
+
+%\paragraph{TensorFlow}
 
 Another dataflow framework from Google is
 \textit{TensorFlow}\site{https://www.tensorflow.org/}, which is an open-source
@@ -1068,19 +1021,7 @@ dimensional array that usually represents features or weights. In contrast to
 fact that their size is determined by the dimensionality of the problem being
 solved, which is, in most cases, a fixed constant.
 
-\paragraph{Ziria}
-The dataflow computational model also found applications in the field of
-wireless systems programming, particularly in the domain of
-\textit{software-defined radio (SDR)}.
-
-\textit{Ziria}\cite{ziria} is a DSL that offers programming abstractions suitable
-for wireless physical (PHY) layer tasks while emphasizing the pipeline
-reconfiguration aspects of PHY programming. \textit{Ziria} also implements many
-specialized optimization steps that enable it to be on par and in many cases
-outperforms a hand-tuned state-of-the-art C++ implementations on commodity
-CPUs.
-
-\section{Conclusions \& Future Work} \label{sec:conclusions}
+\section{Conclusions and Future Work} \label{sec:conclusions}
 
 The framework described in this thesis was designed with extensibility in mind,
 aiming to act as a fundamental basis, onto which various domain-specific
