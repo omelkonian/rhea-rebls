@@ -284,16 +284,9 @@ real-time constraints, due to uncontrollable time- and space- leaks
 \textit{arrows} \cite{arrows}, which provided the necessary guarantees that the
 aforementioned common errors do not occur. Let's see the example of calculating
 a robot's x-coordinate. Here is the mathematical formula drawn from control
-theory:
+theory and the corresponding \textit{FRP} code with \textit{arrow notation}\cite{arrows_notation}:
 
 $$ x = 1/2 \int (vr + vl) \cos\theta $$
-
-Below is the corresponding \textit{FRP} code:
-
-\hssm{code/frp1.hs}
-
-As the above may seem counter-intuitive and difficult to understand, the
-\textit{arrow notation}\cite{arrows_notation} was introduced:
 
 \hssm{code/frp2.hs}
 
@@ -314,10 +307,7 @@ class or \textit{topic} that is identified by a \textit{keyword}, whereas
 \textit{subscribers} listen on a specific \textit{topic} without any knowledge
 of who the publishers are. The component responsible for relaying the messages
 between machines and/or processes and finding the cheaper dissemination method
-is called the \textit{message broker}. Figure \ref{fig:pubsub} illustrates an
-abstract representation of the \textit{PubSub} model.
-
-\mydiag{pubsub}{PubSub typical layout}
+is called the \textit{message broker}.
 
 \subsection{ROS: Robot Operating System}
 
@@ -390,12 +380,6 @@ A \textit{Subscriber} implementation should define
 reactions to observed values, including normal and erroneous termination,
 whereas a \textit{Publisher} implementation should accept requests from
 \textit{Subscribers} and start emitting values to them.
-
-Below we see a minimal example of using \textit{RSS} to define a publisher that
-emits values 1..10 and a subscriber that prints all observed values and finally
-connect them together.
-
-\jvs{code/rss.java}
 
 \section{Requirements} \label{sec:requirements}
 
@@ -482,8 +466,7 @@ semantics.
 
 This section presents the framework's main characteristics and capabilities.
 
-\subsection{System architecture}
-
+\paragraph{System architecture}
 The \textsc{RHEA} ecosystem consists of several
 clearly separated modules, whose interconnection is illustrated in figure
 \ref{fig:architecture}.
@@ -497,33 +480,17 @@ performance, communication cost and node placement). The optimized graph is then
 distributed across the available machines for evaluation, maybe using a
 different technique each time.
 
-The following subsections will present the aforementioned stream language, while
-the other components, namely \textit{optimization, distribution, evaluation,
-serialization and network profiling}, will be discussed in Sections
-\ref{sec:implementation} and \ref{sec:optimization}.
-
-\subsection{Supported dataflow graphs}
-
+\paragraph{Supported dataflow graphs}
 The kind of dataflow graph that can be expressed using the framework's stream
 language are directed cyclic graphs with possibly many inputs and outputs.
-Figure \ref{fig:graph} depicts such a graph, where inputs and outputs are
-colored red and green respectively.
 
-\mydiag{graph}{Example of supported graph}
-
-\subsection{Stream language} This section presents the framework's language for
-defining streams and executing them. Due to space constraints, only a very small
-subset of the provided operators will be presented.
-
-\subsubsection{The Stream data type}
-
+\paragraph{The Stream data type}
 The data channels (i.e. edges of the dataflow graph) are represented using the
 \textit{Stream} data type, which is parametric, meaning that it can emit values
 of any data type, whether built-in or user-defined. The stream produced may
 terminate, successfully or erroneously, or even be infinite.
 
-\subsubsection{Graph construction syntax}
-
+\paragraph{Graph construction syntax}
 The construction of the internal dataflow graph is always implicit, through a
 rich set of operators on the Stream data type. Each \textit{Stream} object
 contains internally a dataflow graph of type \textit{FlowGraph}, which is only
@@ -576,8 +543,7 @@ multiple input node that concatenates its input streams.
 
 \codefig{natt}{\jvs{code/natt.java}}{Cyclic example}
 
-\subsubsection{Evaluation syntax}
-
+\paragraph{Evaluation syntax}
 To evaluate a given dataflow graph and do something with its output values, we
 need to call the \textit{subscribe} method of the \textit{Stream} object. The
 argument passed to \textit{subscribe} is either a user-defined action (i.e.
@@ -588,8 +554,7 @@ example of printing the output of the single-input example in figure
 
 \codefig{subexample}{\jvs{code/subexample.java}}{Evaluation example}
 
-\subsubsection{Execution semantics}
-
+\paragraph{Execution semantics}
 As the execution is completely asynchronous, the order of stream declaration
 and/or evaluation does not matter at all. If there is absolute necessity for
 control flow management, the programmer can use the altered
@@ -653,7 +618,6 @@ Every primitive operator corresponds to an expression implementing the
 which can be either an \textit{Action}, a \textit{Sink} or a list of these.
 An \textit{EvaluationStrategy} just takes the \textit{Stream} variable and its
 corresponding \textit{Output} and executes it, however desired.
-
 The strategies we have implemented so far follow:
 \begin{description}[style=nextline]
 \item[RxJavaEvaluationStrategy] Uses
@@ -733,14 +697,11 @@ The first optimization stage is a heuristic one, based on the fact that if a
 filter operation can be moved earlier (i.e. closer to source nodes) while
 preserving the original semantics, then there will be benefit concerning
 computational cost and cross-machine communication overhead. The figures below
-show the corresponding graph transformations.
+illustrate one representative example of each general class of
+graph transformation.
 
-\paragraph{Transformations}
-The figures below illustrate one representative example of each general class of
-graph transformation
-
-\optimization{maptake}{Take/skip/distinct before map}
-\optimization{mapfilter}{Filter before map}
+\optimizationh{maptake}{Take/skip/distinct before map}
+\optimizationh{mapfilter}{Filter before map}
 \optimization{concatdistinct}{Filter/distinct before concat/merge}
 
 \subsection{Granularity adjustment}
@@ -752,33 +713,25 @@ computational resources are limited. For this reason, the second optimization
 stage tries to adjust the granularity of the dataflow graph to a desired value,
 which is normally the number of available threads amongst all machines.
 
-\paragraph{Transformations}
 To reach the desired granularity, the optimizer applies some semantic-preserving
-transformation, as shown in the figures below (for simplicity, only a single
-example of each general case is demonstrated).
+transformation, as shown in the figures below.
 
-\optimization{mergemap}{Merge maps}
-\optimization{embedmap}{Embed map in creation}
-\optimization{embedrepeat}{Embed repeat in creation}
-\optimization{combmapfilter}{Combine map with filter}
-\optimization{combfilterexists}{Combine filter with exists}
-\optimization{combmapexists}{Combine map with exists}
+\optimizationh{mergemap}{Merge maps}
+\optimizationh{combmapfilter}{Combine map with filter}
+\optimizationh{combfilterexists}{Combine filter with exists}
+\optimizationh{combmapexists}{Combine map with exists}
 \optimization{combmapzip}{Combine map with zip}
-\optimization{combzipmap}{Combine zip with map}
-\optimization{meaningless}{Meaningless nevers}
+\optimizationh{combzipmap}{Combine zip with map}
 
 In figure \ref{fig:mergemap} we merge two \textit{map} operations into
 one \textit{map} operation that uses the composition of the two initial
-functions, while in figures \ref{fig:embedmap} and \ref{fig:embedrepeat} we
-utilize Java's built-in stream operators on its collections, namely \textit{map}
-and \textit{repeat}. In figure \ref{fig:combmapfilter} a \textit{map} followed
+functions, while in figure \ref{fig:combmapfilter} a \textit{map} followed
 by a \textit{filter} is substituted by a more complex equivalent operation,
-namely \textit{filterMap}, while in figures \ref{fig:combfilterexists} and
+namely \textit{filterMap}. In figures \ref{fig:combfilterexists} and
 \ref{fig:combmapexists} we apply some simple properties of the boolean functions
-involved to decrease the number of nodes. In figures \ref{fig:combmapzip} and
+involved to decrease the number of nodes. Lastly, in figures \ref{fig:combmapzip} and
 \ref{fig:combzipmap} we utilize function composition to embed \textit{map}
-operations into \textit{zip} operations. Lastly, in figure \ref{fig:meaningless}
-we remove sub-graphs that are not reachable, due to \textit{never} operations.
+operations into \textit{zip} operations.
 
 \subsection{Node placement}
 
@@ -800,10 +753,6 @@ Apart from these hard constraints, we need to minimize communication overhead.
 For this purpose, one must implement the \textit{NetworkProfileStrategy} by providing
 a way to calculate network distance between available machines, which is then fed as input
 to the \textit{NodePlacement} optimizer.
-
-At this stage, we identify the aforementioned network distance as cost and apply
-brute-force to find the optimal placement of the (groups of) tasks that minimize
-that cost.
 
 \section{Applications} \label{sec:applications}
 
@@ -921,8 +870,7 @@ frameworks have adopted it, is the high level of abstraction it provides with
 its declarative approach, making it simple to structure and maintain a complex
 system, while at the same time not losing its expressive power.
 
-\subsubsection{MapReduce}
-
+\paragraph{MapReduce}
 \textit{MapReduce} was developed by Google and provides a very simple model, and
 corresponding runtime, that allows automatic concurrency/distribution on a
 cluster by allowing only a very minimal program structure. First, the user
@@ -933,8 +881,7 @@ was widely adopted at first, quickly many problems that could not be expressed
 with the above formalism were found and therefore a more expressive model was
 required.
 
-\subsubsection{Flumejava}
-
+\paragraph{Flumejava}
 A generalization of the \textit{MapReduce} framework is \textit{FlumeJava},
 again developed by Google, which tries to overcome its \textit{MapReduce's }
 shortcomings, by allowing more expressive pipelines consisting of multiple
@@ -948,13 +895,13 @@ many big-data applications. For instance, the constructed dataflow could not
 contain cycles, which is an integral part of \textit{incremental computation},
 used extensively nowadays for machine learning and data analysis.
 
-\subsubsection{Spark}
-
+\paragraph{Spark}
 A very well-known and well-adapted framework for scalable large-data processing
 is Apache's \textit{Spark}\site{http://spark.apache.org/}. Although not a
 dataflow framework, it was developed to overcome the shortcomings of the
 \textit{MapReduce}, similar to \textit{FlumeJava}, by providing a much more
-efficient and flexible runtime.
+efficient and flexible runtime, offering a rich set of data-parallel operators ($\simeq 80$)
+that can be used interactively from Scala, Python, Java or R.
 
 It follows the same general approach as \textsc{RHEA}, in the sense that it is
 completely generic and encourages domain-specific libraries to be built upon it.
@@ -962,14 +909,7 @@ For instance, \textit{MLib} is a library for machine learning and
 \textit{GraphX} is a library for iterative graph algorithms, both stacked upon
 \textit{Spark}.
 
-It offers a rich set of data-parallel operators ($\simeq 80$) that can be used
-interactively from Scala, Python, Java or R. The code below shows the classic
-word-counting example in Spark's Scala API.
-
-\scalas{code/spark.scala}
-
-\subsubsection{Cloud Dataflow}
-
+\paragraph{Cloud Dataflow}
 Continuing the search for more expressive models, Google recently released the
 \textit{Cloud Dataflow} framework\site{https://cloud.google.com/dataflow/},
 which is an evolution of \textit{FlumeJava}\cite{flumejava}, allowing cycles and
@@ -991,8 +931,7 @@ node placement,  \textit{Cloud Dataflow} lets the cloud system targeted to make
 all decisions, while \textsc{RHEA} profiles the network and decides
 autonomously.
 
-\subsubsection{Stratosphere}
-
+\paragraph{Stratosphere}
 The frameworks discussed so far follow, more or less, an imperative approach,
 which enables automatic distribution/concurrency by using immutable data
 structures. \textit{Stratosphere}\cite{stratosphere}, on the other hand, follows
@@ -1007,8 +946,7 @@ sense that most frameworks can adopt them without much effort. Integrating these
 optimization into \textsc{RHEA}, as future work, would certainly be of great
 benefit to the performance of the system.
 
-\subsubsection{Naiad}
-
+\paragraph{Naiad}
 Another high-level dataflow system that follows a declarative approach similar
 to \textsc{RHEA} is \textit{Naiad}, which unifies incrementally iterative
 computations with continuous data ingestion into a new technique called
@@ -1034,8 +972,7 @@ coordination mechanism for capturing opportunities for parallelism. This is
 achieved by enriching the dataflow model with timestamps that represent logical
 points in the computation.
 
-\subsubsection{Akka}
-
+\paragraph{Akka}
 Definitely one the most mature frameworks for distribution targeting the JVM,
 \textit{Akka}\site{http://akka.io/} is a toolkit and runtime for highly
 concurrent, distributed and resilient message-driven applications. It is also
@@ -1052,10 +989,7 @@ inappropriate nature of callbacks for complex scenarios, \textit{Akka}
 developers also felt the necessity for a more flexible and composable
 programming model, so they developed the \textit{AkkaStreams} library, which
 provides a convenient API for stream processing and also dataflow graph
-construction with an interesting DSL. Figure \ref{fig:akka} demonstrates a
-dataflow graph generated by the DSL code below it.
-
-\codefig{akka}{\scalas{code/akka.scala}}{Akka DSL}
+construction with an interesting DSL.
 
 The main reason \textsc{RHEA} offers a more flexible solution to \textit{ROS}
 shortcomings than \textit{Akka}, is that \textit{Akka} is a pretty heavyweight
@@ -1064,8 +998,7 @@ other hand, \textsc{RHEA} offers the ability to choose between several
 \textit{EvaluationStrategies} to match your application's needs, therefore a
 simple application would just use a lightweight library like \textit{rxjava}.
 
-\subsubsection{dispel4py}
-
+\paragraph{dispel4py}
 A less-known framework for Python is
 \textit{dispel4py}\site{https://github.com/dispel4py}. It provides the ability
 to describe abstract workflows for distributed data-intensive applications.
@@ -1086,8 +1019,7 @@ It is only natural that the dataflow model would make its way through the field
 of robotics, as many behaviours in control theory are expressed as dataflow
 diagrams.
 
-\subsubsection{roshask}
-
+\paragraph{roshask}
 \textit{Roshask}\cite{roshask} is a binding from the Haskell programming language
 to the basic \textit{ROS} interfaces. Like \textsc{RHEA}, the approach is to
 overcome the shortcomings of \textit{ROS} callbacks by viewing topics as
@@ -1095,27 +1027,11 @@ streams. This allows for, and encourages, a higher level of abstraction in
 robot programming, while making the fusing, transforming and filtering of
 streams fully generic and compositional.
 
-Below is the classic Talker-Listener \textit{ROS} example, where one node
-publishes messages to a topic and another one listens for them.
-
-\hssm{code/roshask.hs}
-
-\subsubsection{Yampa}
-
+\paragraph{Yampa}
 \textsc{RHEA} and \textit{roshask} were heavily influenced by the work of Hudak's
-group (Yale Haskell Group) on robot DSLs and FRP in general\cite{fran,arrows_robots,lambda_in_motion,event_frp,real_frp,pushpull_frp}.
+group (Yale Haskell Group) on robot DSLs and FRP in general\cite{fran,arrows_robots,lambda_in_motion}.
 \textit{Yampa}\site{https://wiki.haskell.org/Yampa} is a DSL embedded in Haskell
 that realizes the FRP model, using arrows to minimize time-/space- leaks.
-
-\subsubsection{Flowstone}
-
-\textit{Flowstone}\site{http://www.dsprobotics.com/flowstone.html}  is a
-programming environment that mixes graphical and text-based programming in Ruby
-that can be used for robotics, image/signal processing and interconnecting
-heterogeneous sources. It follows a variant of the dataflow model, where
-applications are built by linking together functional blocks called components.
-Its main advantage is that it is stand-alone, so no compiling is necessary,
-which allows for rapid prototyping.
 
 \subsection{Internet of Things}
 
@@ -1124,21 +1040,7 @@ sources that different devices introduce. Therefore, a component-based approach
 suits well to solve this problem and there are some dataflow frameworks that
 follow that approach.
 
-\subsubsection{NoFlo}
-
-\textit{NoFlo}\site{http://noflojs.org/} is a JavaScript implementation of
-\textit{Flow-based Programming}\cite{fbp}, which is a particular form of dataflow
-programming, based on bounded buffers, information packets with defined
-lifetimes, named ports and separate definition of connections.
-
-\textit{NoFlo} applications consist of components that are connected together in
-a graph. This allows for clear separation of control flow from the actual
-software logic, helping you organize large applications easier than traditional
-OOP paradigms. You can design \textit{NoFlo} applications using a web-based
-graph editor\site{https://flowhub.io/}.
-
-\subsubsection{Node-RED}
-
+\paragraph{Node-RED}
 Another interesting \textit{IoT} tool for JavaScript following a dataflow
 approach is \textit{Node-RED}\cite{node-red}, which is a visual tool for wiring
 together hardware devices, APIs and online services in new and interesting ways.
@@ -1152,7 +1054,7 @@ number of contributions so far.
 
 \subsection{Miscellaneous}
 
-\subsubsection{TensorFlow}
+\paragraph{TensorFlow}
 
 Another dataflow framework from Google is
 \textit{TensorFlow}\site{https://www.tensorflow.org/}, which is an open-source
@@ -1175,8 +1077,7 @@ dimensional array that usually represents features or weights. In contrast to
 fact that their size is determined by the dimensionality of the problem being
 solved, which is, in most cases, a fixed constant.
 
-\subsubsection{Ziria}
-
+\paragraph{Ziria}
 The dataflow computational model also found applications in the field of
 wireless systems programming, particularly in the domain of
 \textit{software-defined radio (SDR)}.
