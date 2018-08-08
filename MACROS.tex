@@ -7,15 +7,19 @@
   	net/.style={to, red, dotted},  	
   	opt/.style={->,>=stealth',shorten >=1pt,semithick,draw=red},
   	point/.style={draw, inner sep=0pt, circle, fill=black},
-  	every matrix/.style={ampersand replacement=\&, column sep=.8cm, row sep=.35cm},
+  	every matrix/.style={ampersand replacement=\&, column sep=.7cm, row sep=.35cm},
   	every node/.style={align=center, anchor=base}
 }
 
 % General macros
 \newcommand\site[1]{\footnote{\url{#1}}}
 
-\newcommand\xdownarrow[1][.05cm]{%
-   \mathrel{\rotatebox{-90}{$\rightsquigarrow{\rule{#1}{0pt}}$}}
+\newcommand\xdown{%
+   \mathrel{\rotatebox{-90}{$\rightsquigarrow{\rule{.03cm}{0pt}}$}}
+}
+
+\newcommand\xright{%
+   \mathrel{\rotatebox{0}{$\rightsquigarrow{\rule[-2cm]{0pt}{0cm}}$}}
 }
 
 \newcommand\myimage[3]{
@@ -48,7 +52,7 @@
 \newcommand\twofig[3]{
 	\begin{figure}[h!]
 		\begin{center} \input{diagrams/#1.tikz} \end{center}
-		$\xdownarrow$
+		$\xdown$
 		\begin{center} \input{diagrams/#2.tikz} \end{center}
 		\caption{#3}
 		\label{fig:#1}
@@ -58,7 +62,7 @@
 \newcommand\optimization[2]{
 	\begin{figure}[h!]
 	  \begin{center} \input{diagrams/optimization/#1B.tikz} \end{center}
-	  $\xdownarrow$
+	  $\xdown$
 	  \begin{center} \input{diagrams/optimization/#1A.tikz} \end{center}
 		\caption{#2}
 		\label{fig:#1}
@@ -68,7 +72,7 @@
 \newcommand\optimizationh[2]{
 	\begin{figure}[h!]
 	  \input{diagrams/optimization/#1B.tikz}
-	  $\rightsquigarrow$
+	  \input{diagrams/optimization/rightarrow.tikz}
 	  \input{diagrams/optimization/#1A.tikz}
 		\caption{#2}
 		\label{fig:#1}

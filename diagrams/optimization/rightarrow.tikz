@@ -1,0 +1,5 @@
+\begin{tikzpicture}
+  \matrix{
+  	\node[draw=none] {$\rightsquigarrow$}; \\
+  };
+\end{tikzpicture}
