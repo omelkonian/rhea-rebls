@@ -125,61 +125,23 @@ architectures</concept_desc> <concept_significance>500</concept_significance>
 
 \section{Introduction} \label{sec:introduction}
 
-\subsection{Main concept}
+%\paragraph{Why FRP is popular and many systems embrace it}
+Functional reactive programming (FRP) \cite{fran} is a relatively recent
+proposal for implementing implementing reactive (i.e. time-varying
+and responding to external stimuli) behaviour using higher-order functional operators.
+The idea is not new and it is essentially based on the well-established dataflow programming
+that models the program as a network of nodes that process streams of events
+and outputs streams of responses to that events. FRP has been proven useful in
+various applications such as the development of graphical user interface~\cite{fran} and robotics~\cite{}
+since its high-level abstractions alleviate the need to deal with implementation
+chores needed in a reactive application. As an immediate response of the increasing
+attention various implementations of FRP emerge mainly as embedded domain-specific languages.
 
-Our main contribution is the design and implementation of a framework for
-dataflow programming to be deployed anywhere, ranging from low-performance
-robots and sensors to clusters of computer and even the Cloud.
+%\paragraph{There are many domains that need reactive apps but have their own
+% established architectures and protocols that makes it hard to employ a brand new FRP system}
+% such domains are robotics and internet of things.
 
-The main idea is to provide the programmer with a different execution model, the
-dataflow model, which allows for a more abstract way of thinking and has the
-advantage of exposing opportunities for parallelism (amongst CPU cores) and
-distribution (amongst computational machines), which can then be automatically
-realised by the "intelligent" underlying system.
-
-Therefore, the programmer will be able to utilize available computational
-resources without any effort, while at the same time reducing development
-time/cost and maintaining a much cleaner and easier-to-refactor software system.
-Resource utilization may appear in the form of faster execution (i.e. by
-concurrently doing computations on multiple machines) or more robust
-error-handling (i.e. by using backup machines to rerun nodes that were hosted
-on a faulty machine).
-
-\subsection{Motivation}
-
-\subsubsection{Declarative languages}
-
-Software is becoming increasingly more complex, as computing capabilities are
-strengthened and user needs become more demanding. Thus the need for higher
-abstraction becomes imperative, as it provides a more structured, easier to
-debug and maintainable way of developing software. In other words, abstraction
-in computer science acts as a mean to overcome complexity.
-
-In programming languages, the level of the aforementioned abstraction is
-measured regarding the amount of low-level details a programmer has to specify.
-Therefore, languages can be divided in two categories: the imperative ones, in
-which the programmer specifies what needs to be done and how to do it, and the
-declarative ones, where the programmer only specifies what needs to be done and
-rely on the underlying compiler/interpreter to produce the exact commands that
-will realize the desired behaviour. The most well-known declarative programming
-paradigms are functional and logic programming, each providing higher
-abstraction in different aspects. Our approach was greatly influenced by the
-functional paradigm.
-
-\subsubsection{Data versus Computation}
-
-A common problem in heterogeneous systems is that different representations of
-the same entities/data-types coexist in the same software and, as a consequence,
-pure computational tasks are intermingled with data-converting tasks. This makes
-the code less readable and harder to maintain and understand. In the dataflow
-execution model, where the program is modelled as directed graph of data flowing
-between operations, there is a clear separation of these two aspects as data
-(edges) are completely decoupled from computation (nodes). This motivation is
-strengthened even more, when cross-machine communication is included, and apart
-from converting data from one representation to another, serialization(i.e.
-conversion to bytes) is also mandatory.
-
-\subsubsection{Dataflows in Robotics}
+\paragraph{Dataflows in Robotics}
 
 In control theory, which is the main background theory used in robotics, most
 architectures and/or algorithms are represented as dataflow diagrams for the
@@ -199,15 +161,44 @@ as a dataflow graph, composing them together is as trivial as connecting inputs
 with outputs, which is not the case in a traditional architecture, which is not
 component-based.
 
-\subsubsection{Dataflows in Big Data}
+% \paragraph{To make things worse: integration of systems and heterogeneity}
 
-Another reason for following a dataflow approach is the attention that it
-recently has drawn in the \textit{Big Data} field. As data size is growing
-exponentially and distribution is not a luxury but a necessity, a more scalable
-and decentralized architecture is destined to be examined in more depth. As we
-will discuss in Section \ref{sec:related}, there are many recent frameworks that
-became famous for their scalability due to the fact that they rely on a dataflow
-approach.
+\paragraph{Data versus Computation}
+
+A common problem in heterogeneous systems is that different representations of
+the same entities/data-types coexist in the same software and, as a consequence,
+pure computational tasks are intermingled with data-converting tasks. This makes
+the code less readable and harder to maintain and understand. In the dataflow
+execution model, where the program is modelled as directed graph of data flowing
+between operations, there is a clear separation of these two aspects as data
+(edges) are completely decoupled from computation (nodes). This motivation is
+strengthened even more, when cross-machine communication is included, and apart
+from converting data from one representation to another, serialization(i.e.
+conversion to bytes) is also mandatory.
+
+\paragraph{Contributions}
+Our main contribution is the design and implementation of a framework for
+dataflow programming to be deployed anywhere, ranging from low-performance
+robots and sensors to clusters of computer and even the Cloud.
+
+The main idea is to provide the programmer with a different execution model, the
+dataflow model, which allows for a more abstract way of thinking and has the
+advantage of exposing opportunities for parallelism (amongst CPU cores) and
+distribution (amongst computational machines), which can then be automatically
+realised by the "intelligent" underlying system.
+
+Therefore, the programmer will be able to utilize available computational
+resources without any effort, while at the same time reducing development
+time/cost and maintaining a much cleaner and easier-to-refactor software system.
+Resource utilization may appear in the form of faster execution (i.e. by
+concurrently doing computations on multiple machines) or more robust
+error-handling (i.e. by using backup machines to rerun nodes that were hosted
+on a faulty machine).
+
+\paragraph{Structure of the paper}
+The rest of the paper is structured as follows. Section~\ref{sec:approach}.
+Section~\ref{sec:related} discusses the related work. Finally it concludes
+with future directions.
 
 \section{Background} \label{sec:background}
 
