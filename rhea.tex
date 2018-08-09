@@ -125,18 +125,22 @@ architectures</concept_desc> <concept_significance>500</concept_significance>
 
 \section{Introduction} \label{sec:introduction}
 
+Robotics and Internet of Things (IoT) are two domain where the reactivity of
+applications is imperative. A typical application in these domains needs to timely
+and continuously respond to time-varying external stimuli. As a result the
+domain programmer needs to implement tedious and often error-prone behaviours
+that should comply with the reactive requirements.
+
 %\paragraph{Why FRP is popular and many systems embrace it}
 Functional reactive programming (FRP) \cite{fran} is a relatively recent
-proposal for implementing implementing reactive (i.e. time-varying
-and responding to external stimuli) behaviour using higher-order functional operators.
-The idea is not new and it is essentially based on the well-established dataflow programming
-that models the program as a network of nodes that process streams of events
-and outputs streams of responses to that events. FRP has been proven useful in
-various applications such as the development of graphical user interface~\cite{fran} and robotics~\cite{}
-since its high-level abstractions alleviate the need to deal with implementation
-chores needed in a reactive application. As an immediate response of the increasing
-attention various implementations of FRP emerge mainly as embedded domain-specific languages.
+proposal with the main purpose to alleviate from the programmer the need to
+deal with implementation chores. To achieve that a typical FRP program uses
+higher-order functional operators to define a dataflow network of processing nodes.
+The high-level abstraction of FRP have been proven useful in various applications
+such as the development of graphical user interface~\cite{fran} and various
+implementations of FRP emerge.
 
+and several other proposals exist for Robotics applications~\cite{}
 %\paragraph{There are many domains that need reactive apps but have their own
 % established architectures and protocols that makes it hard to employ a brand new FRP system}
 % such domains are robotics and internet of things.
@@ -286,7 +290,22 @@ mathematics\cite{survey_frp}, which make it an ideal framework for modelling
 real-time systems, and its concise representation of time-varying values via
 \textit{signals}.
 
-\subsection{Publish-Subscribe model}
+\paragraph{The Reactive Streams Standard}
+The \textit{Reactive Streams Standard (RSS)} is an initiative
+to provide a standard for asynchronous stream processing with non-blocking back
+pressure. This encompasses efforts aimed at runtime environments (JVM and
+JavaScript) as well as network protocols\cite{rss}.
+
+\textit{RSS} defines two minimal interfaces for the roles of \textit{Subscriber}
+and \textit{Publisher}\site{http://www.reactive-streams.org/reactive-streams-1.0.0-javadoc/}.
+A \textit{Subscriber} implementation should define
+reactions to observed values, including normal and erroneous termination,
+whereas a \textit{Publisher} implementation should accept requests from
+\textit{Subscribers} and start emitting values to them.
+
+\subsection{Robotics and IoT Middlewares}
+
+\paragraph{Publish-Subscribe model}
 
 \textit{Publish/Subscribe (PubSub)} is a messaging pattern that became popular
 due to the loose coupling of its components, suited for the most recent
@@ -300,8 +319,7 @@ of who the publishers are. The component responsible for relaying the messages
 between machines and/or processes and finding the cheaper dissemination method
 is called the \textit{message broker}.
 
-\subsection{ROS: Robot Operating System}
-
+\paragraph{ROS}
 \textit{ROS} is an open-source middleware for robot software, which emphasizes
 large-scale integrative robotics research cite{ROS}. It provides a \textit{thin}
 communication layer between heterogeneous computers, from robots to mainframes
@@ -327,7 +345,7 @@ easily lead to unstructured code, which obviously lead to unreadable and
 hard-to-maintain code. Our approach gives a solution to the aforementioned
 problem.
 
-\subsection{Internet of things - MQTT}
+\paragraph{Internet of things - MQTT}
 
 The birth of the Internet gave rise to a concept called \textit{Internet of
 Things (IoT)}, which is essentially the ability of many heterogeneous devices,
@@ -356,21 +374,6 @@ of the model makes it a good architectural choice for such applications. The
 only thing to consider is how these things will communicate in a standard way,
 so as to be able to add new types of \textit{things} and integrate it in an
 effortless way to an existing dataflow network.
-
-\subsection{The Reactive Streams Standard}
-
-\textit{PubSub} is widely used by different frameworks but still lacks
-standardization. The \textit{Reactive Streams Standard (RSS)} is an initiative
-to provide a standard for asynchronous stream processing with non-blocking back
-pressure. This encompasses efforts aimed at runtime environments (JVM and
-JavaScript) as well as network protocols\cite{rss}.
-
-\textit{RSS} defines two minimal interfaces for the roles of \textit{Subscriber}
-and \textit{Publisher}\site{http://www.reactive-streams.org/reactive-streams-1.0.0-javadoc/}.
-A \textit{Subscriber} implementation should define
-reactions to observed values, including normal and erroneous termination,
-whereas a \textit{Publisher} implementation should accept requests from
-\textit{Subscribers} and start emitting values to them.
 
 \section{Requirements} \label{sec:requirements}
 
@@ -673,7 +676,7 @@ depicts the serialization process in more detail.
 
 \mydiag{serialization}{Serialization process}
 
-\section{Optimization} \label{sec:optimization}
+\section{Optimizations} \label{sec:optimization}
 
 This section describes three stages of optimization the dataflow graph goes
 through before being evaluated, which are illustrated in Figure \ref{fig:optimization}.
@@ -901,7 +904,7 @@ other hand, \textsc{RHEA} offers the ability to choose between several
 \textit{EvaluationStrategies} to match your application's needs, therefore a
 simple application would just use a lightweight library like \textit{rxjava}.
 
-\paragraph{Unified dataflow languages}
+\subsection{Unified dataflow languages}
 
 %\paragraph{Cloud Dataflow}
 Continuing the search for more expressive models, Google recently released the
@@ -979,7 +982,7 @@ in JSON format, which can be easily imported and exported for sharing with
 others. The online flow library\site{http://flows.nodered.org/} has had a huge
 number of contributions so far.
 
-\paragraph{Dataflow optimization}
+\subsection{Dataflow optimization}
 
 %\paragraph{Stratosphere}
 The frameworks discussed so far follow, more or less, an imperative approach,
@@ -996,7 +999,7 @@ sense that most frameworks can adopt them without much effort. Integrating these
 optimization into \textsc{RHEA}, as future work, would certainly be of great
 benefit to the performance of the system.
 
-\paragraph{Heterogeneous data processing}
+\subsection{Heterogeneous data processing}
 
 %\paragraph{TensorFlow}
 
