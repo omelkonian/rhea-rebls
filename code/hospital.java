@@ -5,8 +5,7 @@ Stream.configure(new HazelcastDistributionStrategy(
 
 Topic<RobotCommand> vel = new RosTopic<>("/robot/cmd");
 
-Stream<Proximity> ble =
-     Stream.from(new MqttTopic<>("/ble"));
+Stream<Proximity> ble = Stream.from(new MqttTopic<>("/ble"));
 
 ble.filter(Proximity::isNear)
      .map(d -> Commands.SPEED_UP)

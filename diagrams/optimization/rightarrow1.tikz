@@ -1,5 +1,5 @@
 \begin{tikzpicture}
   \matrix{
-  	\node[draw=none] {$\rightsquigarrow$}; \\
+  	\node[inner sep=.3cm] {$\rightsquigarrow$}; \\
   };
 \end{tikzpicture}

@@ -1,5 +1,5 @@
 \begin{tikzpicture}
-  [every matrix/.append style={row sep=0.1cm}]
+  [every matrix/.append style={row sep=0.05cm}]
   \matrix{
     \node[dataflow] (fst) {\small 1..10}; \\
     \& \node[dataflow] (zip) {\small zip \{$x+y$\}};  \\

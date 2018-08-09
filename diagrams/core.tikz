@@ -1,5 +1,5 @@
 \begin{adjustbox}{width=.5\columnwidth}
-\smartdiagramset{bubble center node size = 30mm, bubble node size = 25mm}
+\smartdiagramset{bubble center node size = 20mm, bubble node size = 10mm}
 \smartdiagram[bubble diagram]
 {
   \textsc{RHEA},

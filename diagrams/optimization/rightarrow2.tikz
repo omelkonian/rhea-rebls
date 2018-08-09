@@ -1,7 +1,7 @@
 \begin{tikzpicture}
   \matrix{
     \node[empty] {}; \\
-  	\node[dataflow] {zip $g(f_1(x), f_2(y))$}; \\
+  	\node[inner sep=.3cm] {$\rightsquigarrow$}; \\
     \node[empty] {}; \\
   };
 \end{tikzpicture}

@@ -1,5 +1,5 @@
 \documentclass[sigplan,review,anonymous]{acmart}
-\settopmatter{printfolios=true,printacmref=false}
+\settopmatter{printfolios=true,printccs=false,printacmref=false} %% max submission space
 
 %% Conference information
 \acmConference[PL'18]{ACM SIGPLAN Conference on Programming Languages}{January 01--03, 2018}{New York, NY, USA}
@@ -21,7 +21,7 @@
 % Tikz
 \usepackage{tikz}
 \usepackage{smartdiagram}
-\usetikzlibrary{arrows,mindmap,trees,fit,backgrounds,decorations.pathreplacing}
+\usetikzlibrary{arrows,mindmap,trees,fit,backgrounds,decorations.pathreplacing,calc,positioning}
 \usepackage{environ}
 \makeatletter
 \newsavebox{\measure@tikzpicture}
@@ -140,7 +140,7 @@ The high-level abstraction of FRP have been proven useful in various application
 such as the development of graphical user interface~\cite{fran} and various
 implementations of FRP emerge.
 
-and several other proposals exist for Robotics applications~\cite{}
+and several other proposals exist for Robotics applications~~\cite{arrows_robots}
 %\paragraph{There are many domains that need reactive apps but have their own
 % established architectures and protocols that makes it hard to employ a brand new FRP system}
 % such domains are robotics and internet of things.
@@ -268,25 +268,22 @@ variables (\textit{signals}), which can be passed as parameters to arbitrary
 functions, called \textit{signal functions}.
 
 \textit{FRP} first appeared as a composable library for graphic animations
-\cite{fran}, but quickly evolved into a generic paradigm
-\cite{survey_frp,real_frp,pushpull_frp}. Moreover, extensive research has
+~\cite{fran}, but quickly evolved into a generic paradigm
+~\cite{survey_frp,real_frp,pushpull_frp}. Moreover, extensive research has
 investigated \textit{FRP} as a framework for robotics
-\cite{arrows_robots,lambda_in_motion}.
+~\cite{arrows_robots,lambda_in_motion}.
 
 Although appealing at first, \textit{FRP} was not appropriate for systems  with
 real-time constraints, due to uncontrollable time- and space- leaks
-\cite{event_frp}. The solution was a generalization of monads called
-\textit{arrows} \cite{arrows}, which provided the necessary guarantees that the
-aforementioned common errors do not occur. Let's see the example of calculating
-a robot's x-coordinate. Here is the mathematical formula drawn from control
-theory and the corresponding \textit{FRP} code with \textit{arrow notation}\cite{arrows_notation}:
-
-$$ x = 1/2 \int (vr + vl) \cos\theta $$
-
+~\cite{event_frp}. The solution was a generalization of monads called
+\textit{arrows}~\cite{arrows}, which provided the necessary guarantees that the
+aforementioned common errors do not occur. For instance, to calculate
+a robot's x-coordinate with the formula $x = 1/2 \int (vr + vl) \cos\theta$
+one can write the following \textit{FRP} code that uses the \textit{arrow notation}~\cite{arrows_notation}:
 \hssm{code/frp2.hs}
 
 The main advantages of \textit{FRP} are its close correspondence to
-mathematics\cite{survey_frp}, which make it an ideal framework for modelling
+mathematics~\cite{survey_frp}, which make it an ideal framework for modelling
 real-time systems, and its concise representation of time-varying values via
 \textit{signals}.
 
@@ -358,17 +355,17 @@ complex and costly. Typical software architectures were not meant to be used in
 such environments and therefore new tools and concepts needed to be invented.
 Recent development of a variety of middleware frameworks, showed that a standard
 protocol of communication is imperative along with supporting
-tools\cite{iot_middleware}. The most widely spread protocol is \textit{MQTT},
+tools~\cite{iot_middleware}. The most widely spread protocol is \textit{MQTT},
 which follows the \textit{PubSub} messaging pattern and provides a very minimal
 communication layer in order not to put a strain on the resource-bounded
-system\cite{mqtt}.
+system~\cite{mqtt}.
 
 For instance, an \textit{IoT} application could connect to some sensors by
 subscribing to their corresponding topics, taking decisions that would result in
 some commands to some actuators, by publishing to their corresponding topics.
 
 Fortunately, the dataflow model seems to be rather fitting for these
-scenarios\cite{iot_dataflow}, as every node in the graph is completely
+scenarios~\cite{iot_dataflow}, as every node in the graph is completely
 independent, and consequently can be any "\textit{thing}". This useful property
 of the model makes it a good architectural choice for such applications. The
 only thing to consider is how these things will communicate in a standard way,
@@ -380,10 +377,9 @@ effortless way to an existing dataflow network.
 The design was heavily influenced by principles set out by the FRP and dataflow
 models.
 
-\subsection{Reactive}
-
+\paragraph{Reactive}
 The system should be \textit{reactive}, as close as possible to the definition
-of the Reactive Manifesto\cite{manifesto}.
+of the Reactive Manifesto~\cite{manifesto}.
 
 The system should be \textit{responsive}, meaning it should be able to handle
 time-sensitive scenarios if at all possible. This is the cornerstone of
@@ -410,8 +406,7 @@ coupling, isolation, location transparency and the error propagation mentioned
 above. Location transparency is critical to preserve the semantics whether on a
 single host or a machine cluster.
 
-\subsection{Heterogeneous}
-
+\paragraph{Heterogeneous}
 One of the major concerns while designing the framework was the ability to
 deploy it anywhere, from low-cost robots to mainframes. Obviously, such
 attribute would require a very flexible runtime environment. To satisfy this
@@ -432,8 +427,7 @@ and the red node is deployed on the main server.
 
 \mydiag{heterogen}{Heterogeneity pipeline}
 
-\subsection{Extensible}
-
+\paragraph{Extensible}
 As the work described in this thesis is quite fundamental and ambitious, it
 seemed highly unlikely that it would reach closure. Therefore, careful
 consideration was taken to compose the system of different independent modules,
@@ -445,8 +439,7 @@ satisfied with the level of abstraction the core system has reached and hope the
 stressful refactoring that the framework went through will blossom in the form
 of future contributions.
 
-\subsection{Abstract}
-
+\paragraph{Abstract}
 The framework is \textit{abstract} in terms of implementation details, as it is
 completely agnostic of any machine-specific requirements. It is designed as a
 unifying conceptual base for further extensions and careful consideration was
@@ -537,30 +530,15 @@ multiple input node that concatenates its input streams.
 
 \codefig{natt}{\jvs{code/natt.java}}{Cyclic example}
 
-\paragraph{Evaluation syntax}
+\paragraph{Evaluation syntax and semantics}
 To evaluate a given dataflow graph and do something with its output values, we
 need to call the \textit{subscribe} method of the \textit{Stream} object. The
 argument passed to \textit{subscribe} is either a user-defined action (i.e.
 function with side-effects) or an object implementing the \textit{Subscriber}
-interface. Figure \ref{fig:subexample} shows an
-example of printing the output of the single-input example in figure
-\ref{fig:singleinput}.
+interface.
 
-\codefig{subexample}{\jvs{code/subexample.java}}{Evaluation example}
-
-\paragraph{Execution semantics}
-As the execution is completely asynchronous, the order of stream declaration
-and/or evaluation does not matter at all. If there is absolute necessity for
-control flow management, the programmer can use the altered
-\textit{BlockingStream} type that blocks program execution to next
-\textit{subscribes} until the currently subscribed streams terminate
-successfully.
-
-Nonetheless, this utility is helpful for rapid prototyping and testing purposes.
-The source code below shows an example of accumulating the 10 first natural
-numbers in a list and printing that list.
-
-\jvs{code/block.java}
+The execution is completely asynchronous, hence the order of stream declaration
+and evaluation does not matter at all.
 
 \section{Implementation} \label{sec:implementation}
 
@@ -575,7 +553,7 @@ and for which default implementations are already provided by the current implem
 \paragraph{Internal representation}
 For representing the internal structure of the dataflow graph, the
 \textit{JGrapht} open-source Java library was used, which provides many graph
-data structures and common graph-theoretic algorithms\site{http://jgrapht.org/}.
+data structures and common graph-theoretic algorithms~\cite{jgrapht}.
 
 \paragraph{Notifications}
 Every value passed through the framework's
@@ -615,7 +593,7 @@ corresponding \textit{Output} and executes it, however desired.
 The strategies we have implemented so far follow:
 \begin{description}[style=nextline]
 \item[RxJavaEvaluationStrategy] Uses
-rxjava\site{https://github.com/ReactiveX/RxJava}, which is a famous and well-
+rxjava~\cite{rxjava}, which is a famous and well-
 maintained library for asynchronous programming using the \textit{Observable}
 type, which is very close, semantically, to our \textit{Stream} type.
 
@@ -640,7 +618,7 @@ and partition it across all computational resources, maybe using different evalu
 
 \paragraph{Hazelcast}
 The default \textit{DistributionStrategy} shipped with the framework uses
-the \textit{Hazelcast}\site{http://hazelcast.org/} library to discover and
+the \textit{Hazelcast}~\cite{hazelcast} library to discover and
 manage multiple machines and used its internal decentralized \textit{PubSub} model to communicate
 intermediate results across the network. Figure \ref{fig:partition1} illustrates
 the partitioning of a dataflow graph over several machines, where each machin
@@ -694,9 +672,9 @@ computational cost and cross-machine communication overhead. The figures below
 illustrate one representative example of each general class of
 graph transformation.
 
-\optimizationh{maptake}{Take/skip/distinct before map}
-\optimizationh{mapfilter}{Filter before map}
-\optimization{concatdistinct}{Filter/distinct before concat/merge}
+\optimization{1}{maptake}{Take/skip/distinct before map}
+\optimization{1}{mapfilter}{Filter before map}
+\optimization{3}{concatdistinct}{Filter/distinct before concat/merge}
 
 \subsection{Granularity adjustment}
 
@@ -710,12 +688,12 @@ which is normally the number of available threads amongst all machines.
 To reach the desired granularity, the optimizer applies some semantic-preserving
 transformation, as shown in the figures below.
 
-\optimizationh{mergemap}{Merge maps}
-\optimizationh{combmapfilter}{Combine map with filter}
-\optimizationh{combfilterexists}{Combine filter with exists}
-\optimizationh{combmapexists}{Combine map with exists}
-\optimization{combmapzip}{Combine map with zip}
-\optimizationh{combzipmap}{Combine zip with map}
+\optimization{1}{mergemap}{Merge maps}
+\optimization{1}{combmapfilter}{Combine map with filter}
+\optimization{1}{combfilterexists}{Combine filter with exists}
+\optimization{1}{combmapexists}{Combine map with exists}
+\optimization{2}{combmapzip}{Combine map with zip}
+\optimization{1}{combzipmap}{Combine zip with map}
 
 In figure \ref{fig:mergemap} we merge two \textit{map} operations into
 one \textit{map} operation that uses the composition of the two initial
@@ -737,7 +715,7 @@ If the desired granularity has not been reached yet, the
 \textit{DistributionStrategy} applies fusion to pairs of tasks until it reaches
 it, as shown in figure \ref{fig:fusion}.
 
-\optimization{fusion}{Task fusion}
+\optimization{1}{fusion}{Task fusion}
 
 The final decision to be made is where each of these newly constructed tasks
 will be executed, although some of them need to necessarily be placed on
@@ -750,7 +728,7 @@ to the \textit{NodePlacement} optimizer.
 
 \section{Applications} \label{sec:applications}
 
-This section will demonstrate some use-cases of the framework.
+This section demonstrates some use-cases of the framework.
 
 \subsection{Hamming numbers}
 
@@ -758,37 +736,20 @@ Consider the problem of enumerating the
 \textit{Hamming numbers}, which are generated by the mathematical formula
 $\mathbb{H} = 2^i3^j5^k$, where $i,j,k \in \mathbb{N}$. There is an intuitive
 dataflow solution to the above problem, taken from the book of \textit{Lucid},
-which is the first functional dataflow language\cite{lucid}. Figure
+which is the first functional dataflow language~\cite{lucid}. Figure
 \ref{fig:hamming} shows the dataflow graph with its corresponding \textsc{RHEA}
 code.
 
 \codefig{hamming}{\scalaxs{code/hamming.scala}}{Hamming numbers}
 
 The code is written in Scala to utilize the \textit{Pimp my library} design
-pattern\cite{pimp}, which is used to easily add new functions to already
+pattern~\cite{pimp}, which is used to easily add new functions to already
 existing libraries, using Scala's \textit{implicit conversions} (line 28). In
 the example above, we define two new Stream operators, namely \textit{multiply}
 (line 10), which just multiplies the stream with a constant, and
 \textit{mergeSort} (line 13), which produces an ordered stream given two ordered
 streams as input. We also see the power of the \textit{loop} operator (line 2),
 which allows us to define cycles in an effortless manner.
-
-\subsection{Camera surveilance}
-
-Moving to a more realistic, but still minimal, use-case, this example
-demonstrates how cleanly we can express a surveillance application from a
-robot's camera.
-
-The camera should send frames to be displayed on the screen, only when motion is
-detected. Figure \ref{fig:surveillance} shows the dataflow graph with its
-corresponding \textsc{RHEA} code.
-
-\codefig{surveillance}{\jvxs{code/surveillance.java}}{Camera surveillance}
-
-In the code above, we can see how easy it is to view a \textit{ROS} topic as a
-stream, using the \textit{RosEvaluationStrategy} (line 3). Moreover, there is a
-nice separation between program logic (stream declaration in lines 6-17) and
-implementation details (\textit{motionDetected} function in line 19).
 
 \subsection{Robot control panel}
 
@@ -841,7 +802,7 @@ its corresponding \textsc{RHEA} code.
 \codefig{hospital}{\jvxs{code/hospital.java}}{Robot hospital guide}
 
 The second module just uses the \textit{ReactiveBeacons}
-library\site{https://github.com/pwittchen/ReactiveBeacons} to get a stream of
+library~\cite{beacons} to get a stream of
 beacon data via \textit{rxjava}, and then publishes it to a \textit{MQTT} topic,
 which is the input of the first module. The corresponding \textsc{RHEA} code
 follows:
@@ -866,7 +827,7 @@ system, while at the same time not losing its expressive power.
 
 %\paragraph{Spark}
 A very well-known and well-adapted framework for scalable large-data processing
-is Apache's \textit{Spark}\site{http://spark.apache.org/}. Although not a
+is Apache's \textit{Spark}~\cite{spark}. Although not a
 dataflow framework, it was developed to overcome the shortcomings of the
 \textit{MapReduce}, similar to \textit{FlumeJava}, by providing a much more
 efficient and flexible runtime, offering a rich set of data-parallel operators ($\simeq 80$)
@@ -880,11 +841,11 @@ For instance, \textit{MLib} is a library for machine learning and
 
 %\paragraph{Akka}
 Definitely one the most mature frameworks for distribution targeting the JVM,
-\textit{Akka}\site{http://akka.io/} is a toolkit and runtime for highly
+\textit{Akka}~\cite{akka} is a toolkit and runtime for highly
 concurrent, distributed and resilient message-driven applications. It is also
-one of the founders of the \textit{Reactive Streams}\cite{rss} initiative.
+one of the founders of the \textit{Reactive Streams}~\cite{rss} initiative.
 
-Its approach follows the \textit{Actor} model\cite{actor}, where one perceives
+Its approach follows the \textit{Actor} model~\cite{actor}, where one perceives
 abstract computational agents, called actors, that are distributed in space and
 communicate with point-to-point messages that are buffered in a queue. In
 reaction to a message, an actor can create more actors, make local decisions,
@@ -908,8 +869,8 @@ simple application would just use a lightweight library like \textit{rxjava}.
 
 %\paragraph{Cloud Dataflow}
 Continuing the search for more expressive models, Google recently released the
-\textit{Cloud Dataflow} framework\site{https://cloud.google.com/dataflow/},
-which is an evolution of \textit{FlumeJava}\cite{flumejava}, allowing cycles and
+\textit{Cloud Dataflow} framework~\cite{googledataflow},
+which is an evolution of \textit{FlumeJava}~\cite{flumejava}, allowing cycles and
 therefore incremental computation.
 
 It is a completely domain-agnostic dataflow framework integrated with many other
@@ -930,12 +891,11 @@ autonomously.
 
 %\paragraph{dispel4py}
 A less-known framework for Python is
-\textit{dispel4py}\site{https://github.com/dispel4py}. It provides the ability
+\textit{dispel4py}~\cite{dispel4py}. It provides the ability
 to describe abstract workflows for distributed data-intensive applications.
 
 Similar to our \textit{EvaluationStrategy} concept, it allows different mappings
-to enactment systems, such as MPI\site{http://www.mpich.org/} and Apache
-Storm\site{http://storm.apache.org/}.
+to enactment systems, such as MPI and Apache Storm.
 
 Its main disadvantages are that it has only an API for Python and only allows
 low-level specification of the graph's nodes, through the definition of
@@ -950,7 +910,7 @@ of robotics, as many behaviours in control theory are expressed as dataflow
 diagrams.
 
 %\paragraph{roshask}
-\textit{Roshask}\cite{roshask} is a binding from the Haskell programming language
+\textit{Roshask}~\cite{roshask} is a binding from the Haskell programming language
 to the basic \textit{ROS} interfaces. Like \textsc{RHEA}, the approach is to
 overcome the shortcomings of \textit{ROS} callbacks by viewing topics as
 streams. This allows for, and encourages, a higher level of abstraction in
@@ -959,8 +919,8 @@ streams fully generic and compositional.
 
 %\paragraph{Yampa}
 \textsc{RHEA} and \textit{roshask} were heavily influenced by the work of Hudak's
-group (Yale Haskell Group) on robot DSLs and FRP in general\cite{fran,arrows_robots,lambda_in_motion}.
-\textit{Yampa}\site{https://wiki.haskell.org/Yampa} is a DSL embedded in Haskell
+group (Yale Haskell Group) on robot DSLs and FRP in general~\cite{fran,arrows_robots,lambda_in_motion}.
+\textit{Yampa}~\cite{yampa} is a DSL embedded in Haskell
 that realizes the FRP model, using arrows to minimize time-/space- leaks.
 
 %\subsection{Internet of Things}
@@ -972,29 +932,28 @@ follow that approach.
 
 %\paragraph{Node-RED}
 Another interesting \textit{IoT} tool for JavaScript following a dataflow
-approach is \textit{Node-RED}\cite{node-red}, which is a visual tool for wiring
+approach is \textit{Node-RED}~\cite{node-red}, which is a visual tool for wiring
 together hardware devices, APIs and online services in new and interesting ways.
 
 Applications called flows, are built immediately on a browser, and can be
 deployed on the Cloud with just a single click. The main advantage of this tool
 is that it encourages social development, due to the fact that flows are stored
 in JSON format, which can be easily imported and exported for sharing with
-others. The online flow library\site{http://flows.nodered.org/} has had a huge
-number of contributions so far.
+others.
 
 \subsection{Dataflow optimization}
 
 %\paragraph{Stratosphere}
 The frameworks discussed so far follow, more or less, an imperative approach,
 which enables automatic distribution/concurrency by using immutable data
-structures. \textit{Stratosphere}\cite{stratosphere}, on the other hand, follows
+structures. \textit{Stratosphere}~\cite{stratosphere}, on the other hand, follows
 a declarative programming approach similar to \textsc{RHEA}, which enables
 writing highly parallel code directly from the language's semantics.
 
 Apart from offering a language of a much higher abstraction level,
 \textit{Stratosphere} has internalised several interesting and novel approaches
 to optimization of dataflow graphs, especially concerning cyclic graphs (i.e.
-incremental computation)\cite{spinning}. These optimizations are generic, in the
+incremental computation)~\cite{spinning}. These optimizations are generic, in the
 sense that most frameworks can adopt them without much effort. Integrating these
 optimization into \textsc{RHEA}, as future work, would certainly be of great
 benefit to the performance of the system.
@@ -1004,7 +963,7 @@ benefit to the performance of the system.
 %\paragraph{TensorFlow}
 
 Another dataflow framework from Google is
-\textit{TensorFlow}\site{https://www.tensorflow.org/}, which is an open-source
+\textit{TensorFlow}~\cite{tensorflow}, which is an open-source
 polyglot library for machine learning and especially construction of neural
 networks.
 
@@ -1035,10 +994,10 @@ The set of operators aided expressibility, making it possible to specify any
 dataflow graph in a concise and readable manner. This disallowed optimizations
 suitable for less expressive models (e.g. \textit{Map-Reduce}), but recent
 research has shown that general dataflow topologies have optimization
-opportunities that are yet to be found\cite{blackbox}. A minimal optimization
+opportunities that are yet to be found~\cite{blackbox}. A minimal optimization
 stage has been implemented, which paves the path to more advanced optimization
-techniques, such as those used in \textit{Naiad}\cite{naiad} and
-\textit{Stratosphere}\cite{static_analysis}.
+techniques, such as those used in \textit{Naiad}~\cite{naiad} and
+\textit{Stratosphere}~\cite{static_analysis}.
 
 The extensible nature of \textsc{RHEA} allows for many meaningful extensions, such as
 more evaluation/distribution strategies to support integration with other software ecosystems,
@@ -1050,7 +1009,7 @@ There are also significant shortcomings to the framework design and implementati
 could be addressed in future work.
 
 For instance, \textit{dynamic reconfiguration} is needed to handle environments that are constantly changing.
-A concrete contribution to the \textsc{RHEA} would be to integrate \textit{HotWave}\cite{reconf_java},
+A concrete contribution to the \textsc{RHEA} would be to integrate \textit{HotWave}~\cite{reconf_java},
 which is an \textit{aspect-oriented programming (AOP)} framework that supports dynamic
 (re)weaving of previously loaded classes. This would allow the user to specify the desired
 adaptive behaviour for reconfiguring where nodes are executed, what operation they perform, and so forth.
@@ -1058,7 +1017,7 @@ adaptive behaviour for reconfiguring where nodes are executed, what operation th
 Another major drawback is that network profiling - an integral part of node placement - is achieved via
 calculation of \textit{round-trip time (RTT)}, which is naively expensive and may outweigh the benefits of
 exploiting network proximity. A possible decentralized approach that we could employ would be the \textit{Vivaldi}
-coordinate system\cite{vivaldi}, which assigns synthetic coordinates to hosts
+coordinate system~\cite{vivaldi}, which assigns synthetic coordinates to hosts
 such that the distance between the coordinates of two hosts accurately predicts
 the communication latency between them.
 
@@ -1069,7 +1028,7 @@ certain that host failures and other faults will be a common occurrence. The
 functional nature of the dataflow model enables fault-tolerance, in addition to
 parallelism, due to the fact that a node can be moved to another machine for
 execution, while preserving the original semantics.  This contribution path can draw
-heavy influence from recent research on fault-tolerance for stream processing engines\cite{borealis,wide_area},
+heavy influence from recent research on fault-tolerance for stream processing engines~\cite{borealis,wide_area},
 which provide efficient models for availability and data recovery/consistency,
 by using data replication and parallel recovery of lost state.
 
@@ -1077,7 +1036,7 @@ The applications demonstrated the framework's ability to provide a higher level
 of abstraction, where the language only specifies how different components
 coordinate, without knowledge of the implementation details. This is exactly
 what \textit{Ziria} accomplishes in the domain of wireless systems
-programming\cite{ziria}. The driving force for both frameworks is that some
+programming~\cite{ziria}. The driving force for both frameworks is that some
 specific domains have fixated their methods on low-level programming, whereas
 more satisfactory paradigms can solve many shortcomings.
 

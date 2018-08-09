@@ -1,25 +1,25 @@
 \begin{tikzpicture}
-  [every matrix/.append style={row sep=0.6cm, column sep=.5cm}]
-  \matrix{         
-    \node (A) {}; 
-    \& \node[dataflow] (ble) {\small BLE}; 
+  [every matrix/.append style={row sep=0.3cm, column sep=.3cm}]
+  \matrix{
+    \node (A) {};
+    \& \node[dataflow] (ble) {\small BLE};
     \& \node (B) {}; \\
-    
-    \node[dataflow] (near) {\small filter \{near\}}; 
+
+    \node[dataflow] (near) {\small filter \{near\}};
     \& \& \node[dataflow] (far) {\small filter \{far\}}; \\
 
-    \node[dataflow] (map) {\small map \{speed\_up\} }; 
-    \& \& \node[dataflow] (mapp) {\small map \{slow\_down\}}; \\    
-    
-    \node (C) {}; 
+    \node[dataflow] (map) {\small map \{speed\_up\} };
+    \& \& \node[dataflow] (mapp) {\small map \{slow\_down\}}; \\
+
+    \node (C) {};
     \& \node[dataflow] (cmd) {\small robot command};
     \& \node (D) {}; \\
   };
-    
+
   \draw[to] (ble) -- (near);
   \draw[to] (ble) -- (far);
   \draw[to] (near) -- (map);
   \draw[to] (far) -- (mapp);
-  \draw[to] (map) -- (cmd);
-  \draw[to] (mapp) -- (cmd);
-\end{tikzpicture} 
+  \draw[to] (map) -- (cmd.west);
+  \draw[to] (mapp) -- (cmd.east);
+\end{tikzpicture}
