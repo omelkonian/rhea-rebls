@@ -1,7 +1,8 @@
 % Dataflow graphs
 \tikzset{
-	dataflow/.style={draw, fill=myye!80, rounded corners, thick},  	  	
-  	machine/.style={draw, fill=myrd!80, rounded corners, thick, inner sep=.5cm},
+	dataflow/.style={draw, fill=myye!80, rounded corners, thick},
+	empty/.style={draw=none, inner sep=.3cm},
+  	machine/.style={draw, fill=myrd!80, rounded corners, thick, inner sep=.3cm},
   	task/.style={draw, fill=mygr!80, rounded corners, thick, inner sep=.5cm},
   	to/.style={->,>=stealth',shorten >=1pt,semithick},
   	net/.style={to, red, dotted},  	
@@ -59,23 +60,15 @@
 	\end{figure}
 }
 
-\newcommand\optimization[2]{
+\newcommand\optimization[3]{
 	\begin{figure}[h!]
-	  \begin{center} \input{diagrams/optimization/#1B.tikz} \end{center}
-	  $\xdown$
-	  \begin{center} \input{diagrams/optimization/#1A.tikz} \end{center}
-		\caption{#2}
-		\label{fig:#1}
-	\end{figure}	
-}
-
-\newcommand\optimizationh[2]{
-	\begin{figure}[h!]
-	  \input{diagrams/optimization/#1B.tikz}
-	  \input{diagrams/optimization/rightarrow.tikz}
-	  \input{diagrams/optimization/#1A.tikz}
-		\caption{#2}
-		\label{fig:#1}
+	  \input{diagrams/optimization/#2B.tikz}
+	  \hspace{-.4cm}
+	  \input{diagrams/optimization/rightarrow#1.tikz}
+	  \hspace{-.4cm}
+	  \input{diagrams/optimization/#2A.tikz}
+		\caption{#3}
+		\label{fig:#2}
 	\end{figure}	
 }
 

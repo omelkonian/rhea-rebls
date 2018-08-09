@@ -1,5 +1,5 @@
 \documentclass[sigplan,review,anonymous]{acmart}
-\settopmatter{printfolios=true,printacmref=false}
+\settopmatter{printfolios=true,printccs=false,printacmref=false} %% max submission space
 
 %% Conference information
 \acmConference[PL'18]{ACM SIGPLAN Conference on Programming Languages}{January 01--03, 2018}{New York, NY, USA}
@@ -126,13 +126,13 @@ architectures</concept_desc> <concept_significance>500</concept_significance>
 \section{Introduction} \label{sec:introduction}
 
 %\paragraph{Why FRP is popular and many systems embrace it}
-Functional reactive programming (FRP) \cite{fran} is a relatively recent
-proposal for implementing implementing reactive (i.e. time-varying
+Functional reactive programming (FRP)~\cite{fran} is a relatively recent
+proposal for implementing reactive (i.e. time-varying
 and responding to external stimuli) behaviour using higher-order functional operators.
 The idea is not new and it is essentially based on the well-established dataflow programming
 that models the program as a network of nodes that process streams of events
 and outputs streams of responses to that events. FRP has been proven useful in
-various applications such as the development of graphical user interface~\cite{fran} and robotics~\cite{}
+various applications such as the development of graphical user interface~\cite{fran} and robotics~\cite{arrows_robots}
 since its high-level abstractions alleviate the need to deal with implementation
 chores needed in a reactive application. As an immediate response of the increasing
 attention various implementations of FRP emerge mainly as embedded domain-specific languages.
@@ -363,10 +363,10 @@ effortless way to an existing dataflow network.
 standardization. The \textit{Reactive Streams Standard (RSS)} is an initiative
 to provide a standard for asynchronous stream processing with non-blocking back
 pressure. This encompasses efforts aimed at runtime environments (JVM and
-JavaScript) as well as network protocols\cite{rss}.
+JavaScript) as well as network protocols~\cite{rss}.
 
 \textit{RSS} defines two minimal interfaces for the roles of \textit{Subscriber}
-and \textit{Publisher}\site{http://www.reactive-streams.org/reactive-streams-1.0.0-javadoc/}.
+and \textit{Publisher}\cite{rss_docs}.
 A \textit{Subscriber} implementation should define
 reactions to observed values, including normal and erroneous termination,
 whereas a \textit{Publisher} implementation should accept requests from
@@ -377,8 +377,7 @@ whereas a \textit{Publisher} implementation should accept requests from
 The design was heavily influenced by principles set out by the FRP and dataflow
 models.
 
-\subsection{Reactive}
-
+\paragraph{Reactive}
 The system should be \textit{reactive}, as close as possible to the definition
 of the Reactive Manifesto\cite{manifesto}.
 
@@ -407,8 +406,7 @@ coupling, isolation, location transparency and the error propagation mentioned
 above. Location transparency is critical to preserve the semantics whether on a
 single host or a machine cluster.
 
-\subsection{Heterogeneous}
-
+\paragraph{Heterogeneous}
 One of the major concerns while designing the framework was the ability to
 deploy it anywhere, from low-cost robots to mainframes. Obviously, such
 attribute would require a very flexible runtime environment. To satisfy this
@@ -429,8 +427,7 @@ and the red node is deployed on the main server.
 
 \mydiag{heterogen}{Heterogeneity pipeline}
 
-\subsection{Extensible}
-
+\paragraph{Extensible}
 As the work described in this thesis is quite fundamental and ambitious, it
 seemed highly unlikely that it would reach closure. Therefore, careful
 consideration was taken to compose the system of different independent modules,
@@ -442,8 +439,7 @@ satisfied with the level of abstraction the core system has reached and hope the
 stressful refactoring that the framework went through will blossom in the form
 of future contributions.
 
-\subsection{Abstract}
-
+\paragraph{Abstract}
 The framework is \textit{abstract} in terms of implementation details, as it is
 completely agnostic of any machine-specific requirements. It is designed as a
 unifying conceptual base for further extensions and careful consideration was
@@ -572,7 +568,7 @@ and for which default implementations are already provided by the current implem
 \paragraph{Internal representation}
 For representing the internal structure of the dataflow graph, the
 \textit{JGrapht} open-source Java library was used, which provides many graph
-data structures and common graph-theoretic algorithms\site{http://jgrapht.org/}.
+data structures and common graph-theoretic algorithms\cite{jgrapht}.
 
 \paragraph{Notifications}
 Every value passed through the framework's
@@ -612,7 +608,7 @@ corresponding \textit{Output} and executes it, however desired.
 The strategies we have implemented so far follow:
 \begin{description}[style=nextline]
 \item[RxJavaEvaluationStrategy] Uses
-rxjava\site{https://github.com/ReactiveX/RxJava}, which is a famous and well-
+rxjava\cite{rxjava}, which is a famous and well-
 maintained library for asynchronous programming using the \textit{Observable}
 type, which is very close, semantically, to our \textit{Stream} type.
 
@@ -637,7 +633,7 @@ and partition it across all computational resources, maybe using different evalu
 
 \paragraph{Hazelcast}
 The default \textit{DistributionStrategy} shipped with the framework uses
-the \textit{Hazelcast}\site{http://hazelcast.org/} library to discover and
+the \textit{Hazelcast}\cite{hazelcast} library to discover and
 manage multiple machines and used its internal decentralized \textit{PubSub} model to communicate
 intermediate results across the network. Figure \ref{fig:partition1} illustrates
 the partitioning of a dataflow graph over several machines, where each machin
@@ -691,9 +687,9 @@ computational cost and cross-machine communication overhead. The figures below
 illustrate one representative example of each general class of
 graph transformation.
 
-\optimizationh{maptake}{Take/skip/distinct before map}
-\optimizationh{mapfilter}{Filter before map}
-\optimization{concatdistinct}{Filter/distinct before concat/merge}
+\optimization{1}{maptake}{Take/skip/distinct before map}
+\optimization{1}{mapfilter}{Filter before map}
+\optimization{3}{concatdistinct}{Filter/distinct before concat/merge}
 
 \subsection{Granularity adjustment}
 
@@ -707,12 +703,12 @@ which is normally the number of available threads amongst all machines.
 To reach the desired granularity, the optimizer applies some semantic-preserving
 transformation, as shown in the figures below.
 
-\optimizationh{mergemap}{Merge maps}
-\optimizationh{combmapfilter}{Combine map with filter}
-\optimizationh{combfilterexists}{Combine filter with exists}
-\optimizationh{combmapexists}{Combine map with exists}
-\optimization{combmapzip}{Combine map with zip}
-\optimizationh{combzipmap}{Combine zip with map}
+\optimization{1}{mergemap}{Merge maps}
+\optimization{1}{combmapfilter}{Combine map with filter}
+\optimization{1}{combfilterexists}{Combine filter with exists}
+\optimization{1}{combmapexists}{Combine map with exists}
+\optimization{2}{combmapzip}{Combine map with zip}
+\optimization{1}{combzipmap}{Combine zip with map}
 
 In figure \ref{fig:mergemap} we merge two \textit{map} operations into
 one \textit{map} operation that uses the composition of the two initial
@@ -734,7 +730,7 @@ If the desired granularity has not been reached yet, the
 \textit{DistributionStrategy} applies fusion to pairs of tasks until it reaches
 it, as shown in figure \ref{fig:fusion}.
 
-\optimization{fusion}{Task fusion}
+\optimization{1}{fusion}{Task fusion}
 
 The final decision to be made is where each of these newly constructed tasks
 will be executed, although some of them need to necessarily be placed on
@@ -769,23 +765,6 @@ the example above, we define two new Stream operators, namely \textit{multiply}
 \textit{mergeSort} (line 13), which produces an ordered stream given two ordered
 streams as input. We also see the power of the \textit{loop} operator (line 2),
 which allows us to define cycles in an effortless manner.
-
-\subsection{Camera surveilance}
-
-Moving to a more realistic, but still minimal, use-case, this example
-demonstrates how cleanly we can express a surveillance application from a
-robot's camera.
-
-The camera should send frames to be displayed on the screen, only when motion is
-detected. Figure \ref{fig:surveillance} shows the dataflow graph with its
-corresponding \textsc{RHEA} code.
-
-\codefig{surveillance}{\jvxs{code/surveillance.java}}{Camera surveillance}
-
-In the code above, we can see how easy it is to view a \textit{ROS} topic as a
-stream, using the \textit{RosEvaluationStrategy} (line 3). Moreover, there is a
-nice separation between program logic (stream declaration in lines 6-17) and
-implementation details (\textit{motionDetected} function in line 19).
 
 \subsection{Robot control panel}
 
@@ -838,7 +817,7 @@ its corresponding \textsc{RHEA} code.
 \codefig{hospital}{\jvxs{code/hospital.java}}{Robot hospital guide}
 
 The second module just uses the \textit{ReactiveBeacons}
-library\site{https://github.com/pwittchen/ReactiveBeacons} to get a stream of
+library\cite{beacons} to get a stream of
 beacon data via \textit{rxjava}, and then publishes it to a \textit{MQTT} topic,
 which is the input of the first module. The corresponding \textsc{RHEA} code
 follows:
@@ -863,7 +842,7 @@ system, while at the same time not losing its expressive power.
 
 %\paragraph{Spark}
 A very well-known and well-adapted framework for scalable large-data processing
-is Apache's \textit{Spark}\site{http://spark.apache.org/}. Although not a
+is Apache's \textit{Spark}\cite{spark}. Although not a
 dataflow framework, it was developed to overcome the shortcomings of the
 \textit{MapReduce}, similar to \textit{FlumeJava}, by providing a much more
 efficient and flexible runtime, offering a rich set of data-parallel operators ($\simeq 80$)
@@ -877,7 +856,7 @@ For instance, \textit{MLib} is a library for machine learning and
 
 %\paragraph{Akka}
 Definitely one the most mature frameworks for distribution targeting the JVM,
-\textit{Akka}\site{http://akka.io/} is a toolkit and runtime for highly
+\textit{Akka}\cite{akka} is a toolkit and runtime for highly
 concurrent, distributed and resilient message-driven applications. It is also
 one of the founders of the \textit{Reactive Streams}\cite{rss} initiative.
 
@@ -905,7 +884,7 @@ simple application would just use a lightweight library like \textit{rxjava}.
 
 %\paragraph{Cloud Dataflow}
 Continuing the search for more expressive models, Google recently released the
-\textit{Cloud Dataflow} framework\site{https://cloud.google.com/dataflow/},
+\textit{Cloud Dataflow} framework\cite{googledataflow},
 which is an evolution of \textit{FlumeJava}\cite{flumejava}, allowing cycles and
 therefore incremental computation.
 
@@ -927,7 +906,7 @@ autonomously.
 
 %\paragraph{dispel4py}
 A less-known framework for Python is
-\textit{dispel4py}\site{https://github.com/dispel4py}. It provides the ability
+\textit{dispel4py}\cite{dispel4py}. It provides the ability
 to describe abstract workflows for distributed data-intensive applications.
 
 Similar to our \textit{EvaluationStrategy} concept, it allows different mappings
@@ -956,7 +935,7 @@ streams fully generic and compositional.
 %\paragraph{Yampa}
 \textsc{RHEA} and \textit{roshask} were heavily influenced by the work of Hudak's
 group (Yale Haskell Group) on robot DSLs and FRP in general\cite{fran,arrows_robots,lambda_in_motion}.
-\textit{Yampa}\site{https://wiki.haskell.org/Yampa} is a DSL embedded in Haskell
+\textit{Yampa}\cite{yampa} is a DSL embedded in Haskell
 that realizes the FRP model, using arrows to minimize time-/space- leaks.
 
 %\subsection{Internet of Things}
@@ -975,8 +954,7 @@ Applications called flows, are built immediately on a browser, and can be
 deployed on the Cloud with just a single click. The main advantage of this tool
 is that it encourages social development, due to the fact that flows are stored
 in JSON format, which can be easily imported and exported for sharing with
-others. The online flow library\site{http://flows.nodered.org/} has had a huge
-number of contributions so far.
+others.
 
 \paragraph{Dataflow optimization}
 
@@ -1000,7 +978,7 @@ benefit to the performance of the system.
 %\paragraph{TensorFlow}
 
 Another dataflow framework from Google is
-\textit{TensorFlow}\site{https://www.tensorflow.org/}, which is an open-source
+\textit{TensorFlow}\cite{tensorflow}, which is an open-source
 polyglot library for machine learning and especially construction of neural
 networks.
 
