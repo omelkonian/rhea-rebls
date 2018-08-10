@@ -125,17 +125,24 @@ architectures</concept_desc> <concept_significance>500</concept_significance>
 
 \section{Introduction} \label{sec:introduction}
 
-Robotics and Internet of Things (IoT) are two domain where the reactivity of
-applications is imperative. A typical application in these domains needs to timely
-and continuously respond to time-varying external stimuli. As a result the
-domain programmer needs to implement tedious and often error-prone behaviours
+A typical application in Robotics or Internet of Things (IoT) needs to timely and
+continuously respond to time-varying external sensory data. This fact makes the
+reactivity of these applications imperative. Typically, a programmer of a robotic
+application has to deal with the asynchronous callbacks in conventional imperative
+programming languages in oder to implement tedious and often error-prone behaviours
 that should comply with the reactive requirements.
 
 %\paragraph{Why FRP is popular and many systems embrace it}
-Functional reactive programming (FRP) \cite{fran} is a relatively recent
-proposal with the main purpose to alleviate from the programmer the need to
-deal with implementation chores. To achieve that a typical FRP program uses
-higher-order functional operators to define a dataflow network of processing nodes.
+A promising and relatively recent proposal for simplyfing the implementation of
+reactive applications is the \emph{functional reactive programming} (FRP) \cite{fran}.
+FRP was originally proposed as a framework for developing graphical user interfaces
+but the key high-level abstractions can be also applied in multiple domains that
+require reactive applications. Essentially, FRP make heavy use of higher-order
+functional operators to define a dataflow network of processing nodes. The merit
+
+
+For example, several proposals exist for robotic applications~\cite{arrows_robots}.
+
 The high-level abstraction of FRP have been proven useful in various applications
 such as the development of graphical user interface~\cite{fran} and various
 implementations of FRP emerge.
