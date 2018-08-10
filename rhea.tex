@@ -239,23 +239,9 @@ reactive (i.e. time-varying and responding to external stimuli) behaviour in
 \textit{hybrid systems} (i.e. containing both continuous and discrete
 components), such as robots, in functional programming languages.
 
-To implement such systems in conventional imperative languages, one must use
-asynchronous \textit{callbacks} (i.e. each change is handled by a registered
-\textit{callback} function). Although this solution is satisfactory for simple
-schemes, more complex scenarios eventually lead to highly incoherent code
-structure, often called \textit{spaghetti code}, in the sense that control
-rapidly moves between disconnected parts of the system, similar to the notorious
-\textit{GOTO} command. This phenomenon stems from the unary nature of
-\textit{callback} functions, which requires some kind of "internal plumbing" in
-order to achieve   mechanisms for handling combination of changes (e.g. when
-multiple changes occur simultaneously). \textit{FRP} provides a solution to this
-shortcoming of \textit{callback} functions, because changes are represented as
-variables (\textit{signals}), which can be passed as parameters to arbitrary
-functions, called \textit{signal functions}.
-
 \textit{FRP} first appeared as a composable library for graphic animations
 ~\cite{fran}, but quickly evolved into a generic paradigm
-~\cite{survey_frp,real_frp,pushpull_frp}. Moreover, extensive research has
+~\cite{survey_frp,pushpull_frp}. Moreover, extensive research has
 investigated \textit{FRP} as a framework for robotics
 ~\cite{arrows_robots,lambda_in_motion}.
 
@@ -265,7 +251,7 @@ real-time constraints, due to uncontrollable time- and space- leaks
 \textit{arrows}~\cite{arrows}, which provided the necessary guarantees that the
 aforementioned common errors do not occur. For instance, to calculate
 a robot's x-coordinate with the formula $x = 1/2 \int (vr + vl) \cos\theta$
-one can write the following \textit{FRP} code that uses the \textit{arrow notation}~\cite{arrows_notation}:
+one can write the following \textit{FRP} code:
 \hssm{code/frp2.hs}
 
 The main advantages of \textit{FRP} are its close correspondence to
@@ -277,7 +263,7 @@ real-time systems, and its concise representation of time-varying values via
 The \textit{Reactive Streams Standard (RSS)} is an initiative
 to provide a standard for asynchronous stream processing with non-blocking back
 pressure. This encompasses efforts aimed at runtime environments (JVM and
-JavaScript) as well as network protocols\cite{rss}.
+JavaScript) as well as network protocols~\cite{rss}.
 
 \textit{RSS} defines two minimal interfaces for the roles of \textit{Subscriber}
 and \textit{Publisher}\site{http://www.reactive-streams.org/reactive-streams-1.0.0-javadoc/}.
@@ -404,15 +390,6 @@ onwards, each partial graph can be evaluated by a different
 interpret it using a specific streams library or even compile into CUDA code for
 execution on a GPU.
 
-Figure \ref{fig:heterogen} illustrates a simple example of a robot application
-pipeline, where input to the dataflow graph is what the robot's camera senses
-and, after some image processing and some computation-heavy decision making, a
-command to an actuator of the robot is executed. Orange nodes are deployed on
-the robot's on-board computer, the green node is deployed on an off-board GPU
-and the red node is deployed on the main server.
-
-\mydiag{heterogen}{Heterogeneity pipeline}
-
 \paragraph{Extensible}
 As the work described in this thesis is quite fundamental and ambitious, it
 seemed highly unlikely that it would reach closure. Therefore, careful
@@ -531,10 +508,10 @@ and evaluation does not matter at all.
 Since extensibility is a major design priority, most individual critical
 components are defined using the \textit{Strategy design pattern}, isolating the desired
 functionality in a separate \textit{interface} and allowing the system to select the
-appropriate instantiating classes at runtime. Figure \ref{fig:core} illustrates all the
-pluggable components of the framework around the core, which are normally deployed in separate libraries
-and for which default implementations are already provided by the current implementation.
-\mydiag{core}{The \textsc{RHEA} ecosystem}
+appropriate instantiating classes at runtime. The main pluggable components of the system,
+for which default implementations are already provided by the current implementation as separate
+libraries, are \textit{Evaluation}, \textit{Optimization}, \textit{Distribution}, \textit{Serialization}
+and \textit{Network Profiling}.
 
 \paragraph{Internal representation}
 For representing the internal structure of the dataflow graph, the
@@ -568,7 +545,7 @@ Many existing technologies provide these interfaces, or at least adapters from
 their internal representations, and therefore they are very easy to be
 integrated to the framework.
 
-\subsection{Evaluation}
+\subsection{Execution}
 
 Every primitive operator corresponds to an expression implementing the
 \textit{Transformer} interface and a complete dataflow is defined by a
@@ -592,7 +569,7 @@ rxjava).
 \item[MqttEvaluationStrategy] Integrates the MQTT middleware into the framework,
 in the same way \textit{ROS} is intergrated. \end{description}
 
-\subsection{Distribution}
+\section{Distributed Execution}
 
 An evaluation strategy executes the requested dataflow graph in a single
 machine, without concern about distribution and resource utilization.
@@ -831,7 +808,7 @@ Definitely one the most mature frameworks for distribution targeting the JVM,
 concurrent, distributed and resilient message-driven applications. It is also
 one of the founders of the \textit{Reactive Streams}~\cite{rss} initiative.
 
-Its approach follows the \textit{Actor} model~\cite{actor}, where one perceives
+Its approach follows the \textit{Actor} model, where one perceives
 abstract computational agents, called actors, that are distributed in space and
 communicate with point-to-point messages that are buffered in a queue. In
 reaction to a message, an actor can create more actors, make local decisions,
@@ -918,7 +895,7 @@ follow that approach.
 
 %\paragraph{Node-RED}
 Another interesting \textit{IoT} tool for JavaScript following a dataflow
-approach is \textit{Node-RED}~\cite{node-red}, which is a visual tool for wiring
+approach is \textit{Node-RED}~\cite{iot_dataflow}, which is a visual tool for wiring
 together hardware devices, APIs and online services in new and interesting ways.
 
 Applications called flows, are built immediately on a browser, and can be
