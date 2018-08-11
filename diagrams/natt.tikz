@@ -1,5 +1,6 @@
+\begin{adjustbox}{width=.9\columnwidth}
 \begin{tikzpicture}
-  [every matrix/.append style={row sep=.5cm}]
+  [every matrix/.append style={column sep=.4cm, row sep=.5cm}]
   \matrix{
     \node[dataflow] (zero) {0};
     \& \node[dataflow] (concat) {concat};
@@ -11,3 +12,4 @@
   \draw[to] (concat) to[bend left=50] (inc);
   \draw[to] (inc) to[bend left=50] (concat);
 \end{tikzpicture}
+\end{adjustbox}

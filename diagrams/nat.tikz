@@ -1,3 +1,4 @@
+\begin{adjustbox}{width=.5\columnwidth}
 \begin{tikzpicture}
   [every matrix/.append style={row sep=.5cm}]
   \matrix{
@@ -11,3 +12,4 @@
   \draw[to] (concat) to[bend left=50] (inc);
   \draw[to] (inc) to[bend left=50] (concat);
 \end{tikzpicture}
+\end{adjustbox}

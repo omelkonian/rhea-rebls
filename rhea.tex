@@ -1,4 +1,4 @@
-\documentclass[sigplan,review,anonymous]{acmart}
+\documentclass[sigplan,review,anonymous,screen ]{acmart}
 \settopmatter{printfolios=true,printccs=false,printacmref=false} %% max submission space
 
 %% Conference information
@@ -116,7 +116,6 @@ architectures</concept_desc> <concept_significance>500</concept_significance>
 \keywords{dataflow programming,
           stream processing,
           functional reactive programming (FRP),
-          distributed systems,
           declarative languages,
           implicit concurrency,
           node placement}
@@ -186,9 +185,16 @@ error-handling (i.e. by using backup machines to rerun nodes that were hosted
 on a faulty machine).
 
 %\paragraph{Structure of the paper}
-The rest of the paper is structured as follows. Section~\ref{sec:approach}.
-Section~\ref{sec:related} discusses the related work. Finally it concludes
-with future directions.
+The rest of the paper is structured as follows.
+Section~\ref{sec:background} provides some background,
+Section~\ref{sec:requirements} gives the main principles that drove our design
+and Section~\ref{sec:approach} presents the framework's characteristics and capabilities.
+Sections~\ref{sec:implementation}-\ref{sec:optimization} discuss implementation details
+such as execution and optimization,
+while Section~\ref{sec:applications} demonstrates some use-cases of the framework.
+and Section~\ref{sec:related} discusses related work in the fields of 
+\textit{Big Data}, \textit{Robotics} and \textit{IoT}.
+Finally, Section~\ref{sec:conclusions} concludes with future directions.
 
 \section{Background} \label{sec:background}
 
@@ -249,10 +255,7 @@ Although appealing at first, \textit{FRP} was not appropriate for systems  with
 real-time constraints, due to uncontrollable time- and space- leaks
 ~\cite{event_frp}. The solution was a generalization of monads called
 \textit{arrows}~\cite{arrows}, which provided the necessary guarantees that the
-aforementioned common errors do not occur. For instance, to calculate
-a robot's x-coordinate with the formula $x = 1/2 \int (vr + vl) \cos\theta$
-one can write the following \textit{FRP} code:
-\hssm{code/frp2.hs}
+aforementioned common errors do not occur.
 
 The main advantages of \textit{FRP} are its close correspondence to
 mathematics~\cite{survey_frp}, which make it an ideal framework for modelling
@@ -266,7 +269,7 @@ pressure. This encompasses efforts aimed at runtime environments (JVM and
 JavaScript) as well as network protocols~\cite{rss}.
 
 \textit{RSS} defines two minimal interfaces for the roles of \textit{Subscriber}
-and \textit{Publisher}\site{http://www.reactive-streams.org/reactive-streams-1.0.0-javadoc/}.
+and \textit{Publisher}~\cite{rss_docs}.
 A \textit{Subscriber} implementation should define
 reactions to observed values, including normal and erroneous termination,
 whereas a \textit{Publisher} implementation should accept requests from
@@ -274,23 +277,9 @@ whereas a \textit{Publisher} implementation should accept requests from
 
 \subsection{Robotics and IoT Middlewares}
 
-\paragraph{Publish-Subscribe model}
-
-\textit{Publish/Subscribe (PubSub)} is a messaging pattern that became popular
-due to the loose coupling of its components, suited for the most recent
-large-scale distributed applications.
-
-There is no point-to-point communication and no synchronization.
-\textit{Publishers} advertise messages of a given type to a specific message
-class or \textit{topic} that is identified by a \textit{keyword}, whereas
-\textit{subscribers} listen on a specific \textit{topic} without any knowledge
-of who the publishers are. The component responsible for relaying the messages
-between machines and/or processes and finding the cheaper dissemination method
-is called the \textit{message broker}.
-
 \paragraph{ROS}
 \textit{ROS} is an open-source middleware for robot software, which emphasizes
-large-scale integrative robotics research cite{ROS}. It provides a \textit{thin}
+large-scale integrative robotics research~\cite{ROS}. It provides a \textit{thin}
 communication layer between heterogeneous computers, from robots to mainframes
 and it has been widely adopted by the research community around the world, due
 to its flexibility and maximal support of reusability through packaging and
@@ -315,7 +304,6 @@ hard-to-maintain code. Our approach gives a solution to the aforementioned
 problem.
 
 \paragraph{Internet of things - MQTT}
-
 The birth of the Internet gave rise to a concept called \textit{Internet of
 Things (IoT)}, which is essentially the ability of many heterogeneous devices,
 ranging from low-cost sensors to vehicles with embedded electronics, to collect
@@ -345,9 +333,6 @@ so as to be able to add new types of \textit{things} and integrate it in an
 effortless way to an existing dataflow network.
 
 \section{Requirements} \label{sec:requirements}
-
-The design was heavily influenced by principles set out by the FRP and dataflow
-models.
 
 \paragraph{Reactive}
 The system should be \textit{reactive}, as close as possible to the definition
@@ -414,8 +399,6 @@ semantics.
 
 \section{Approach} \label{sec:approach}
 
-This section presents the framework's main characteristics and capabilities.
-
 \paragraph{System architecture}
 The \textsc{RHEA} ecosystem consists of several
 clearly separated modules, whose interconnection is illustrated in figure
@@ -460,19 +443,18 @@ Processing nodes can be divided into two classes: \textit{single input} ones and
 calling an operator on that object. Figure \ref{fig:singleinput} shows an
 example of a single input node, namely that of \textit{map}, which transforms
 the input stream (i.e. just the values 1, 2 and 3) by applying a user-defined
-function to every emitted value (i.e. $f(x)=x+1$).
+function to every emitted value.
 
-\codefig{singleinput}{\jvs{code/singleinput.java}}{Single input processing node}
+\codefigg{singleinput}{\jvs{code/singleinput.java}}{Single input processing node}
 
 \textit{Multiple input} nodes are constructed by built-in function that take as
 argument already existing Stream objects. Figure \ref{fig:multipleinput} shows
 an example of a multiple input node, namely that of \textit{zip}, which
-transforms the input streams (i.e. two stream that emit the values 1..10) by
-applying a user-defined function to each emitted pairs of values (i.e.
-$f(x,y)=x+y$). Here we also see another stream creation function, namely
-\textit{Stream.range}.
+transforms the input streams by
+applying a user-defined function to each emitted pairs of values.
+Here we also see the stream creation function \textit{Stream.range}.
 
-\codefig{multipleinput}{\jvs{code/multipleinput.java}}{Multiple input processing node}
+\codefigg{multipleinput}{\jvs{code/multipleinput.java}}{Multiple input processing node}
 
 The variables returns by all processing nodes are \textit{Stream} objects. These
 objects can be reused in different parts of the graph to enable splitting a
@@ -480,7 +462,7 @@ node's output to different processing nodes or outputs. Figure \ref{fig:split}
 shows such an example, where the \textit{filter} operator only emits values for
 which the given function returns true.
 
-\codefig{split}{\jvs{code/split.java}}{Split example}
+\codefigg{split}{\jvs{code/split.java}}{Split example}
 
 Cycle construction is a bit trickier, as no direct manipulation of the internal
 graph is permitted. Cycles are constructed using the \textit{loop} operator,
@@ -491,7 +473,7 @@ the \textit{loop} operator to represent the natural numbers, just as the graph
 shown earlier in figure \ref{fig:nat}. The \textit{concat} operator is a
 multiple input node that concatenates its input streams.
 
-\codefig{natt}{\jvs{code/natt.java}}{Cyclic example}
+\codefigg{natt}{\jvs{code/natt.java}}{Cyclic example}
 
 \paragraph{Evaluation syntax and semantics}
 To evaluate a given dataflow graph and do something with its output values, we
@@ -500,8 +482,8 @@ argument passed to \textit{subscribe} is either a user-defined action (i.e.
 function with side-effects) or an object implementing the \textit{Subscriber}
 interface.
 
-The execution is completely asynchronous, hence the order of stream declaration
-and evaluation does not matter at all.
+The execution is completely asynchronous, hence the order of stream
+declaration/evaluation does not matter at all.
 
 \section{Implementation} \label{sec:implementation}
 
@@ -554,20 +536,21 @@ which can be either an \textit{Action}, a \textit{Sink} or a list of these.
 An \textit{EvaluationStrategy} just takes the \textit{Stream} variable and its
 corresponding \textit{Output} and executes it, however desired.
 The strategies we have implemented so far follow:
-\begin{description}[style=nextline]
-\item[RxJavaEvaluationStrategy] Uses
-rxjava~\cite{rxjava}, which is a famous and well-
+
+\paragraph{RxJavaEvaluationStrategy}
+Uses rxjava~\cite{rxjava}, which is a famous and well-
 maintained library for asynchronous programming using the \textit{Observable}
 type, which is very close, semantically, to our \textit{Stream} type.
 
-\item[RosEvaluationStrategy] Integrates the \textit{ROS} middleware into the
+\paragraph{RosEvaluationStrategy}
+Integrates the \textit{ROS} middleware into the
 framework. This strategy's job is to set up a \textit{ROS} client and configure every
 \textit{RosTopic} used within the dataflow that needs to be evaluated to use
 this client. After that, evaluation is propagated to a generic strategy (e.g.
 rxjava).
 
-\item[MqttEvaluationStrategy] Integrates the MQTT middleware into the framework,
-in the same way \textit{ROS} is intergrated. \end{description}
+\paragraph{MqttEvaluationStrategy} Integrates the MQTT middleware into the framework,
+in the same way \textit{ROS} is intergrated.
 
 \section{Distributed Execution}
 
@@ -588,7 +571,7 @@ the partitioning of a dataflow graph over several machines, where each machin
 - except the last one - outputs its result to a \textit{Hazelcast} topic, from which
 another machine gets its input.
 
-\twofig{partition1}{partition2}{Partitioning}
+\optimizationL{2}{partition}{Partitioning}
 
 \paragraph{Machine configuration}
 According to the distribution strategy being used, the available machines will
@@ -691,8 +674,6 @@ to the \textit{NodePlacement} optimizer.
 
 \section{Applications} \label{sec:applications}
 
-This section demonstrates some use-cases of the framework.
-
 \subsection{Hamming numbers}
 
 Consider the problem of enumerating the
@@ -775,9 +756,6 @@ This example clearly show-cases the framework's ability to combine different
 technologies and act as a high-level, declarative coordination language.
 
 \section{Related Work} \label{sec:related}
-
-This section discusses related work in the fields of \textit{Big Data},
-\textit{Robotics} and \textit{IoT}.
 
 \subsection{Dataflow systems}
 
@@ -991,7 +969,7 @@ certain that host failures and other faults will be a common occurrence. The
 functional nature of the dataflow model enables fault-tolerance, in addition to
 parallelism, due to the fact that a node can be moved to another machine for
 execution, while preserving the original semantics.  This contribution path can draw
-heavy influence from recent research on fault-tolerance for stream processing engines~\cite{borealis,wide_area},
+heavy influence from recent research on fault-tolerance for stream processing engines~\cite{borealis},
 which provide efficient models for availability and data recovery/consistency,
 by using data replication and parallel recovery of lost state.
 

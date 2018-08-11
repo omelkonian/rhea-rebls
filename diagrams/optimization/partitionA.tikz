@@ -1,5 +1,5 @@
 \begin{tikzpicture}
-  [every matrix/.append style={row sep=.7cm}]
+  [every matrix/.append style={column sep=.5cm, row sep=.7cm}]
   \matrix{
     \& \node[dataflow] (ini) {\small{1..10}};
     \& \node[dataflow] (iniA) {\small{ topic1 }}; \\

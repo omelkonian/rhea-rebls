@@ -1,3 +1,4 @@
+\begin{adjustbox}{width=.65\columnwidth}
 \begin{tikzpicture}
   \matrix{
     \node[machine] (A) {M1};
@@ -20,3 +21,4 @@
     \node[fill=orange!50, fit=(ds) (dm), label=above:\small arrival] {};
   \end{scope}
 \end{tikzpicture}
+\end{adjustbox}

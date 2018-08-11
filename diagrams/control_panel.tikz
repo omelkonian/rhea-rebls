@@ -1,3 +1,4 @@
+\begin{adjustbox}{width=.75\columnwidth}
 \begin{tikzpicture}
   [every matrix/.append style={row sep=.4cm, column sep=.2cm}]
   \matrix{
@@ -47,3 +48,4 @@
   \draw[to] (map) -- (dba);
 
 \end{tikzpicture}
+\end{adjustbox}

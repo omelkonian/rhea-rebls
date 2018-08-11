@@ -1,10 +1,12 @@
+\begin{adjustbox}{width=.9\columnwidth}
 \begin{tikzpicture}
-  [every matrix/.append style={row sep=0.05cm}]
+  [every matrix/.append style={column sep=0.05cm}]
   \matrix{
-    \node[dataflow] (fst) {\small 1..10}; \\
+    \node[dataflow] (fst) {\small 1..10};
+    \& \& \node[dataflow] (snd) {\small 1..10}; \\
     \& \node[dataflow] (zip) {\small zip \{$x+y$\}};  \\
-    \node[dataflow] (snd) {\small 1..10}; \\
   };
   \draw[to] (fst) -- (zip);
   \draw[to] (snd) -- (zip);
 \end{tikzpicture}
+\end{adjustbox}

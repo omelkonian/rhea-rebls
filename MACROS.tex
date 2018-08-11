@@ -34,8 +34,23 @@
 
 \newcommand\codefig[3]{
 	\begin{figure}[h!]
-	  \begin{center} \input{diagrams/#1.tikz} \end{center}
+	  \begin{center}
+	    \input{diagrams/#1.tikz}
+	  \end{center}
 		#2
+		\caption{#3}
+		\label{fig:#1}
+	\end{figure}
+}
+
+\newcommand\codefigg[3]{
+	\begin{figure}[h!]
+	  \begin{minipage}{.4\columnwidth}
+		    \centering \input{diagrams/#1.tikz}
+	  \end{minipage}
+	  \begin{minipage}{.55\columnwidth}
+	    #2
+	  \end{minipage}
 		\caption{#3}
 		\label{fig:#1}
 	\end{figure}
@@ -50,27 +65,26 @@
 	\end{figure}
 }
 
-\newcommand\twofig[3]{
+\newcommand\optim[4]{
 	\begin{figure}[h!]
-		\begin{center} \input{diagrams/#1.tikz} \end{center}
-		\vspace{-.3cm}
-		$\xdown$
-		\begin{center} \input{diagrams/#2.tikz} \end{center}
-		\caption{#3}
-		\label{fig:#1}
-	\end{figure}
+	  \begin{adjustbox}{width=#1}
+	  \input{diagrams/optimization/#3B.tikz}
+	  \hspace{-.4cm}
+	  \input{diagrams/optimization/rightarrow#2.tikz}
+	  \hspace{-.4cm}
+	  \input{diagrams/optimization/#3A.tikz}
+	  \end{adjustbox}
+		\caption{#4}
+		\label{fig:#3}
+	\end{figure}	
 }
 
 \newcommand\optimization[3]{
-	\begin{figure}[h!]
-	  \input{diagrams/optimization/#2B.tikz}
-	  \hspace{-.4cm}
-	  \input{diagrams/optimization/rightarrow#1.tikz}
-	  \hspace{-.4cm}
-	  \input{diagrams/optimization/#2A.tikz}
-		\caption{#3}
-		\label{fig:#2}
-	\end{figure}	
+	\optim{.7\columnwidth}{#1}{#2}{#3}
+}
+
+\newcommand\optimizationL[3]{
+	\optim{.9\columnwidth}{#1}{#2}{#3}
 }
 
 % Source Code

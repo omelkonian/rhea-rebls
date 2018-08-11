@@ -1,8 +1,9 @@
+\begin{adjustbox}{width=.5\columnwidth}
 \begin{tikzpicture}
-  [every matrix/.append style={row sep=0.5cm}]
   \matrix{
-    \node[dataflow] (just) {\small just [1, 2, 3]};
-    \& \node[dataflow] (map) {\small map \{$x + 1$\}};  \\
+    \node[dataflow] (just) {\small just [1, 2, 3]}; \\
+    \node[dataflow] (map) {\small map \{$x + 1$\}};  \\
   };
   \draw[to] (just) -- (map);
 \end{tikzpicture}
+\end{adjustbox}

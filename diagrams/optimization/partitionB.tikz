@@ -1,0 +1,9 @@
+\begin{tikzpicture}
+  \matrix{
+    \node[dataflow] (ini) {\small{1..10}}; \\
+    \node[dataflow] (map) {\small{map\{ f \}}}; \\
+    \node[dataflow] (out) {\small{print}}; \\
+  };
+  \draw[to] (ini) -- (map);
+  \draw[to] (map) -- (out);
+\end{tikzpicture}
