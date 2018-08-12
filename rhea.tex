@@ -192,18 +192,20 @@ Finally, Section~\ref{sec:conclusions} concludes with future directions.
 
 \section{Background} \label{sec:background}
 
-\subsection{The dataflow computational model} The increased interest in
-parallelism during the 70's gave rise to the dataflow execution model, which is
-an alternative to the classical "von-Neumann" model. In the dataflow model,
-everything is represented in a dataflow graph, where nodes are independent
-computational units  and edges are communication channels between these units. A
-node/unit is fired immediately when its required inputs are available and
-therefore no explicit control commands are needed for execution. Figure
-\ref{fig:nat} shows a dataflow graph enumerating the set $\mathbb{N}$ of natural
-numbers.
+\subsection{The dataflow computational model}
+In the dataflow model, the program is represented as a dataflow graph, where
+nodes are independent computational units and edges are communication channels
+between these units. A node is fired immediately when its required inputs are
+available and therefore no explicit control commands are needed for execution.
+An immediate consequence is that the nodes of the graph can run independently
+and potentially in parallel as soon as their inputs are present.
 
+%\begin{example}
+Figure~\ref{fig:nat} shows a dataflow graph enumerating the set $\mathbb{N}$ of
+natural numbers.
+%
 \mydiag{nat}{Natural numbers}
-
+%
 In the dataflow graph above, we can discern three types of nodes: sources, which
 do not have any incoming edge and act as value generators to initiate
 computation, sinks, which do not have any outgoing edges and inner nodes, which
@@ -222,14 +224,13 @@ therefore can run in parallel. For instance, while \textit{increment} is
 processing value 5 (i.e. to produce value 6), the previous result (i.e. value 5)
 passes through \textit{concat} to reach the sink node, which can concurrently
 process it to display it.
+%\end{example}
 
-The main advantage of the dataflow model is its implicit parallelism, deriving
-from the fact that the computational units are totally independent and therefore
-can be executed in parallel. A possible single-machine implementation could
-represent edges as in-memory data storage, whereas a multi-machine one could
-represent them as channels between TCP sockets, allowing communication across
-the network. Its great flexibility and composability makes it a good candidate
-for the underlying architecture of a framework with a high level of abstraction.
+A possible single-machine implementation could represent edges as in-memory
+data storage, whereas a multi-machine one could represent them as channels
+between TCP sockets, allowing communication across the network. Its great
+flexibility and composability makes it a good candidate for the underlying
+architecture of a framework with a high level of abstraction.
 
 \subsection{Functional reactive programming}
 
@@ -365,12 +366,12 @@ requirement, the strategy design pattern was used for evaluation, meaning that
 the core system only builds the internal representation of the dataflow graph
 and partitions it across the available computational resources. From there
 onwards, each partial graph can be evaluated by a different
-\textit{EvaluationStrategy} (see Section \ref{sec:implementation}), which could
+\textit{EvaluationStrategy} (see, Section \ref{sec:implementation}), which could
 interpret it using a specific streams library or even compile into CUDA code for
 execution on a GPU.
 
 \paragraph{Extensible}
-As the work described in this thesis is quite fundamental and ambitious, it
+As the work described in this paper is quite fundamental and ambitious, it
 seemed highly unlikely that it would reach closure. Therefore, careful
 consideration was taken to compose the system of different independent modules,
 which could easily be extended/modified, allowing many future contributions.
@@ -391,15 +392,14 @@ most of its internal functionality. Moreover, the internal graph representation
 does not include information on how a node is executed, but only on its
 semantics.
 
-\section{Approach} \label{sec:approach}
+\section{The RHEA Framework} \label{sec:approach}
 
-\paragraph{System architecture}
-The \textsc{RHEA} ecosystem consists of several
-clearly separated modules, whose interconnection is illustrated in figure
-\ref{fig:architecture}.
-
+\subsection{System Architecture}
+The \textsc{RHEA} ecosystem consists of several clearly separated modules,
+whose interconnection is illustrated in Figure~\ref{fig:architecture}.
+%
 \myimage{architecture}{0.3}{System architecture}
-
+%
 The user writes a program in the provided stream language, which constructs a
 dataflow graph internally. Afterwards, using information about the available
 resources in the network, the constructed graph is optimized (i.e. in terms of
@@ -407,17 +407,18 @@ performance, communication cost and node placement). The optimized graph is then
 distributed across the available machines for evaluation, maybe using a
 different technique each time.
 
-\paragraph{Supported dataflow graphs}
+\subsection{Constructing Dataflow Graphs}
+
 The kind of dataflow graph that can be expressed using the framework's stream
 language are directed cyclic graphs with possibly many inputs and outputs.
-
-\paragraph{The Stream data type}
+%
+%\paragraph{The Stream data type}
 The data channels (i.e. edges of the dataflow graph) are represented using the
 \textit{Stream} data type, which is parametric, meaning that it can emit values
 of any data type, whether built-in or user-defined. The stream produced may
 terminate, successfully or erroneously, or even be infinite.
 
-\paragraph{Graph construction syntax}
+%\paragraph{Graph construction syntax}
 The construction of the internal dataflow graph is always implicit, through a
 rich set of operators on the Stream data type. Each \textit{Stream} object
 contains internally a dataflow graph of type \textit{FlowGraph}, which is only
@@ -432,52 +433,54 @@ object of type \textit{Stream}.
 
 Processing nodes can be divided into two classes: \textit{single input} ones and
 \textit{multiple input} ones.
-
-\textit{Single input} nodes are inserted into an existing Stream object, by
-calling an operator on that object. Figure \ref{fig:singleinput} shows an
+%
+\begin{description}
+\item[Single input] nodes are inserted into an existing Stream object, by
+calling an operator on that object. Figure~\ref{fig:singleinput} shows an
 example of a single input node, namely that of \textit{map}, which transforms
 the input stream (i.e. just the values 1, 2 and 3) by applying a user-defined
 function to every emitted value.
-
+%
 \codefigg{singleinput}{\jvs{code/singleinput.java}}{Single input processing node}
-
-\textit{Multiple input} nodes are constructed by built-in function that take as
-argument already existing Stream objects. Figure \ref{fig:multipleinput} shows
+%
+\item[Multiple input] nodes are constructed by built-in function that take as
+argument already existing Stream objects. Figure~\ref{fig:multipleinput} shows
 an example of a multiple input node, namely that of \textit{zip}, which
 transforms the input streams by
 applying a user-defined function to each emitted pairs of values.
 Here we also see the stream creation function \textit{Stream.range}.
-
+%
 \codefigg{multipleinput}{\jvs{code/multipleinput.java}}{Multiple input processing node}
+%
+\end{description}
 
-The variables returns by all processing nodes are \textit{Stream} objects. These
+The variables returned by all processing nodes are \textit{Stream} objects. These
 objects can be reused in different parts of the graph to enable splitting a
-node's output to different processing nodes or outputs. Figure \ref{fig:split}
+node's output to different processing nodes or outputs. Figure~\ref{fig:split}
 shows such an example, where the \textit{filter} operator only emits values for
 which the given function returns true.
 
 \codefigg{split}{\jvs{code/split.java}}{Split example}
 
-Cycle construction is a bit trickier, as no direct manipulation of the internal
-graph is permitted. Cycles are constructed using the \textit{loop} operator,
-which is a single input processing node. It requires a function that, given an
-input stream, constructs a subgraph that redirects its output to that input,
-therefore creating a feedback loop. Figure \ref{fig:natt} shows an example of
-the \textit{loop} operator to represent the natural numbers, just as the graph
-shown earlier in figure \ref{fig:nat}. The \textit{concat} operator is a
+Cycles are constructed using the \textit{loop} operator, which is a single
+input processing node. It requires a function that, given an input stream,
+constructs a subgraph that redirects its output to that input, therefore
+creating a feedback loop. Figure~\ref{fig:natt} shows an example of the
+\textit{loop} operator to represent the natural numbers, just as the graph
+shown earlier in Figure~\ref{fig:nat}. The \textit{concat} operator is a
 multiple input node that concatenates its input streams.
 
 \codefigg{natt}{\jvs{code/natt.java}}{Cyclic example}
 
-\paragraph{Evaluation syntax and semantics}
+%\paragraph{Evaluation syntax and semantics}
 To evaluate a given dataflow graph and do something with its output values, we
 need to call the \textit{subscribe} method of the \textit{Stream} object. The
 argument passed to \textit{subscribe} is either a user-defined action (i.e.
 function with side-effects) or an object implementing the \textit{Subscriber}
 interface.
-
-The execution is completely asynchronous, hence the order of stream
-declaration/evaluation does not matter at all.
+%
+%The execution is completely asynchronous, hence the order of stream
+%declaration and evaluation does not matter at all.
 
 \section{Implementation} \label{sec:implementation}
 
@@ -512,7 +515,7 @@ etc).
 A sink node (output) should implement the Subscriber interface, which
 essentially defines three methods corresponding to reactions to a
 \textit{Notification}, one for each of the categories mentioned above.
-
+%
 A source node (input) should implement the Publisher interface, which defines a
 single method \textit{subscribe(Subscriber)}, where a Subscriber requests the
 Publisher to start emitting values.
@@ -527,24 +530,24 @@ Every primitive operator corresponds to an expression implementing the
 \textit{Transformer} interface and a complete dataflow is defined by a
 \textit{Stream} variable and an object implementing the \textit{Output} interface,
 which can be either an \textit{Action}, a \textit{Sink} or a list of these.
-An \textit{EvaluationStrategy} just takes the \textit{Stream} variable and its
+An \textit{EvaluationStrategy} takes the \textit{Stream} variable and its
 corresponding \textit{Output} and executes it, however desired.
 The strategies we have implemented so far follow:
 
 \paragraph{RxJavaEvaluationStrategy}
-Uses rxjava~\cite{rxjava}, which is a famous and well-
-maintained library for asynchronous programming using the \textit{Observable}
-type, which is very close, semantically, to our \textit{Stream} type.
+Uses RxJava~\cite{rxjava}, an established and well-maintained library for
+asynchronous programming using the \textit{Observable} type, which is very close,
+semantically, to our \textit{Stream} type.
 
 \paragraph{RosEvaluationStrategy}
 Integrates the \textit{ROS} middleware into the
 framework. This strategy's job is to set up a \textit{ROS} client and configure every
 \textit{RosTopic} used within the dataflow that needs to be evaluated to use
 this client. After that, evaluation is propagated to a generic strategy (e.g.
-rxjava).
+RxJava).
 
 \paragraph{MqttEvaluationStrategy} Integrates the MQTT middleware into the framework,
-in the same way \textit{ROS} is intergrated.
+in the same way \textit{ROS} is integrated.
 
 \section{Distributed Execution}
 
@@ -556,18 +559,18 @@ the \textit{DistributionStrategy} interface by adjusting the granularity (i.e. s
 the graph to evaluate to fit the available resources (see \textit{Optimization} section)
 and partition it across all computational resources, maybe using different evaluation strategies.
 
-\paragraph{Hazelcast}
+%\paragraph{Hazelcast}
 The default \textit{DistributionStrategy} shipped with the framework uses
 the \textit{Hazelcast}~\cite{hazelcast} library to discover and
 manage multiple machines and used its internal decentralized \textit{PubSub} model to communicate
-intermediate results across the network. Figure \ref{fig:partition} illustrates
+intermediate results across the network. Figure~\ref{fig:partition} illustrates
 the partitioning of a dataflow graph over several machines, where each machin
 - except the last one - outputs its result to a \textit{Hazelcast} topic, from which
 another machine gets its input.
-
+%
 \optimizationL{2}{partition}{Partitioning}
 
-\paragraph{Machine configuration}
+%\paragraph{Machine configuration}
 According to the distribution strategy being used, the available machines will
 require a certain initial configuration. For the \textit{Hazelcast} case, a
 little piece of setup code needs to be executed on every member of the cluster,
@@ -584,12 +587,12 @@ in order to set up a \textit{ROS} client. In the \textit{Hazelcast} case, these
 skills are just \textit{strings} and are declared in the initialization code of
 each machine separately.
 
-\paragraph{Serialization}
+\subsection{Serialization}
 As communication between machines across a network is mandatory, data types
 emitted through the streams must be serialized on departure and de-serialized on
 arrival at each machine. For this reason, each \textit{DistributionStrategy}
 must be configured with a class implementing the \textit{Serializer} interface,
-but we also provide a default one that covers most datatypes. Figure \ref{fig:serialization}
+but we also provide a default one that covers most datatypes. Figure~\ref{fig:serialization}
 depicts the serialization process in more detail.
 
 \mydiag{serialization}{Serialization process}
@@ -597,7 +600,7 @@ depicts the serialization process in more detail.
 \section{Optimizations} \label{sec:optimization}
 
 This section describes three stages of optimization the dataflow graph goes
-through before being evaluated, which are illustrated in Figure \ref{fig:optimization}.
+through before being evaluated, which are illustrated in Figure~\ref{fig:optimization}.
 The purpose of the optimization graph is to achieve better performance and
 utilization of the available resources.
 
@@ -635,9 +638,9 @@ transformation, as shown in the figures below.
 \optimization{2}{combmapzip}{Combine map with zip}
 \optimization{1}{combzipmap}{Combine zip with map}
 
-In figure \ref{fig:mergemap} we merge two \textit{map} operations into
+In Figure~\ref{fig:mergemap} we merge two \textit{map} operations into
 one \textit{map} operation that uses the composition of the two initial
-functions, while in figure \ref{fig:combmapfilter} a \textit{map} followed
+functions, while in Figure~\ref{fig:combmapfilter} a \textit{map} followed
 by a \textit{filter} is substituted by a more complex equivalent operation,
 namely \textit{filterMap}. In figures \ref{fig:combfilterexists} and
 \ref{fig:combmapexists} we apply some simple properties of the boolean functions
@@ -653,7 +656,7 @@ the available machines, keeping resource utilization in mind.
 
 If the desired granularity has not been reached yet, the
 \textit{DistributionStrategy} applies fusion to pairs of tasks until it reaches
-it, as shown in figure \ref{fig:fusion}.
+it, as shown in Figure~\ref{fig:fusion}.
 
 \optimization{1}{fusion}{Task fusion}
 
@@ -705,7 +708,7 @@ horizontal depth information in polar coordinates.
 The GUI displays the laser data embedded on the camera stream, while allowing
 for real-time face detection. Additionally, it displays the depth frames and the
 \textit{tf} relations as a tree. Finally, a mock-up battery bar is displayed to
-show-case the framework's ability for simulation. Figure \ref{fig:control_panel}
+show-case the framework's ability for simulation. Figure~\ref{fig:control_panel}
 illustrates the dataflow solution to the above problem and its corresponding
 \textsc{RHEA} code.
 
@@ -734,7 +737,7 @@ velocity commands for the robot, in the form of slowing down or speeding up.
 
 The first module constitutes the main program logic, where a declared dataflow
 graph acts as a stream transformation from beacon information to velocity
-commands to the robot. Figure \ref{fig:hospital} shows the dataflow graph with
+commands to the robot. Figure~\ref{fig:hospital} shows the dataflow graph with
 its corresponding \textsc{RHEA} code.
 
 \codefig{hospital}{\jvxs{code/hospital.java}}{Robot hospital guide}
