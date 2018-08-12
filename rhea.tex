@@ -52,11 +52,13 @@
 \usepackage{adjustbox}
 \usepackage{url}
 
-\begin{document}\sloppy
+\renewcommand{\comment}[1]{}
+
+\begin{document}%\sloppy
 \input{MACROS.tex}
 
 \title[RHEA]{RHEA: A Reactive, Heterogeneous, Extensible and Abstract Framework for Dataflow Programming}
-\subtitle{}
+%\subtitle{}
 
 %% Orestis
 \author{Orestis Melkonian}
@@ -232,6 +234,7 @@ between TCP sockets, allowing communication across the network. Its great
 flexibility and composability makes it a good candidate for the underlying
 architecture of a framework with a high level of abstraction.
 
+\comment{%
 \subsection{Functional reactive programming}
 
 A relatively recent programming paradigm is \textit{Functional Reactive
@@ -269,7 +272,8 @@ A \textit{Subscriber} implementation should define
 reactions to observed values, including normal and erroneous termination,
 whereas a \textit{Publisher} implementation should accept requests from
 \textit{Subscribers} and start emitting values to them.
-
+}
+  
 \subsection{Robotics and IoT Middlewares}
 
 \paragraph{ROS}
@@ -494,8 +498,8 @@ and \textit{Network Profiling}.
 
 \paragraph{Internal representation}
 For representing the internal structure of the dataflow graph, the
-\textit{JGrapht} open-source Java library was used, which provides many graph
-data structures and common graph-theoretic algorithms~\cite{jgrapht}.
+\textit{JGrapht}\footnote{\url{http://jgrapht.org/}} open-source Java library was used, which provides many graph
+data structures and common graph-theoretic algorithms.
 
 \paragraph{Notifications}
 Every value passed through the framework's
@@ -561,7 +565,7 @@ and partition it across all computational resources, maybe using different evalu
 
 %\paragraph{Hazelcast}
 The default \textit{DistributionStrategy} shipped with the framework uses
-the \textit{Hazelcast}~\cite{hazelcast} library to discover and
+the \textit{Hazelcast}\footnote{\url{http://hazelcast.org/}} library to discover and
 manage multiple machines and used its internal decentralized \textit{PubSub} model to communicate
 intermediate results across the network. Figure~\ref{fig:partition} illustrates
 the partitioning of a dataflow graph over several machines, where each machin
@@ -742,9 +746,8 @@ its corresponding \textsc{RHEA} code.
 
 \codefig{hospital}{\jvxs{code/hospital.java}}{Robot hospital guide}
 
-The second module just uses the \textit{ReactiveBeacons}
-library~\cite{beacons} to get a stream of
-beacon data via \textit{rxjava}, and then publishes it to a \textit{MQTT} topic,
+The second module just uses the library \textit{ReactiveBeacons}\footnote{\url{http://github.com/ 1083 pwittchen/ReactiveBeacons}}
+to get a stream of beacon data via \textit{rxjava}, and then publishes it to a \textit{MQTT} topic,
 which is the input of the first module. The corresponding \textsc{RHEA} code
 follows:
 \jvxs{code/rxbeacon.java}
@@ -804,7 +807,6 @@ other hand, \textsc{RHEA} offers the ability to choose between several
 simple application would just use a lightweight library like \textit{rxjava}.
 
 \subsection{Unified dataflow languages}
-
 %\paragraph{Cloud Dataflow}
 Continuing the search for more expressive models, Google recently released the
 \textit{Cloud Dataflow} framework~\cite{googledataflow},
@@ -840,6 +842,45 @@ low-level specification of the graph's nodes, through the definition of
 \textit{Processing Elements}. Therefore, it is inconvenient to compose larger
 graphs from simpler ones and the source code becomes chaotic and difficult to
 maintain.
+
+\subsection{Dataflow optimization}
+%\paragraph{Stratosphere}
+The frameworks discussed so far follow, more or less, an imperative approach,
+which enables automatic distribution/concurrency by using immutable data
+structures. \textit{Stratosphere}~\cite{stratosphere}, on the other hand, follows
+a declarative programming approach similar to \textsc{RHEA}, which enables
+writing highly parallel code directly from the language's semantics.
+
+Apart from offering a language of a much higher abstraction level,
+\textit{Stratosphere} has internalised several interesting and novel approaches
+to optimization of dataflow graphs, especially concerning cyclic graphs (i.e.
+incremental computation)~\cite{spinning}. These optimizations are generic, in the
+sense that most frameworks can adopt them without much effort. Integrating these
+optimization into \textsc{RHEA}, as future work, would certainly be of great
+benefit to the performance of the system.
+
+\subsection{Heterogeneous data processing}
+Another dataflow framework from Google is
+\textit{TensorFlow}~\cite{tensorflow}, which is an open-source
+polyglot library for machine learning and especially construction of neural
+networks.
+
+The interesting fact is that, although it started out as a rigid neural network
+library, it quickly generalized to a dataflow construction library, much similar
+to our own project, which started out as a robotics library.
+
+Its main features are its portability to multiple computational architetures
+(e.g. CPU, GPU, etc...) and multiple language APIs (e.g. C++, Python), although
+its main advantage are its domain-specific operators for neural nets (i.e.
+common subgraphs, auto-differentiation).
+
+Through the edges/streams connecting the nodes, only a single but flexible data
+type is allowed, namely the \textit{Tensor} type, which essentially is a multi-
+dimensional array that usually represents features or weights. In contrast to
+\textsc{RHEA}'s Streams, \textit{Tensors} cannot be infinite, mainly due to the
+fact that their size is determined by the dimensionality of the problem being
+solved, which is, in most cases, a fixed constant.
+
 
 \subsection{Robotics and IoT}
 
@@ -878,48 +919,6 @@ deployed on the Cloud with just a single click. The main advantage of this tool
 is that it encourages social development, due to the fact that flows are stored
 in JSON format, which can be easily imported and exported for sharing with
 others.
-
-\subsection{Dataflow optimization}
-
-%\paragraph{Stratosphere}
-The frameworks discussed so far follow, more or less, an imperative approach,
-which enables automatic distribution/concurrency by using immutable data
-structures. \textit{Stratosphere}~\cite{stratosphere}, on the other hand, follows
-a declarative programming approach similar to \textsc{RHEA}, which enables
-writing highly parallel code directly from the language's semantics.
-
-Apart from offering a language of a much higher abstraction level,
-\textit{Stratosphere} has internalised several interesting and novel approaches
-to optimization of dataflow graphs, especially concerning cyclic graphs (i.e.
-incremental computation)~\cite{spinning}. These optimizations are generic, in the
-sense that most frameworks can adopt them without much effort. Integrating these
-optimization into \textsc{RHEA}, as future work, would certainly be of great
-benefit to the performance of the system.
-
-\subsection{Heterogeneous data processing}
-
-%\paragraph{TensorFlow}
-
-Another dataflow framework from Google is
-\textit{TensorFlow}~\cite{tensorflow}, which is an open-source
-polyglot library for machine learning and especially construction of neural
-networks.
-
-The interesting fact is that, although it started out as a rigid neural network
-library, it quickly generalized to a dataflow construction library, much similar
-to our own project, which started out as a robotics library.
-
-Its main features are its portability to multiple computational architetures
-(e.g. CPU, GPU, etc...) and multiple language APIs (e.g. C++, Python), although
-its main advantage are its domain-specific operators for neural nets (i.e.
-common subgraphs, auto-differentiation).
-
-Through the edges/streams connecting the nodes, only a single but flexible data
-type is allowed, namely the \textit{Tensor} type, which essentially is a multi-
-dimensional array that usually represents features or weights. In contrast to
-\textsc{RHEA}'s Streams, \textit{Tensors} cannot be infinite, mainly due to the
-fact that their size is determined by the dimensionality of the problem being
-solved, which is, in most cases, a fixed constant.
 
 \section{Conclusions and Future Work} \label{sec:conclusions}
 
