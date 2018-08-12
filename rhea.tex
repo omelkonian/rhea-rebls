@@ -1,4 +1,4 @@
-\documentclass[sigplan,review,anonymous,screen ]{acmart}
+\documentclass[sigplan,review,anonymous,screen]{acmart}
 \settopmatter{printfolios=true,printccs=false,printacmref=false} %% max submission space
 
 %% Conference information
@@ -125,8 +125,8 @@ architectures</concept_desc> <concept_significance>500</concept_significance>
 \section{Introduction} \label{sec:introduction}
 
 A typical application in Robotics or Internet of Things (IoT) needs to timely and
-continuously respond to time-varying external sensory data. This fact makes the
-reactivity of these applications imperative. Typically, a programmer of a robotic
+continuously respond to time-varying external sensory data and as a result the
+reactivity of these applications is imperative. Typically, a programmer of such an
 application has to deal with asynchronous callbacks in conventional imperative
 programming languages in order to implement tedious and often error-prone behaviours
 that should comply with the reactive requirements.
@@ -134,13 +134,18 @@ that should comply with the reactive requirements.
 %\paragraph{Why FRP is popular and many systems embrace it}
 A promising and relatively recent proposal for simplifying the implementation of
 reactive applications is the \emph{functional reactive programming} (FRP) \cite{fran}.
-FRP was originally proposed as a framework for developing graphical user interfaces
-but the key high-level abstractions can be also applied in other domains that
-require reactive applications. Essentially, FRP makes heavy use of higher-order
-functional operators to define a dataflow network of processing nodes.
-The purpose of these high-level abstractions is to alleviate the low-level
-implementation chores. Moreover, since the resulting program is a dataflow graph
-it lends itself to optimization, partitioning and potential distributed execution.
+Essentially, FRP makes heavy use of higher-order functional operators to define a
+dataflow network of processing nodes. The purpose of these high-level abstractions
+is to alleviate the low-level implementation chores. FRP was originally proposed
+though as a framework for developing graphical user interfaces but fortunately the key
+high-level abstractions are generic enough that other domains can benefit from this
+approach.
+
+More specifically, most robotic applications follow the \textit{Robot Perception
+Architecture (RPA)}, where inputs to system are the robot's sensors, which are
+then processed by a dataflow graph, whose output is given as commands to the
+robot actuators. Moreover, robotics typically involve several different robotic
+systems, whose combination is even more challenging.
 
 %\paragraph{There are many domains that need reactive apps but have their own
 % established architectures and protocols that makes it hard to employ a brand new FRP system}
@@ -155,17 +160,6 @@ of execution which makes the integration between libraries more cumbersome.
 Fortunately, the Reactive Streams Standard (RSS) defines a minimal interface between
 reactive libraries in order to ease the integration efforts needed.
 
-
-Specifically, most robotic applications follow the \textit{Robot Perception
-Architecture (RPA)}, where inputs to system are the robot's sensors, which are
-then processed by a dataflow graph, whose output is given as commands to the
-robot actuators. Moreover, robotics typically involve several different robotic
-systems, whose combination is even more challenging. If each individual system
-is represented as a dataflow graph, composing them together is as trivial as
-connecting inputs with outputs, which is not the case in a traditional
-architecture, which is not component-based.
-
-\paragraph{Contributions}
 Our main contribution is the design and implementation of a framework for
 dataflow programming to be deployed anywhere, ranging from low-performance
 robots and sensors to clusters of computer and even the Cloud.
@@ -192,7 +186,7 @@ and Section~\ref{sec:approach} presents the framework's characteristics and capa
 Sections~\ref{sec:implementation}-\ref{sec:optimization} discuss implementation details
 such as execution and optimization,
 while Section~\ref{sec:applications} demonstrates some use-cases of the framework.
-and Section~\ref{sec:related} discusses related work in the fields of 
+and Section~\ref{sec:related} discusses related work in the fields of
 \textit{Big Data}, \textit{Robotics} and \textit{IoT}.
 Finally, Section~\ref{sec:conclusions} concludes with future directions.
 
@@ -566,7 +560,7 @@ and partition it across all computational resources, maybe using different evalu
 The default \textit{DistributionStrategy} shipped with the framework uses
 the \textit{Hazelcast}~\cite{hazelcast} library to discover and
 manage multiple machines and used its internal decentralized \textit{PubSub} model to communicate
-intermediate results across the network. Figure \ref{fig:partition1} illustrates
+intermediate results across the network. Figure \ref{fig:partition} illustrates
 the partitioning of a dataflow graph over several machines, where each machin
 - except the last one - outputs its result to a \textit{Hazelcast} topic, from which
 another machine gets its input.
