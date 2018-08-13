@@ -83,18 +83,18 @@
 \email{acharal@iit.demokritos.gr}
 
 \begin{abstract}
-The dataflow computational model enables writing highly
-parallel programs, to be deployed on a heterogeneous network, in a concise and
-readable way. The main advantage is the fact that the system can be conceptually
-separated into several independent components that can be run in parallel and
-deployed on different machines. Therefore, concurrency and distribution is
-implicit and little or no responsibility is given to the programmer. The
-framework proposed in this thesis constitutes the underlying system that make
-this style of programming possible in JVM-based languages (e.g. Java, Scala,
-Closure), while at the same time making it easy to integrate other technologies
-that rely on the PubSub model, in order to move away from imperative languages
-and enter a higher level of abstraction. Particular emphasis was put on three
-domains, namely \textit{Big Data}, \textit{Robotics} and \textit{IoT}.
+The dataflow computational model enables writing highly parallel programs,
+to be deployed on a heterogeneous network, in a concise and readable way.
+The main advantage is the fact that the system can be conceptually separated
+into several independent components that can be run in parallel and deployed on
+different machines. Therefore, concurrency and distribution is implicit and
+little or no responsibility is given to the programmer. The framework proposed
+in this paper constitutes the underlying system that make this style of
+programming possible in JVM-based languages (e.g. Java, Scala, Clojure),
+while at the same time making it easy to integrate other technologies that rely
+on the PubSub model, in order to move away from imperative languages and enter
+a higher level of abstraction. Particular emphasis was put on three domains,
+namely \textit{Big Data}, \textit{Robotics} and \textit{IoT}.
 \end{abstract}
 
 %% 2012 ACM Computing Classification System (CSS) concepts
@@ -273,7 +273,7 @@ reactions to observed values, including normal and erroneous termination,
 whereas a \textit{Publisher} implementation should accept requests from
 \textit{Subscribers} and start emitting values to them.
 }
-  
+
 \subsection{Robotics and IoT Middlewares}
 
 \paragraph{ROS}
@@ -922,7 +922,7 @@ others.
 
 \section{Conclusions and Future Work} \label{sec:conclusions}
 
-The framework described in this thesis was designed with extensibility in mind,
+The framework described in this paper was designed with extensibility in mind,
 aiming to act as a fundamental basis, onto which various domain-specific
 libraries or DSLs will rely in the future. To that end, a constant effort to
 generalize and make components as abstract as possible was made.
@@ -934,7 +934,7 @@ research has shown that general dataflow topologies have optimization
 opportunities that are yet to be found~\cite{blackbox}. A minimal optimization
 stage has been implemented, which paves the path to more advanced optimization
 techniques, such as those used in \textit{Naiad}~\cite{naiad} and
-\textit{Stratosphere}~\cite{static_analysis}.
+\textit{Stratosphere}~\cite{blackbox}.
 
 The extensible nature of \textsc{RHEA} allows for many meaningful extensions, such as
 more evaluation/distribution strategies to support integration with other software ecosystems,
@@ -981,7 +981,6 @@ This is a general notion in computer science, owning its existence to the fact
 that the problems we are facing are getting increasingly more complex, while
 resources meet certain realistic bounds, and therefore a higher abstraction
 layer is mandatory for maintaining readability, efficiency and expressibility.
-
 
 %% Bibliography
 \bibliography{rhea}
