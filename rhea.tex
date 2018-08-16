@@ -83,18 +83,17 @@
 \email{acharal@iit.demokritos.gr}
 
 \begin{abstract}
-The dataflow computational model enables writing highly parallel programs,
-to be deployed on a heterogeneous network, in a concise and readable way.
-The main advantage is the fact that the system can be conceptually separated
-into several independent components that can be run in parallel and deployed on
-different machines. Therefore, concurrency and distribution is implicit and
-little or no responsibility is given to the programmer. The framework proposed
-in this paper constitutes the underlying system that make this style of
-programming possible in JVM-based languages (e.g. Java, Scala, Clojure),
-while at the same time making it easy to integrate other technologies that rely
-on the PubSub model, in order to move away from imperative languages and enter
-a higher level of abstraction. Particular emphasis was put on three domains,
-namely \textit{Big Data}, \textit{Robotics} and \textit{IoT}.
+Robotics and IoT applications are perfect candidates that can benefit from
+the functional reactive programming paradigm. Moreover since the typical
+program can be represented as a dataflow graph the application can be conceptually
+separated and distributed in different machines and the several graph partitions
+can run in parallel and possibly in different execution stacks. In this paper
+we propose a general-purpose reactive framework that can express complex
+applications seamlessly and transparently integrating different sources and
+middlewares. The framework is abstract and extensible making it easy to integrate
+well-established technologies that rely on the PubSub model. We demonstrate
+the usability of the framework by providing applications in the domain of
+robotics and IoT.
 \end{abstract}
 
 %% 2012 ACM Computing Classification System (CSS) concepts
