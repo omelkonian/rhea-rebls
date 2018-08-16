@@ -128,57 +128,49 @@ architectures</concept_desc> <concept_significance>500</concept_significance>
 
 A typical application in Robotics or Internet of Things (IoT) needs to timely and
 continuously respond to time-varying external sensory data and as a result the
-reactivity of these applications is imperative. Typically, a programmer of such an
-application has to deal with asynchronous callbacks in conventional imperative
+reactivity of these applications is imperative. Typically, the programmer of such
+applications has to deal with asynchronous callbacks in conventional imperative
 programming languages in order to implement tedious and often error-prone behaviours
 that should comply with the reactive requirements.
 
 %\paragraph{Why FRP is popular and many systems embrace it}
 A promising and relatively recent proposal for simplifying the implementation of
 reactive applications is the \emph{functional reactive programming} (FRP) \cite{fran}.
-Essentially, FRP makes heavy use of higher-order functional operators to define a
-dataflow network of processing nodes. The purpose of these high-level abstractions
-is to alleviate the low-level implementation chores. FRP was originally proposed
+FRP makes heavy use of higher-order functional operators to define, essentially, a
+dataflow network of processing nodes. These high-level abstractions
+alleviates, as intended, the low-level implementation chores. FRP was originally proposed
 though as a framework for developing graphical user interfaces but fortunately the key
 high-level abstractions are generic enough that other domains can benefit from this
-approach.
+approach. As a result of its generality and its popularity several general-purpose
+implementations emerge with different capabilities and prerequisites.
 
-More specifically, most robotic applications follow the \textit{Robot Perception
-Architecture (RPA)}, where inputs to system are the robot's sensors, which are
-then processed by a dataflow graph, whose output is given as commands to the
-robot actuators. Moreover, robotics typically involve several different robotic
-systems, whose combination is even more challenging.
+It is natural, therefore, to investigate whether robotics and IoT applications
+can fit into this new paradigm. Indeed most robotic applications follow the
+Robot Perception Architecture, where inputs to system are the robot's
+sensors, which are then processed by a dataflow graph, whose output is given as
+commands to the robot actuators. Moreover, robotics typically involve several
+different other robotic or IoT systems to enhance their sensing abilities. This
+combination naturally give rise to issues of distributing the dataflow graph to
+several robotic units and issues of heterogeneity and interoperability between
+different middlewares and protocols.
 
-%\paragraph{There are many domains that need reactive apps but have their own
-% established architectures and protocols that makes it hard to employ a brand new FRP system}
-% such domains are robotics and internet of things.
-The popularity of this new programming paradigm originate a multitude of
-implementations of FRP with different design decisions, capabilities and requirements.
-For example, RxJava and Akka streams are the most prominent and mature
-libraries in JVM-based languages (e.g. Java, Scala and Clojure). They provide their
-functionality as an embedded domain-specific language through a predefined set of
-higher-order operators. Apart from that similarity, each library has its own stack
-of execution which makes the integration between libraries more cumbersome.
-Fortunately, the Reactive Streams Standard (RSS) defines a minimal interface between
-reactive libraries in order to ease the integration efforts needed.
+The first steps towards using FRP in robotics was identified in \cite{arrows_robots}
+and realized in Yampa, an FRP framework developed in Haskell. Yampa provides its
+functionality through an embedded DSL as it is customary for many of the FRP
+libraries. Although an interesting proposal, there is limited acceptance from the
+robotics community mainly because it does not integrate well with existing well-established
+robotics middlewares such as the Robot Operating System (ROS). Moreover, it does
+assume distributed execution and integration with other systems via the
+Reactive Streams Standard\site{http://www.reactive-streams.org}.
 
-Our main contribution is the design and implementation of a framework for
-dataflow programming to be deployed anywhere, ranging from low-performance
-robots and sensors to clusters of computer and even the Cloud.
-
-The main idea is to provide the programmer with a different execution model, the
-dataflow model, which allows for a more abstract way of thinking and has the
-advantage of exposing opportunities for parallelism (amongst CPU cores) and
-distribution (amongst computational machines), which can then be automatically
-realised by the "intelligent" underlying system.
-
-Therefore, the programmer will be able to utilize available computational
-resources without any effort, while at the same time reducing development
-time/cost and maintaining a much cleaner and easier-to-refactor software system.
-Resource utilization may appear in the form of faster execution (i.e. by
-concurrently doing computations on multiple machines) or more robust
-error-handling (i.e. by using backup machines to rerun nodes that were hosted
-on a faulty machine).
+Motivated by the robotics and IoT community we propose \textit{RHEA}, an abstract
+FRP general-purpose framework that aims to act as a unifying layer that can
+be mapped and executed simultaneously using different reactive libraries
+and existing middlewares such as ROS and MQTT. The programmer can transparently
+express a complex reactive applications within this framework that may use
+both sensing from several robots and IoT sensors. The framework places the
+dataflow nodes to computational resources and handles the serialization needed
+between different execution engines.
 
 %\paragraph{Structure of the paper}
 The rest of the paper is structured as follows.
@@ -335,7 +327,7 @@ effortless way to an existing dataflow network.
 
 \paragraph{Reactive}
 The system should be \textit{reactive}, as close as possible to the definition
-of the Reactive Manifesto~\cite{manifesto}.
+of the Reactive Manifesto\site{http://www.reactivemanifesto.org}.
 
 The system should be \textit{responsive}, meaning it should be able to handle
 time-sensitive scenarios if at all possible. This is the cornerstone of
@@ -438,8 +430,7 @@ object of type \textit{Stream}.
 Processing nodes can be divided into two classes: \textit{single input} ones and
 \textit{multiple input} ones.
 %
-\begin{description}
-\item[Single input] nodes are inserted into an existing Stream object, by
+Single input nodes are inserted into an existing Stream object, by
 calling an operator on that object. Figure~\ref{fig:singleinput} shows an
 example of a single input node, namely that of \textit{map}, which transforms
 the input stream (i.e. just the values 1, 2 and 3) by applying a user-defined
@@ -447,7 +438,7 @@ function to every emitted value.
 %
 \codefigg{singleinput}{\jvs{code/singleinput.java}}{Single input processing node}
 %
-\item[Multiple input] nodes are constructed by built-in function that take as
+Multiple input nodes are constructed by built-in function that take as
 argument already existing Stream objects. Figure~\ref{fig:multipleinput} shows
 an example of a multiple input node, namely that of \textit{zip}, which
 transforms the input streams by
@@ -456,7 +447,6 @@ Here we also see the stream creation function \textit{Stream.range}.
 %
 \codefigg{multipleinput}{\jvs{code/multipleinput.java}}{Multiple input processing node}
 %
-\end{description}
 
 The variables returned by all processing nodes are \textit{Stream} objects. These
 objects can be reused in different parts of the graph to enable splitting a
@@ -498,8 +488,8 @@ and \textit{Network Profiling}.
 
 \paragraph{Internal representation}
 For representing the internal structure of the dataflow graph, the
-\textit{JGrapht}\footnote{\url{http://jgrapht.org/}} open-source Java library was used, which provides many graph
-data structures and common graph-theoretic algorithms.
+\textit{JGrapht}\footnote{\url{http://jgrapht.org/}} open-source Java library was
+used, which provides many graph data structures and common graph-theoretic algorithms.
 
 \paragraph{Notifications}
 Every value passed through the framework's
@@ -566,11 +556,11 @@ and partition it across all computational resources, maybe using different evalu
 %\paragraph{Hazelcast}
 The default \textit{DistributionStrategy} shipped with the framework uses
 the \textit{Hazelcast}\footnote{\url{http://hazelcast.org/}} library to discover and
-manage multiple machines and used its internal decentralized \textit{PubSub} model to communicate
-intermediate results across the network. Figure~\ref{fig:partition} illustrates
-the partitioning of a dataflow graph over several machines, where each machin
-- except the last one - outputs its result to a \textit{Hazelcast} topic, from which
-another machine gets its input.
+manage multiple machines and used its internal decentralized \textit{PubSub} model
+to communicate intermediate results across the network. Figure~\ref{fig:partition}
+illustrates the partitioning of a dataflow graph over several machines, where each
+machin -- except the last one -- outputs its result to a \textit{Hazelcast} topic,
+from which another machine gets its input.
 %
 \optimizationL{2}{partition}{Partitioning}
 
@@ -785,7 +775,6 @@ Definitely one the most mature frameworks for distribution targeting the JVM,
 \textit{Akka}~\cite{akka} is a toolkit and runtime for highly
 concurrent, distributed and resilient message-driven applications. It is also
 one of the founders of the \textit{Reactive Streams}~\cite{rss} initiative.
-
 Its approach follows the \textit{Actor} model, where one perceives
 abstract computational agents, called actors, that are distributed in space and
 communicate with point-to-point messages that are buffered in a queue. In
@@ -812,11 +801,9 @@ Continuing the search for more expressive models, Google recently released the
 \textit{Cloud Dataflow} framework~\cite{googledataflow},
 which is an evolution of \textit{FlumeJava}~\cite{flumejava}, allowing cycles and
 therefore incremental computation.
-
 It is a completely domain-agnostic dataflow framework integrated with many other
 closely-related technologies from Google, like Cloud Storage, Cloud PubSub,
 Cloud Datastore, Cloud Bigtable and BigQuery.
-
 It is open-source, offers fully automatic resource management that auto-scales
 for optimal throughput and provides increased reliability and data consistency.
 Moreover, it provides a unified programming model through its API, while
@@ -833,10 +820,8 @@ autonomously.
 A less-known framework for Python is
 \textit{dispel4py}~\cite{dispel4py}. It provides the ability
 to describe abstract workflows for distributed data-intensive applications.
-
 Similar to our \textit{EvaluationStrategy} concept, it allows different mappings
 to enactment systems, such as MPI and Apache Storm.
-
 Its main disadvantages are that it has only an API for Python and only allows
 low-level specification of the graph's nodes, through the definition of
 \textit{Processing Elements}. Therefore, it is inconvenient to compose larger
@@ -846,7 +831,7 @@ maintain.
 \subsection{Dataflow optimization}
 %\paragraph{Stratosphere}
 The frameworks discussed so far follow, more or less, an imperative approach,
-which enables automatic distribution/concurrency by using immutable data
+which enables automatic distribution and concurrency by using immutable data
 structures. \textit{Stratosphere}~\cite{stratosphere}, on the other hand, follows
 a declarative programming approach similar to \textsc{RHEA}, which enables
 writing highly parallel code directly from the language's semantics.
@@ -864,16 +849,13 @@ Another dataflow framework from Google is
 \textit{TensorFlow}~\cite{tensorflow}, which is an open-source
 polyglot library for machine learning and especially construction of neural
 networks.
-
 The interesting fact is that, although it started out as a rigid neural network
 library, it quickly generalized to a dataflow construction library, much similar
 to our own project, which started out as a robotics library.
-
 Its main features are its portability to multiple computational architetures
-(e.g. CPU, GPU, etc...) and multiple language APIs (e.g. C++, Python), although
+(e.g. CPU, GPU) and multiple language APIs (e.g. C++, Python), although
 its main advantage are its domain-specific operators for neural nets (i.e.
 common subgraphs, auto-differentiation).
-
 Through the edges/streams connecting the nodes, only a single but flexible data
 type is allowed, namely the \textit{Tensor} type, which essentially is a multi-
 dimensional array that usually represents features or weights. In contrast to
@@ -895,11 +877,10 @@ overcome the shortcomings of \textit{ROS} callbacks by viewing topics as
 streams. This allows for, and encourages, a higher level of abstraction in
 robot programming, while making the fusing, transforming and filtering of
 streams fully generic and compositional.
-
 %\paragraph{Yampa}
 \textsc{RHEA} and \textit{roshask} were heavily influenced by the work of Hudak's
 group (Yale Haskell Group) on robot DSLs and FRP in general~\cite{fran,arrows_robots,lambda_in_motion}.
-\textit{Yampa}~\cite{yampa} is a DSL embedded in Haskell
+\textit{Yampa}~\cite{arrows_robots} is a DSL embedded in Haskell
 that realizes the FRP model, using arrows to minimize time-/space- leaks.
 
 %\subsection{Internet of Things}
@@ -908,12 +889,10 @@ IoT applications often deal with much heterogeneity, due to the variety of
 sources that different devices introduce. Therefore, a component-based approach
 suits well to solve this problem and there are some dataflow frameworks that
 follow that approach.
-
 %\paragraph{Node-RED}
 Another interesting \textit{IoT} tool for JavaScript following a dataflow
 approach is \textit{Node-RED}~\cite{iot_dataflow}, which is a visual tool for wiring
 together hardware devices, APIs and online services in new and interesting ways.
-
 Applications called flows, are built immediately on a browser, and can be
 deployed on the Cloud with just a single click. The main advantage of this tool
 is that it encourages social development, due to the fact that flows are stored
@@ -944,7 +923,6 @@ associated with dataflow programming.
 
 There are also significant shortcomings to the framework design and implementation that
 could be addressed in future work.
-
 For instance, \textit{dynamic reconfiguration} is needed to handle environments that are constantly changing.
 A concrete contribution to the \textsc{RHEA} would be to integrate \textit{HotWave}~\cite{reconf_java},
 which is an \textit{aspect-oriented programming (AOP)} framework that supports dynamic
