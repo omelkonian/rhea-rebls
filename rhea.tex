@@ -9,10 +9,7 @@
 \startPage{1}
 %% Copyright
 \setcopyright{none}
-%% Bibliography style
-\bibliographystyle{ACM-Reference-Format}
-%% Citation style
-\citestyle{acmnumeric}  % acmauthoryear
+
 %% Recommended packages
 \usepackage{booktabs}   % formal tables
 \usepackage{subcaption} % complex figures with subfigures/subcaptions
@@ -154,15 +151,15 @@ several robotic units and issues of heterogeneity and interoperability between
 different middlewares and protocols.
 
 The first steps towards using FRP in robotics was identified in \cite{arrows_robots}
-and realized in Yampa, an FRP framework developed in Haskell. Yampa provides its
-functionality through an embedded DSL as it is customary for many of the FRP
-libraries. Although an interesting proposal, there is limited acceptance from the
-robotics community mainly because it does not integrate well with existing well-established
-robotics middlewares such as the Robot Operating System (ROS). Moreover, it does
-assume distributed execution and integration with other systems via the
-Reactive Streams Standard\site{http://www.reactive-streams.org}.
+and realized in Yampa\site{https://wiki.haskell.org/Yampa}, an FRP framework
+developed in Haskell. Yampa provides its functionality through an embedded DSL
+as it is customary for many of the FRP libraries. Although an interesting proposal,
+there is limited acceptance from the robotics community mainly because it does
+not integrate well with existing well-established robotics middlewares such as
+the Robot Operating System (ROS). Moreover, it does assume distributed execution
+and integration with other systems via the Reactive Streams Standard\site{http://www.reactive-streams.org}.
 
-Motivated by the robotics and IoT community we propose \textit{RHEA}, an abstract
+Motivated by the robotics and IoT community we propose \textsc{RHEA}, an abstract
 FRP general-purpose framework that aims to act as a unifying layer that can
 be mapped and executed simultaneously using different reactive libraries
 and existing middlewares such as ROS and MQTT. The programmer can transparently
@@ -173,15 +170,17 @@ between different execution engines.
 
 %\paragraph{Structure of the paper}
 The rest of the paper is structured as follows.
-Section~\ref{sec:background} provides some background,
-Section~\ref{sec:requirements} gives the main principles that drove our design
-and Section~\ref{sec:approach} presents the framework's characteristics and capabilities.
-Sections~\ref{sec:implementation}-\ref{sec:optimization} discuss implementation details
-such as execution and optimization,
-while Section~\ref{sec:applications} demonstrates some use-cases of the framework.
-and Section~\ref{sec:related} discusses related work in the fields of
-\textit{Big Data}, \textit{Robotics} and \textit{IoT}.
-Finally, Section~\ref{sec:conclusions} concludes with future directions.
+Section~\ref{sec:background} provides some background context about dataflows and
+the state-of-art middlewares used in robotics and IoT.
+Section~\ref{sec:requirements} discusses the main requirements and objectives that drove the design of the framework.
+Section~\ref{sec:approach} presents the framework's characteristics and capabilities.
+Section~\ref{sec:implementation} discusses implementation details and
+Section~\ref{sec:distributed} presents the techniques used for distributed execution.
+Section~\ref{sec:optimization} presents several optimizations that have been implemented in the
+framework. Section~\ref{sec:applications} demonstrates some use-cases of the framework
+mainly motivated by robotics and IoT.
+Section~\ref{sec:related} discusses related work and
+finally Section~\ref{sec:conclusions} concludes with future directions.
 
 \section{Background} \label{sec:background}
 
@@ -528,7 +527,7 @@ corresponding \textit{Output} and executes it, however desired.
 The strategies we have implemented so far follow:
 
 \paragraph{RxJavaEvaluationStrategy}
-Uses RxJava~\cite{rxjava}, an established and well-maintained library for
+Uses RxJava~\site{http://github.com/ReactiveX/RxJava}, an established and well-maintained library for
 asynchronous programming using the \textit{Observable} type, which is very close,
 semantically, to our \textit{Stream} type.
 
@@ -542,7 +541,7 @@ RxJava).
 \paragraph{MqttEvaluationStrategy} Integrates the MQTT middleware into the framework,
 in the same way \textit{ROS} is integrated.
 
-\section{Distributed Execution}
+\section{Distributed Execution} \label{sec:distributed}
 
 An evaluation strategy executes the requested dataflow graph in a single
 machine, without concern about distribution and resource utilization.
@@ -771,9 +770,8 @@ For instance, \textit{MLib} is a library for machine learning and
 
 %\paragraph{Akka}
 Definitely one the most mature frameworks for distribution targeting the JVM,
-\textit{Akka}~\cite{akka} is a toolkit and runtime for highly
-concurrent, distributed and resilient message-driven applications. It is also
-one of the founders of the \textit{Reactive Streams}~\cite{rss} initiative.
+\textit{Akka}~\site{http://akka.io} is a toolkit and runtime for highly
+concurrent, distributed and resilient message-driven applications.
 Its approach follows the \textit{Actor} model, where one perceives
 abstract computational agents, called actors, that are distributed in space and
 communicate with point-to-point messages that are buffered in a queue. In
@@ -797,7 +795,7 @@ simple application would just use a lightweight library like \textit{rxjava}.
 \subsection{Unified dataflow languages}
 %\paragraph{Cloud Dataflow}
 Continuing the search for more expressive models, Google recently released the
-\textit{Cloud Dataflow} framework~\cite{googledataflow},
+\textit{Cloud Dataflow} framework~\site{http://cloud.google.com/dataflow/},
 which is an evolution of \textit{FlumeJava}~\cite{flumejava}, allowing cycles and
 therefore incremental computation.
 It is a completely domain-agnostic dataflow framework integrated with many other
@@ -954,11 +952,10 @@ programming~\cite{ziria}. The driving force for both frameworks is that some
 specific domains have fixated their methods on low-level programming, whereas
 more satisfactory paradigms can solve many shortcomings.
 
-This is a general notion in computer science, owning its existence to the fact
-that the problems we are facing are getting increasingly more complex, while
-resources meet certain realistic bounds, and therefore a higher abstraction
-layer is mandatory for maintaining readability, efficiency and expressibility.
-
+%% Bibliography style
+\bibliographystyle{ACM-Reference-Format}
+%% Citation style
+\citestyle{acmnumeric}  % acmauthoryear
 %% Bibliography
 \bibliography{rhea}
 
