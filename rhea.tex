@@ -704,8 +704,8 @@ illustrates the dataflow solution to the above problem and its corresponding
 \codefig{control_panel}{\jvxs{code/control_panel.java}}{Robot control panel}
 
 The implementation details (i.e. the visualization class and methods
-\texttt{faceDetect}(line 7), \texttt{embedLaser}(line 8) and
-\texttt{toGray}(line 26)) are not shown for brevity's sake. It is worth noting
+\texttt{faceDetect} (line 7), \texttt{embedLaser} (line 8) and
+\texttt{toGray} (line 26)) are not shown for brevity's sake. It is worth noting
 that this model of programming encourages a clean separation of concerns between the
 individual components, namely between the sensor data manipulation and the
 actual visualization on the GUI.
@@ -746,117 +746,69 @@ technologies and act as a high-level, declarative unified layer.
 
 The necessity for implicit parallelism and distribution of more and more
 applications, dealing with huge and/or complex data, has brought increasingly
-more attention to the dataflow programming model. The main reason many
-frameworks have adopted it, is the high level of abstraction it provides with
-its declarative approach, making it simple to structure and maintain a complex
-system, while at the same time not losing its expressive power.
+more attention to the dataflow programming model. Nowadays there are various
+implementation of dataflow systems focused on different applications such as
+Big Data batch and stream processing, Machine Learning and others.
+In the following we discuss the prominent dataflow systems and the similarities
+and differences with the proposed framework \textsc{RHEA}.
 
 %\paragraph{Spark}
-A very well-known and well-adapted framework for scalable large-data processing
-is Apache's \textit{Spark}~\cite{spark}. Although not a
-dataflow framework, it was developed to overcome the shortcomings of the
-\textit{MapReduce}, similar to \textit{FlumeJava}, by providing a much more
-efficient and flexible runtime, offering a rich set of data-parallel operators ($\simeq 80$)
-that can be used interactively from Scala, Python, Java or R.
+The two most prominent dataflow framework for scalable large-data processing
+is Apache Spark~\cite{spark} and Apache Flink~\cite{stratosphere}. Both support
+a rich set of data-parallel operators and can be used for either batch or
+stream processing. They follow the same general approach as \textsc{RHEA} by
+implicitly creating a dataflow pipeline. It is also worth noting that Apache Flink
+optimizes the dataflow graph by applying semantically-equivalent graph rewriting~\cite{blackbox}.
+Apart from these similarities there are also key differences.
+They focus on providing a full execution stack and therefore they do not
+provide the flexibility in using
+existing  underlying system to perform execution. They accomplish distributed
+execution by partitioning on the data in contrast to \textsc{RHEA} that partitions
+the graph on the operations.
 
-It follows the same general approach as \textsc{RHEA}, in the sense that it is
-completely generic and encourages domain-specific libraries to be built upon it.
-For instance, \textit{MLib} is a library for machine learning and
-\textit{GraphX} is a library for iterative graph algorithms, both stacked upon
-\textit{Spark}.
-
-%\paragraph{Akka}
-Definitely one the most mature frameworks for distribution targeting the JVM,
-\textit{Akka}~\site{http://akka.io} is a toolkit and runtime for highly
-concurrent, distributed and resilient message-driven applications.
-Its approach follows the \textit{Actor} model, where one perceives
-abstract computational agents, called actors, that are distributed in space and
-communicate with point-to-point messages that are buffered in a queue. In
-reaction to a message, an actor can create more actors, make local decisions,
-send more messages and determine how to respond to the next message received.
-
-Similar to the problem of \textit{ROS} that our framework solved, which is the
-inappropriate nature of callbacks for complex scenarios, \textit{Akka}
-developers also felt the necessity for a more flexible and composable
-programming model, so they developed the \textit{AkkaStreams} library, which
-provides a convenient API for stream processing and also dataflow graph
-construction with an interesting DSL.
-
-The main reason \textsc{RHEA} offers a more flexible solution to \textit{ROS}
-shortcomings than \textit{Akka}, is that \textit{Akka} is a pretty heavyweight
-library, and consequently may prove over-abundant for simple use-cases. On the
-other hand, \textsc{RHEA} offers the ability to choose between several
-\textit{EvaluationStrategies} to match your application's needs, therefore a
-simple application would just use a lightweight library like \textit{rxjava}.
-
-\subsection{Unified dataflow languages}
-%\paragraph{Cloud Dataflow}
-Continuing the search for more expressive models, Google recently released the
-\textit{Cloud Dataflow} framework~\site{http://cloud.google.com/dataflow/},
-which is an evolution of \textit{FlumeJava}~\cite{flumejava}, allowing cycles and
-therefore incremental computation.
-It is a completely domain-agnostic dataflow framework integrated with many other
-closely-related technologies from Google, like Cloud Storage, Cloud PubSub,
-Cloud Datastore, Cloud Bigtable and BigQuery.
-It is open-source, offers fully automatic resource management that auto-scales
-for optimal throughput and provides increased reliability and data consistency.
-Moreover, it provides a unified programming model through its API, while
-allowing data monitoring and demand-driven execution.
-
-In contrast to \textsc{RHEA}, graphs constructed by \textit{Cloud Dataflow} are
-designed to be deployed only on cloud infrastructures, and therefore no support
-for complete heterogeneity is provided. In terms of network optimization, namely
-node placement,  \textit{Cloud Dataflow} lets the cloud system targeted to make
-all decisions, while \textsc{RHEA} profiles the network and decides
-autonomously.
-
-%\paragraph{dispel4py}
-A less-known framework for Python is
-\textit{dispel4py}~\cite{dispel4py}. It provides the ability
+Similar to the flexibility that \textsc{RHEA} aims to provide is the project
+Apache Beam, formerly known as Cloud Dataflow and an evolution of FlumeJava~\cite{flumejava}.
+Apache Beam shares the same key idea with \textsc{RHEA} namely they provide a
+unified abstract programming layer for batch and stream processing that can use
+multiple executors. They provide, for instance, an Apache Spark and an Apache Flink
+executor. However, the assume that the cluster is homogeneous and thus the whole
+program is executed using a single executor. Another framework that shares the
+same similarities with Apache Beam and RHEA is dispel4py~\cite{dispel4py}, a Python
+framework that focuses on scientific workflows. It provides the ability
 to describe abstract workflows for distributed data-intensive applications.
-Similar to our \textit{EvaluationStrategy} concept, it allows different mappings
-to enactment systems, such as MPI and Apache Storm.
-Its main disadvantages are that it has only an API for Python and only allows
-low-level specification of the graph's nodes, through the definition of
-\textit{Processing Elements}. Therefore, it is inconvenient to compose larger
-graphs from simpler ones and the source code becomes chaotic and difficult to
-maintain.
+Similar to \textsc{RHEA} evaluation strategy concept, it allows different mappings
+to enactment systems, such as MPI and Apache Storm. However, it does not tackles
+heterogeneity issues and simultaneously executing graph partitions to different
+enactment systems.
 
-\subsection{Dataflow optimization}
-%\paragraph{Stratosphere}
-The frameworks discussed so far follow, more or less, an imperative approach,
-which enables automatic distribution and concurrency by using immutable data
-structures. \textit{Stratosphere}~\cite{stratosphere}, on the other hand, follows
-a declarative programming approach similar to \textsc{RHEA}, which enables
-writing highly parallel code directly from the language's semantics.
+Another dataflow framework from Google is \textit{TensorFlow}~\cite{tensorflow},
+which is an open-source polyglot library for machine intelligence and especially
+construction of neural networks. Tensorflow differs from the aforementioned dataflow
+systems since it assumes that data are Tensors, namely multidimensional arrays,
+the nodes operate in Tensors and the program is a dataflow network of such operations.
+Tensorflow is similar to \textsc{RHEA} since it is inherently heterogeneous by
+considering different hardware devices such as CPU and GPUs. Moreover, it provides
+distributed execution by partitioning the dataflow graph similarly to what \textsc{RHEA}
+is proposing. The main difference compared to \textsc{RHEA} approach is that the
+system is not reactive, therefore it is not optimized for asynchronous stream of
+events.
 
-Apart from offering a language of a much higher abstraction level,
-\textit{Stratosphere} has internalised several interesting and novel approaches
-to optimization of dataflow graphs, especially concerning cyclic graphs (i.e.
-incremental computation)~\cite{spinning}. These optimizations are generic, in the
-sense that most frameworks can adopt them without much effort. Integrating these
-optimization into \textsc{RHEA}, as future work, would certainly be of great
-benefit to the performance of the system.
-
-\subsection{Heterogeneous data processing}
-Another dataflow framework from Google is
-\textit{TensorFlow}~\cite{tensorflow}, which is an open-source
-polyglot library for machine learning and especially construction of neural
-networks.
-The interesting fact is that, although it started out as a rigid neural network
-library, it quickly generalized to a dataflow construction library, much similar
-to our own project, which started out as a robotics library.
-Its main features are its portability to multiple computational architetures
-(e.g. CPU, GPU) and multiple language APIs (e.g. C++, Python), although
-its main advantage are its domain-specific operators for neural nets (i.e.
-common subgraphs, auto-differentiation).
-Through the edges/streams connecting the nodes, only a single but flexible data
-type is allowed, namely the \textit{Tensor} type, which essentially is a multi-
-dimensional array that usually represents features or weights. In contrast to
-\textsc{RHEA}'s Streams, \textit{Tensors} cannot be infinite, mainly due to the
-fact that their size is determined by the dimensionality of the problem being
-solved, which is, in most cases, a fixed constant.
-
+Regarding the reactive-aware systems, RxJava and AkkaStreams are the most mature
+frameworks that support programming languages that target the JVM. It is worth
+mentioning \textit{Akka}~\site{http://akka.io} which is the foundation library
+where AkkaStreams relies on. In particular, Akka is a toolkit and runtime for highly
+concurrent, distributed and resilient message-driven applications and its execution
+model follows the Actor model. In this model one perceives abstract computational
+agents, called actors, that are distributed in space and communicate with
+point-to-point messages. In reaction to a message, an actor can create more actors,
+make local decisions, send more messages and determine how to respond to the next
+message received. Similar to the problem of \textit{ROS} that our framework solved,
+using Actors can be daunting. AkkaStreams try to provide a higher-level abstraction
+from the Actor model and specifically it provides a convenient API for stream
+processing and also dataflow graph construction.
+The difference with \textsc{RHEA} is that AkkaStreams solely relies on Akka. On the
+other hand, \textsc{RHEA} offers the ability to choose between several
+evaluation strategies to match the application's needs.
 
 \subsection{Robotics and IoT}
 
@@ -875,7 +827,7 @@ streams fully generic and compositional.
 \textsc{RHEA} and \textit{roshask} were heavily influenced by the work of Hudak's
 group (Yale Haskell Group) on robot DSLs and FRP in general~\cite{fran,arrows_robots,lambda_in_motion}.
 \textit{Yampa}~\cite{arrows_robots} is a DSL embedded in Haskell
-that realizes the FRP model, using arrows to minimize time-/space- leaks.
+that realizes the FRP model, using arrows to minimize time and space leaks.
 
 %\subsection{Internet of Things}
 
@@ -884,7 +836,7 @@ sources that different devices introduce. Therefore, a component-based approach
 suits well to solve this problem and there are some dataflow frameworks that
 follow that approach.
 %\paragraph{Node-RED}
-Another interesting \textit{IoT} tool for JavaScript following a dataflow
+Another interesting \textit{IoT} framework that follows a dataflow
 approach is \textit{Node-RED}~\cite{iot_dataflow}, which is a visual tool for wiring
 together hardware devices, APIs and online services in new and interesting ways.
 Applications called flows, are built immediately on a browser, and can be
