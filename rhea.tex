@@ -424,7 +424,7 @@ optimizers. Therefore, an application developer only needs to work with the
 \texttt{Stream} type.
 
 Source nodes are constructed using built-in functions of type \texttt{Stream}.
-For instance, \texttt{Stream.just(1, 2, 3)} produces the stream that emits just
+For instance, \texttt{Stream.just(1,2,3)} produces the stream that emits just
 the values 1, 2 and 3. The return variable of these creation function is an
 object of type \texttt{Stream}.
 
@@ -590,15 +590,18 @@ Figure~\ref{fig:serialization} depicts the serialization process in more detail.
 
 \section{Optimizations} \label{sec:optimization}
 
-This section describes three stages of optimization the dataflow graph goes
-through before being evaluated, which are illustrated in Figure~\ref{fig:optimization}.
-The purpose of the optimization graph is to achieve better performance and
-utilization of the available resources.
-
-\mydiag{optimization}{Optimization stages}
+This section describes three stages of optimization that the dataflow graph goes
+through before being evaluated:
+\begin{itemize}
+  \item proactive filtering that places filtering operations as soon as possible;
+  \item granularity adjustment that combines adjucent operation into a single more efficient operation;
+  \item and node placement that places nodes that should be colocated to the same machine.
+\end{itemize}
+The optimization phases run sequentially, that is the output of one phase becomes
+input of the next. The main purpose of the optimization graph is to achieve better
+performance and better utilization of the available resources.
 
 \subsection{Proactive filtering}
-
 The first optimization stage is a heuristic one, based on the fact that if a
 filter operation can be moved earlier (i.e. closer to source nodes) while
 preserving the original semantics, then there will be benefit concerning
@@ -611,14 +614,12 @@ graph transformation.
 \optimization{3}{concatdistinct}{Filter/distinct before concat/merge}
 
 \subsection{Granularity adjustment}
-
 Different nodes of the dataflow graph will be executed on a separate
 thread/process. The fact that graphs can grow very big, for instance when
 programming a swarm of robots, poses a problem when available
 computational resources are limited. For this reason, the second optimization
 stage tries to adjust the granularity of the dataflow graph to a desired value,
 which is normally the number of available threads amongst all machines.
-
 To reach the desired granularity, the optimizer applies some semantic-preserving
 transformation, as shown in the figures below.
 
@@ -629,26 +630,25 @@ transformation, as shown in the figures below.
 \optimization{2}{combmapzip}{Combine map with zip}
 \optimization{1}{combzipmap}{Combine zip with map}
 
-In Figure~\ref{fig:mergemap} we merge two \textit{map} operations into
-one \textit{map} operation that uses the composition of the two initial
-functions, while in Figure~\ref{fig:combmapfilter} a \textit{map} followed
-by a \textit{filter} is substituted by a more complex equivalent operation,
-namely \textit{filterMap}. In figures \ref{fig:combfilterexists} and
+In Figure~\ref{fig:mergemap} we merge two \texttt{map} operations into
+one \texttt{map} operation that uses the composition of the two initial
+functions, while in Figure~\ref{fig:combmapfilter} a \texttt{map} followed
+by a \texttt{filter} is substituted by a more complex equivalent operation,
+namely \texttt{filterMap}. In Figures \ref{fig:combfilterexists} and
 \ref{fig:combmapexists} we apply some simple properties of the boolean functions
-involved to decrease the number of nodes. Lastly, in figures \ref{fig:combmapzip} and
-\ref{fig:combzipmap} we utilize function composition to embed \textit{map}
-operations into \textit{zip} operations.
+involved to decrease the number of nodes. Lastly, in Figures \ref{fig:combmapzip} and
+\ref{fig:combzipmap} we utilize function composition to embed \texttt{map}
+operations into \texttt{zip} operations.
 
 \subsection{Node placement}
 
 After the first two passes, we have an optimized dataflow graph with fine-tuned
 granularity. At this stage, nodes are mapped to tasks and are deployed across
 the available machines, keeping resource utilization in mind.
-
 If the desired granularity has not been reached yet, the
-\textit{DistributionStrategy} applies fusion to pairs of tasks until it reaches
+\texttt{DistributionStrategy} applies fusion to pairs of tasks until it reaches
 it, as shown in Figure~\ref{fig:fusion}.
-
+%
 \optimization{1}{fusion}{Task fusion}
 
 The final decision to be made is where each of these newly constructed tasks
@@ -656,9 +656,9 @@ will be executed, although some of them need to necessarily be placed on
 specific machines with certain skills.
 
 Apart from these hard constraints, we need to minimize communication overhead.
-For this purpose, one must implement the \textit{NetworkProfileStrategy} by providing
-a way to calculate network distance between available machines, which is then fed as input
-to the \textit{NodePlacement} optimizer.
+For this purpose, one must implement the \texttt{NetworkProfileStrategy} by providing
+a way to calculate network distance between available machines, which is then
+fed as input to the \texttt{NodePlacement} optimizer.
 
 \section{Applications} \label{sec:applications}
 
@@ -667,64 +667,62 @@ to the \textit{NodePlacement} optimizer.
 Consider the problem of enumerating the
 \textit{Hamming numbers}, which are generated by the mathematical formula
 $\mathbb{H} = 2^i3^j5^k$, where $i,j,k \in \mathbb{N}$. There is an intuitive
-dataflow solution to the above problem, taken from the book of \textit{Lucid},
-which is the first functional dataflow language~\cite{lucid}. Figure
-\ref{fig:hamming} shows the dataflow graph with its corresponding \textsc{RHEA}
+dataflow solution to the above problem, borrowed from the book of Lucid~\cite{lucid}.
+
+Figure~\ref{fig:hamming} shows the dataflow graph with its corresponding \textsc{RHEA}
 code.
-
+%
 \codefig{hamming}{\scalaxs{code/hamming.scala}}{Hamming numbers}
-
-The code is written in Scala to utilize the \textit{Pimp my library} design
-pattern~\cite{pimp}, which is used to easily add new functions to already
-existing libraries, using Scala's \textit{implicit conversions} (line 28). In
-the example above, we define two new Stream operators, namely \textit{multiply}
-(line 10), which just multiplies the stream with a constant, and
-\textit{mergeSort} (line 13), which produces an ordered stream given two ordered
-streams as input. We also see the power of the \textit{loop} operator (line 2),
-which allows us to define cycles in an effortless manner.
+%
+The code is written in Scala and utilizes the ``Pimp my library'' design
+pattern~\cite{pimp}. In the example above, we define two new Stream operators,
+namely \texttt{multiply} (line 10), which just multiplies the stream with a constant, and
+\texttt{mergeSort} (line 13), which produces an ordered stream given two ordered
+streams as input. We also see the use of the \texttt{loop} operator (line 2),
+which allows us to define cycles.
 
 \subsection{Robot control panel}
 
 This application concerns real-time monitoring of a robot, that is publishing
-its information and sensor-data to \textit{ROS} topics, through a
-\textit{graphical user interface (GUI)}.
+its information and sensor-data to ROS topics, through a
+graphical user interface (GUI).
 
-The \textit{/camera/rgb} topic provides the frames of the robot's camera as
-coloured images, while the \textit{/camera/depth} provides frames that provide
-depth information. The \textit{/tf} topic publishes parent-child relations of
+The \texttt{/camera/rgb} topic provides the frames of the robot's camera as
+coloured images, while the \texttt{/camera/depth} provides frames that provide
+depth information. The \texttt{/tf} topic publishes parent-child relations of
 the internal topics of the robot's configuration, and finally the
-\textit{/scan/} topic provides information from the robot's laser that gives
+\texttt{/scan/} topic provides information from the robot's laser that gives
 horizontal depth information in polar coordinates.
 
 The GUI displays the laser data embedded on the camera stream, while allowing
 for real-time face detection. Additionally, it displays the depth frames and the
-\textit{tf} relations as a tree. Finally, a mock-up battery bar is displayed to
+\texttt{tf} relations as a tree. Finally, a mock-up battery bar is displayed to
 show-case the framework's ability for simulation. Figure~\ref{fig:control_panel}
 illustrates the dataflow solution to the above problem and its corresponding
 \textsc{RHEA} code.
-
+%
 \codefig{control_panel}{\jvxs{code/control_panel.java}}{Robot control panel}
 
 The implementation details (i.e. the visualization class and methods
-\textit{faceDetect}(line 7), \textit{embedLaser}(line 8) and
-\textit{toGray}(line 26)) are not shown for brevity's sake. It is evident that
-this model of programming encourages a clean separation of concerns between the
+\texttt{faceDetect}(line 7), \texttt{embedLaser}(line 8) and
+\texttt{toGray}(line 26)) are not shown for brevity's sake. It is worth noting
+that this model of programming encourages a clean separation of concerns between the
 individual components, namely between the sensor data manipulation and the
 actual visualization on the GUI.
 
 \subsection{Robot hospital guide}
 
-As a final example, we will examine a more IoT-based application. Consider a
-robot that guides patients to different parts of a hospital, such as the gym or
-cafeteria. Assuming map localization, path finding and obstacle avoidance are
-already implemented, there still remains a problem with calibrating the robot's
-speed according to the patient's status.
-
-To keep tract of the patient's distance from the robot, each patient carries a
-smart-phone that acts as a \textit{bluetooth low-energy (BLE) beacon}. The robot
-uses its bluetooth receiver to publish the distance from the signal source to an
-\textit{MQTT} topic, which is then transformed by our stream application to
-velocity commands for the robot, in the form of slowing down or speeding up.
+As a final example, we will examine a combined application that involve both robotics and IoT.
+Consider a robot that guides patients to different parts of a hospital, such as the gym or
+cafeteria. We assume also that the map localization, path finding and obstacle
+avoidance are already implemented and provided by default by ROS. The problem
+is to calibrate the robot's speed according to the patient's status.
+%
+In order to keep track of the patient's distance from the robot, each patient carries a
+smartphone that acts as a bluetooth low-energy (BLE) beacon. The robot uses its
+bluetooth receiver to publish the distance from the signal source to an
+MQTT topic, which is then transformed by our stream application to velocity
+commands for the robot, in the form of slowing down or speeding up.
 
 The first module constitutes the main program logic, where a declared dataflow
 graph acts as a stream transformation from beacon information to velocity
@@ -734,13 +732,13 @@ its corresponding \textsc{RHEA} code.
 \codefig{hospital}{\jvxs{code/hospital.java}}{Robot hospital guide}
 
 The second module just uses the library \textit{ReactiveBeacons}\footnote{\url{http://github.com/ 1083 pwittchen/ReactiveBeacons}}
-to get a stream of beacon data via \textit{rxjava}, and then publishes it to a \textit{MQTT} topic,
+to get a stream of beacon data via RxJava, and then publishes it to a MQTT topic,
 which is the input of the first module. The corresponding \textsc{RHEA} code
 follows:
 \jvxs{code/rxbeacon.java}
 
-This example clearly show-cases the framework's ability to combine different
-technologies and act as a high-level, declarative coordination language.
+The aforementioned example showcases the framework's ability to combine different
+technologies and act as a high-level, declarative unified layer.
 
 \section{Related Work} \label{sec:related}
 
