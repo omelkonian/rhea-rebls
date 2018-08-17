@@ -172,10 +172,8 @@ between different execution engines.
 The rest of the paper is structured as follows.
 Section~\ref{sec:background} provides some background context about dataflows and
 the state-of-art middlewares used in robotics and IoT.
-Section~\ref{sec:requirements} discusses the main requirements and objectives that drove the design of the framework.
-Section~\ref{sec:approach} presents the framework's characteristics and capabilities.
-Section~\ref{sec:implementation} discusses implementation details and
-Section~\ref{sec:distributed} presents the techniques used for distributed execution.
+Section~\ref{sec:approach} presents the framework's architecture and capabilities.
+Section~\ref{sec:implementation} discusses implementation details while
 Section~\ref{sec:optimization} presents several optimizations that have been implemented in the
 framework. Section~\ref{sec:applications} demonstrates some use-cases of the framework
 mainly motivated by robotics and IoT.
@@ -767,7 +765,7 @@ execution by partitioning on the data in contrast to \textsc{RHEA} that partitio
 the graph on the operations.
 
 Similar to the flexibility that \textsc{RHEA} aims to provide is the project
-Apache Beam, formerly known as Cloud Dataflow and an evolution of FlumeJava~\cite{flumejava}.
+Apache Beam~\cite{DBLP:journals/pvldb/AkidauBCCFLMMPS15}, formerly known as Cloud Dataflow and an evolution of FlumeJava~\cite{flumejava}.
 Apache Beam shares the same key idea with \textsc{RHEA} namely they provide a
 unified abstract programming layer for batch and stream processing that can use
 multiple executors. They provide, for instance, an Apache Spark and an Apache Flink
@@ -781,7 +779,7 @@ to enactment systems, such as MPI and Apache Storm. However, it does not tackles
 heterogeneity issues and simultaneously executing graph partitions to different
 enactment systems.
 
-Another dataflow framework from Google is \textit{TensorFlow}~\cite{tensorflow},
+Another dataflow framework from Google is TensorFlow~\cite{tensorflow},
 which is an open-source polyglot library for machine intelligence and especially
 construction of neural networks. Tensorflow differs from the aforementioned dataflow
 systems since it assumes that data are Tensors, namely multidimensional arrays,
