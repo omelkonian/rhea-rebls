@@ -5,8 +5,8 @@
     \& \node[dataflow] (m) {\small materialize};
     \& \node[dataflow] (s) {\small serialize}; \\
     \node[machine] (B) {M2};
-    \& \node[dataflow] (dm) {\small de-serialize};
-    \& \node[dataflow] (ds) {\small de-materialize}; \\
+    \& \node[dataflow] (dm) {\small de-materialize};
+    \& \node[dataflow] (ds) {\small de-serialize}; \\
   };
 
   \draw[to] (A) -- (m);

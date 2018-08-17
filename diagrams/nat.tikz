@@ -2,7 +2,7 @@
 \begin{tikzpicture}
   [every matrix/.append style={row sep=.5cm}]
   \matrix{
-    \node[dataflow] (zero) {1};
+    \node[dataflow] (zero) {0};
     \& \node[dataflow] (concat) {concat};
     \& \node[dataflow] (res) {$\mathbb{N}$}; \\
     \& \node[dataflow] (inc) {increment}; \\

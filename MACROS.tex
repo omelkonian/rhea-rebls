@@ -5,7 +5,7 @@
   	machine/.style={draw, fill=myrd!80, rounded corners, thick, inner sep=.3cm},
   	task/.style={draw, fill=mygr!80, rounded corners, thick, inner sep=.5cm},
   	to/.style={->,>=stealth',shorten >=1pt,semithick},
-  	net/.style={to, red, dotted},  	
+  	net/.style={to, red, dotted},
   	opt/.style={->,>=stealth',shorten >=1pt,semithick,draw=red},
   	point/.style={draw, inner sep=0pt, circle, fill=black},
   	every matrix/.style={ampersand replacement=\&, column sep=.7cm, row sep=.35cm},
@@ -24,7 +24,7 @@
 }
 
 \newcommand\myimage[3]{
-	\begin{figure}[h!] 
+	\begin{figure}
 		\centering
 	 	\includegraphics[scale=#2]{#1}
 	  	\caption{#3}
@@ -33,7 +33,7 @@
 }
 
 \newcommand\codefig[3]{
-	\begin{figure}[h!]
+	\begin{figure}
 	  \begin{center}
 	    \input{diagrams/#1.tikz}
 	  \end{center}
@@ -44,7 +44,7 @@
 }
 
 \newcommand\codefigg[3]{
-	\begin{figure}[h!]
+	\begin{figure}
 	  \begin{minipage}{.4\columnwidth}
 		    \centering \input{diagrams/#1.tikz}
 	  \end{minipage}
@@ -57,7 +57,7 @@
 }
 
 \newcommand\mydiag[2]{
-	\begin{figure}[h!] 
+	\begin{figure}
 		\centering
 	 	\input{diagrams/#1.tikz}
 	  	\caption{#2}
@@ -66,7 +66,7 @@
 }
 
 \newcommand\optim[4]{
-	\begin{figure}[h!]
+	\begin{figure}
 	  \begin{adjustbox}{width=#1}
 	  \input{diagrams/optimization/#3B.tikz}
 	  \hspace{-.4cm}
@@ -76,7 +76,7 @@
 	  \end{adjustbox}
 		\caption{#4}
 		\label{fig:#3}
-	\end{figure}	
+	\end{figure}
 }
 
 \newcommand\optimization[3]{
