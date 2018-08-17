@@ -1,4 +1,4 @@
-\begin{adjustbox}{width=.75\columnwidth}
+\begin{adjustbox}{width=.9\columnwidth}
 \begin{tikzpicture}
   [every matrix/.append style={row sep=.4cm, column sep=.2cm}]
   \matrix{
