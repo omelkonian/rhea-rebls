@@ -847,59 +847,42 @@ others.
 
 \section{Conclusions and Future Work} \label{sec:conclusions}
 
-The framework described in this paper was designed with extensibility in mind,
-aiming to act as a fundamental basis, onto which various domain-specific
-libraries or DSLs will rely in the future. To that end, a constant effort to
-generalize and make components as abstract as possible was made.
-
-The set of operators aided expressibility, making it possible to specify any
-dataflow graph in a concise and readable manner. This disallowed optimizations
-suitable for less expressive models (e.g. \textit{Map-Reduce}), but recent
-research has shown that general dataflow topologies have optimization
-opportunities that are yet to be found~\cite{blackbox}. A minimal optimization
-stage has been implemented, which paves the path to more advanced optimization
-techniques, such as those used in \textit{Naiad}~\cite{naiad} and
-\textit{Stratosphere}~\cite{blackbox}.
-
-The extensible nature of \textsc{RHEA} allows for many meaningful extensions, such as
-more evaluation/distribution strategies to support integration with other software ecosystems,
-Moreover, the design of a block-based visual language interface would certainly make the
-framework even more accessible to novice programmers and smooth the learning curve
-associated with dataflow programming.
-
-There are also significant shortcomings to the framework design and implementation that
-could be addressed in future work.
-For instance, \textit{dynamic reconfiguration} is needed to handle environments that are constantly changing.
-A concrete contribution to the \textsc{RHEA} would be to integrate \textit{HotWave}~\cite{reconf_java},
-which is an \textit{aspect-oriented programming (AOP)} framework that supports dynamic
-(re)weaving of previously loaded classes. This would allow the user to specify the desired
-adaptive behaviour for reconfiguring where nodes are executed, what operation they perform, and so forth.
-
-Another major drawback is that network profiling - an integral part of node placement - is achieved via
-calculation of \textit{round-trip time (RTT)}, which is naively expensive and may outweigh the benefits of
-exploiting network proximity. A possible decentralized approach that we could employ would be the \textit{Vivaldi}
-coordinate system~\cite{vivaldi}, which assigns synthetic coordinates to hosts
-such that the distance between the coordinates of two hosts accurately predicts
-the communication latency between them.
-
-A last major drawback that ultimately needs to be addressed is fault-tolerance,
-since there are no advanced methods for specifying behaviour for graceful
-error-recovery. This is essential for large machine clusters, in which systems it is
-certain that host failures and other faults will be a common occurrence. The
-functional nature of the dataflow model enables fault-tolerance, in addition to
-parallelism, due to the fact that a node can be moved to another machine for
-execution, while preserving the original semantics.  This contribution path can draw
-heavy influence from recent research on fault-tolerance for stream processing engines~\cite{borealis},
-which provide efficient models for availability and data recovery/consistency,
-by using data replication and parallel recovery of lost state.
+The framework described in this paper offers a unified and extensible way for
+reactive applications to be developed. Primarily motivated by the well-established
+middlewares in robotics and IoT, the main focus of the framework is extensibility,
+heterogeneity. To that end, a constant effort to generalize and make components
+as abstract as possible was made.
 
 The applications demonstrated the framework's ability to provide a higher level
 of abstraction, where the language only specifies how different components
-coordinate, without knowledge of the implementation details. This is exactly
-what \textit{Ziria} accomplishes in the domain of wireless systems
-programming~\cite{ziria}. The driving force for both frameworks is that some
-specific domains have fixated their methods on low-level programming, whereas
-more satisfactory paradigms can solve many shortcomings.
+coordinate, without knowledge of the implementation details. The driving force
+for both frameworks is that some specific domains have fixated their methods
+on low-level programming, whereas more satisfactory paradigms can solve many
+shortcomings.
+
+The set of operators aided expressibility, making it possible to specify any
+dataflow graph in a concise and readable manner. This disallowed optimizations
+suitable for less expressive models, but recent research suggest that general
+dataflow topologies have optimization opportunities that are yet to be
+found~\cite{blackbox}. In the current reincarnation of the framework only
+a minimal optimization stage has been implemented, which nevertheless paves
+the path to more advanced optimization techniques, such as those used in
+Apache Flink~\cite{blackbox}.
+
+Apart from a more sophisticated optimization phase that can be investigated
+as a future direction the are also other extensions that are equally interesting
+and challenging. Again motivated by the robotics domain, an interesting extension
+is to apply dynamic reconfiguration where the applications operate in
+environments that are constantly changing. For instance operating in an environment
+where battery powered robots participate or the connectivity of the cluster is unstable.
+Adaptive techniques for reconfiguring the dataflow graph distribution should be
+devised in such situations. Morever, these environments give rise to fault-tolerant
+execution and it is certainly challenging to propose methods for graceful recovery.
+
+Lastly, another interesting future direction is alternative techniques regarding
+node placement. It is worth investinating techniques that use reinforcement learning
+to decide a reasonably efficient node placement. Similar techniques have been
+recently proposed in~\cite{DBLP:conf/icml/MirhoseiniPLSLZ17}.
 
 %% Bibliography style
 \bibliographystyle{ACM-Reference-Format}
