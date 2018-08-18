@@ -88,8 +88,8 @@ can run in parallel and possibly in different execution stacks. In this paper
 we propose a general-purpose reactive framework that can express complex
 applications seamlessly and transparently integrating different sources and
 middlewares. The framework is abstract and extensible making it easy to integrate
-well-established technologies that rely on the PubSub model. We demonstrate
-the usability of the framework by providing applications in the domain of
+with well-established technologies that rely on the PubSub model. We demonstrate
+the usability of the framework by providing application examples in the domain of
 robotics and IoT.
 \end{abstract}
 
@@ -122,7 +122,7 @@ architectures</concept_desc> <concept_significance>500</concept_significance>
 
 \section{Introduction} \label{sec:introduction}
 
-A typical application in Robotics or Internet of Things (IoT) needs to timely and
+A typical application in robotics or Internet of Things (IoT) needs to timely and
 continuously respond to time-varying external sensory data and as a result the
 reactivity of these applications is imperative. Typically, the programmer of such
 applications has to deal with asynchronous callbacks in conventional imperative
@@ -137,16 +137,16 @@ dataflow network of processing nodes. These high-level abstractions
 alleviates, as intended, the low-level implementation chores. FRP was originally proposed
 though as a framework for developing graphical user interfaces but fortunately the key
 high-level abstractions are generic enough that other domains can benefit from this
-approach. As a result of its generality and its popularity several general-purpose
-implementations emerge with different capabilities and prerequisites.
+approach. As a result of its generality and its increasing popularity several
+general-purpose implementations emerge with different capabilities and prerequisites.
 
 It is natural, therefore, to investigate whether robotics and IoT applications
 can fit into this new paradigm. Indeed most robotic applications follow the
 Robot Perception Architecture, where inputs to system are the robot's
 sensors, which are then processed by a dataflow graph, whose output is given as
 commands to the robot actuators. Moreover, robotics typically involve several
-different other robotic or IoT systems to enhance their sensing abilities. This
-combination naturally give rise to issues of distributing the dataflow graph to
+different other robotic or IoT systems to enhance their sensing abilities. These
+combined applications make more evident issues of distributing the dataflow graph to
 several robotic units and issues of heterogeneity and interoperability between
 different middlewares and protocols.
 
@@ -156,37 +156,38 @@ developed in Haskell. Yampa provides its functionality through an embedded DSL
 as it is customary for many of the FRP libraries. Although an interesting proposal,
 there is limited acceptance from the robotics community mainly because it does
 not integrate well with existing well-established robotics middlewares such as
-the Robot Operating System (ROS)~\cite{ROS}. Moreover, it does assume distributed execution
-and integration with other systems via the Reactive Streams Standard\site{http://www.reactive-streams.org}.
+the Robot Operating System (ROS)~\cite{ROS}. As a result, legacy algorithms should be
+written from scratch in this new library. Moreover, it does not assume integration
+with other reactive systems via the Reactive Streams Standard\site{http://www.reactive-streams.org}
+which is essential for applications that need multiple heterogeneous sources.
 
 Motivated by the robotics and IoT community we propose \textsc{RHEA}, an abstract
 FRP general-purpose framework that aims to act as a unifying layer that can
-be mapped and executed simultaneously using different reactive libraries
-and existing middlewares such as ROS and MQTT. The programmer can transparently
-express a complex reactive applications within this framework that may use
-both sensing from several robots and IoT sensors. The framework places the
-dataflow nodes to computational resources and handles the serialization needed
-between different execution engines.
+be mapped and executed using different reactive libraries and existing middlewares
+such as ROS and MQTT. The programmer can transparently express a complex reactive
+applications within this framework that may use both sensing from several robots
+and IoT sensors. The framework places the dataflow nodes to computational resources
+and handles the serialization needed between different execution engines.
 
 %\paragraph{Structure of the paper}
 The rest of the paper is structured as follows.
 Section~\ref{sec:background} provides some background context about dataflows and
 the state-of-art middlewares used in robotics and IoT.
 Section~\ref{sec:approach} presents the framework's architecture and capabilities.
-Section~\ref{sec:implementation} discusses implementation details while
-Section~\ref{sec:optimization} presents several optimizations that have been implemented in the
-framework. Section~\ref{sec:applications} demonstrates some use-cases of the framework
-mainly motivated by robotics and IoT.
-Section~\ref{sec:related} discusses related work and
-finally Section~\ref{sec:conclusions} concludes with future directions.
+Section~\ref{sec:implementation} discusses implementation details followed by
+Section~\ref{sec:optimization} which presents several optimizations that have
+been implemented in the framework. Section~\ref{sec:applications} demonstrates
+some use-cases of the framework mainly motivated by robotics and IoT.
+Section~\ref{sec:related} discusses related work and finally
+Section~\ref{sec:conclusions} concludes with future directions.
 
 \section{Background} \label{sec:background}
 In this section we provide some background context needed. In particular, we
 briefly present the dataflow model and the notation of graphs we use in the
-remaining paper. We continue with a brief overview of the well-established
+remaining sections. We continue with a brief overview of the well-established
 middlewares used in robotics and IoT, namely the Robot Operating System (ROS)
 and the Message Queuing Telemetry Trasport (MQTT) protocol.
-Moreover, for the rest of the paper we assume familiarity with the functional
+For the rest of the paper we assume however familiarity with the functional
 reactive programming (FRP).
 
 \subsection{The Dataflow Computational Model}
@@ -403,6 +404,10 @@ for execution on a GPU. In Section~\ref{sec:implementation} we provide three
 different evaluation strategies.
 
 \subsection{Dataflow Graphs}
+
+In the following we present the graph construction using the DSL of RHEA and
+demonstrate the key supported features of the available operators. We opted to
+do that by illustrative examples. The examples we use are a mix of Java and Scala.
 
 The kind of dataflow graph that can be expressed using the framework's stream
 language are directed cyclic graphs with possibly many inputs and outputs.
