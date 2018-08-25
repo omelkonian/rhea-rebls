@@ -1,8 +1,13 @@
+%% Blind, max submission space
 \documentclass[sigplan,screen,review,anonymous]{acmart}
 \settopmatter{printfolios=true,printccs=false,printacmref=false} %% max submission space
 
+%% Camera-ready
+%\documentclass[sigplan,screen]{acmart}
+%\settopmatter{printfolios=true,printccs=true,printacmref=true}
+
 %% Conference information
-\acmConference[REBLS'18]{International Workshop on Reactive and Event-Based Languages & Systems}{November 04--09, 2018}{Boston, MA, USA}
+\acmConference[REBLS'18]{International Workshop on Reactive and Event-Based Languages \& Systems}{November 04--09, 2018}{Boston, MA, USA}
 \acmYear{2018}
 \acmISBN{}
 \acmDOI{}
@@ -81,13 +86,13 @@
 
 \begin{abstract}
 Robotics and IoT applications are perfect candidates that can benefit from
-the functional reactive programming paradigm. Moreover since the typical
-program can be represented as a dataflow graph the application can be conceptually
+the functional reactive programming paradigm. Moreover, since the typical
+program can be represented as a dataflow graph, the application can be conceptually
 separated and distributed in different machines and the several graph partitions
 can run in parallel and possibly in different execution stacks. In this paper
 we propose a general-purpose reactive framework that can express complex
-applications seamlessly and transparently integrating different sources and
-middlewares. The framework is abstract and extensible making it easy to integrate
+applications, seamlessly and transparently integrating different sources and
+middlewares. The framework is abstract and extensible, making it easy to integrate
 with well-established technologies that rely on the PubSub model. We demonstrate
 the usability of the framework by providing application examples in the domain of
 robotics and IoT.
@@ -123,7 +128,7 @@ architectures</concept_desc> <concept_significance>500</concept_significance>
 \section{Introduction} \label{sec:introduction}
 
 A typical application in robotics or Internet of Things (IoT) needs to timely and
-continuously respond to time-varying external sensory data and as a result the
+continuously respond to time-varying external sensory data and, as a result, the
 reactivity of these applications is imperative. Typically, the programmer of such
 applications has to deal with asynchronous callbacks in conventional imperative
 programming languages in order to implement tedious and often error-prone behaviours
@@ -131,17 +136,17 @@ that should comply with the reactive requirements.
 
 %\paragraph{Why FRP is popular and many systems embrace it}
 A promising and relatively recent proposal for simplifying the implementation of
-reactive applications is the \emph{functional reactive programming} (FRP) \cite{fran}.
+reactive applications is \emph{functional reactive programming} (FRP)~\cite{fran}.
 FRP makes heavy use of higher-order functional operators to define, essentially, a
 dataflow network of processing nodes. These high-level abstractions
 alleviates, as intended, the low-level implementation chores. FRP was originally proposed
-though as a framework for developing graphical user interfaces but fortunately the key
+though as a framework for developing graphical user interfaces, but fortunately the key
 high-level abstractions are generic enough that other domains can benefit from this
 approach. As a result of its generality and its increasing popularity several
 general-purpose implementations emerge with different capabilities and prerequisites.
 
 It is natural, therefore, to investigate whether robotics and IoT applications
-can fit into this new paradigm. Indeed most robotic applications follow the
+can fit into this new paradigm. Indeed, most robotic applications follow the
 Robot Perception Architecture, where inputs to system are the robot's
 sensors, which are then processed by a dataflow graph, whose output is given as
 commands to the robot actuators. Moreover, robotics typically involve several
@@ -152,19 +157,19 @@ different middlewares and protocols.
 
 The first steps towards using FRP in robotics was identified in \cite{arrows_robots}
 and realized in Yampa\site{https://wiki.haskell.org/Yampa}, an FRP framework
-developed in Haskell. Yampa provides its functionality through an embedded DSL
+developed in Haskell. Yampa provides its functionality through an embedded DSL,
 as it is customary for many of the FRP libraries. Although an interesting proposal,
 there is limited acceptance from the robotics community mainly because it does
 not integrate well with existing well-established robotics middlewares such as
-the Robot Operating System (ROS)~\cite{ROS}. As a result, legacy algorithms should be
+the Robot Operating System (ROS) \cite{ROS}. As a result, legacy algorithms should be
 written from scratch in this new library. Moreover, it does not assume integration
-with other reactive systems via the Reactive Streams Standard\site{http://www.reactive-streams.org}
+with other reactive systems via the Reactive Streams Standard (RSS)\site{http://www.reactive-streams.org}
 which is essential for applications that need multiple heterogeneous sources.
 
 Motivated by the robotics and IoT community we propose \textsc{RHEA}, an abstract
 FRP general-purpose framework that aims to act as a unifying layer that can
 be mapped and executed using different reactive libraries and existing middlewares
-such as ROS and MQTT. The programmer can transparently express a complex reactive
+such as ROS and MQTT. The programmer can transparently express complex reactive
 applications within this framework that may use both sensing from several robots
 and IoT sensors. The framework places the dataflow nodes to computational resources
 and handles the serialization needed between different execution engines.
@@ -182,12 +187,12 @@ Section~\ref{sec:related} discusses related work and finally
 Section~\ref{sec:conclusions} concludes with future directions.
 
 \section{Background} \label{sec:background}
-In this section we provide some background context needed. In particular, we
+In this section we provide some necessary background context. In particular, we
 briefly present the dataflow model and the notation of graphs we use in the
 remaining sections. We continue with a brief overview of the well-established
 middlewares used in robotics and IoT, namely the Robot Operating System (ROS)
 and the Message Queuing Telemetry Trasport (MQTT) protocol.
-For the rest of the paper we assume however familiarity with the functional
+For the rest of the paper we assume however familiarity with functional
 reactive programming (FRP).
 
 \subsection{The Dataflow Computational Model}
@@ -224,7 +229,7 @@ passes through \textit{concat} to reach the sink node, which can concurrently
 process it to display it.
 %\end{example}
 
-Dataflow graphs can be executed both in a single-machine and in cluster of
+Dataflow graphs can be executed both in a single machine and in a cluster of
 machines where each node can be placed in a different machine. A possible
 single-machine implementation could represent edges as in-memory queues,
 whereas a multi-machine one could realize them as channels between TCP sockets,
@@ -398,7 +403,7 @@ different evaluation strategy each time.
 More specifically, a flexible evaluation strategy was employed where different
 executors can be considered when available. This design satisfies the requirements
 of extensibility, heterogeneity and abstraction of the system since each partial
-graph can be evaluated by a different \textit{EvaluationStrategy} which could
+graph can be evaluated by a different \texttt{EvaluationStrategy} which could
 interpret it using a specific streams library or even compile into CUDA code
 for execution on a GPU. In Section~\ref{sec:implementation} we provide three
 different evaluation strategies.
@@ -426,7 +431,7 @@ to be accessed and manipulated by the internal module, evaluation strategies and
 optimizers. Therefore, an application developer only needs to work with the
 \texttt{Stream} type.
 
-Source nodes are constructed using built-in functions of type \texttt{Stream}.
+Source nodes are constructed using built-in functions of the \texttt{Stream} type.
 For instance, \texttt{Stream.just(1,2,3)} produces the stream that emits just
 the values 1, 2 and 3. The return variable of these creation function is an
 object of type \texttt{Stream}.
@@ -496,7 +501,7 @@ Every value passed through the framework's streams is wrapped inside a
 \texttt{Notification} object, which discriminates stream values into three
 categories: \texttt{onNext} (when the stream provides a regular value),
 \texttt{onError} (when an error occurs) and \texttt{onComplete} (when the
-stream completes its output). This enables the system to handle gracefully
+stream completes its output). This enables the system to gracefully handle
 error propagation.
 
 In order to make the framework easy to integrate with other stream and
@@ -608,7 +613,7 @@ performance and better utilization of the available resources.
 The first optimization stage is a heuristic one, based on the fact that if a
 filter operation can be moved earlier (i.e. closer to source nodes) while
 preserving the original semantics, then there will be benefit concerning
-computational cost and cross-machine communication overhead. The figures below
+computational cost and cross-machine communication overhead. Figures~\ref{fig:maptake}-\ref{fig:concatdistinct}
 illustrate one representative example of each general class of
 graph transformation.
 
@@ -624,7 +629,7 @@ computational resources are limited. For this reason, the second optimization
 stage tries to adjust the granularity of the dataflow graph to a desired value,
 which is normally the number of available threads amongst all machines.
 To reach the desired granularity, the optimizer applies some semantic-preserving
-transformation, as shown in the figures below.
+transformation, as shown in the figures~\ref{fig:mergemap}-\ref{fig:combzipmap}.
 
 \optimization{1}{mergemap}{Merge maps}
 \optimization{1}{combmapfilter}{Combine map with filter}
@@ -679,8 +684,8 @@ code.
 %
 The code is written in Scala and utilizes the ``Pimp my library'' design
 pattern~\cite{pimp}. In the example above, we define two new Stream operators,
-namely \texttt{multiply} (line 10), which just multiplies the stream with a constant, and
-\texttt{mergeSort} (line 13), which produces an ordered stream given two ordered
+namely \texttt{multiply} (line 7), which just multiplies the stream with a constant, and
+\texttt{mergeSort} (line 8), which produces an ordered stream given two ordered
 streams as input. We also see the use of the \texttt{loop} operator (line 2),
 which allows us to define cycles.
 
@@ -707,8 +712,8 @@ illustrates the dataflow solution to the above problem and its corresponding
 \codefig{control_panel}{\jvxs{code/control_panel.java}}{Robot control panel}
 
 The implementation details (i.e. the visualization class and methods
-\texttt{faceDetect} (line 7), \texttt{embedLaser} (line 8) and
-\texttt{toGray} (line 26)) are not shown for brevity's sake. It is worth noting
+\texttt{faceDetect} (line 6), \texttt{embedLaser} (line 7) and
+\texttt{toGray} (line 14)) are not shown for brevity's sake. It is worth noting
 that this model of programming encourages a clean separation of concerns between the
 individual components, namely between the sensor data manipulation and the
 actual visualization on the GUI.
@@ -784,7 +789,7 @@ to enactment systems, such as MPI and Apache Storm. However, it does not tackles
 heterogeneity issues and simultaneously executing graph partitions to different
 enactment systems.
 
-Another dataflow framework from Google is TensorFlow~\cite{tensorflow},
+Another dataflow framework from Google is TensorFlow \cite{tensorflow},
 which is an open-source polyglot library for machine intelligence and especially
 construction of neural networks. Tensorflow differs from the aforementioned dataflow
 systems since it assumes that data are Tensors, namely multidimensional arrays,
@@ -852,13 +857,15 @@ others.
 
 The framework described in this paper offers a unified and extensible way for
 reactive applications to be developed. Primarily motivated by the well-established
-middlewares in robotics and IoT, the main focus of the framework is extensibility,
-heterogeneity. To that end, a constant effort to generalize and make components
+middlewares in robotics and IoT, the main focus of the framework is extensibility
+and heterogeneity. To that end, a constant effort to generalize and make components
 as abstract as possible was made.
 
 The applications demonstrated the framework's ability to provide a higher level
 of abstraction, where the language only specifies how different components
-coordinate, without knowledge of the implementation details. The driving force
+coordinate, without knowledge of the implementation details. 
+This is exactly what \textit{Ziria} accomplishes in the domain of wireless
+systems programming~\cite{ziria}. The driving force
 for both frameworks is that some specific domains have fixated their methods
 on low-level programming, whereas more satisfactory paradigms can solve many
 shortcomings.
@@ -873,7 +880,7 @@ the path to more advanced optimization techniques, such as those used in
 Apache Flink~\cite{blackbox}.
 
 Apart from a more sophisticated optimization phase that can be investigated
-as a future direction the are also other extensions that are equally interesting
+as a future direction, there are also other extensions that are equally interesting
 and challenging. Again motivated by the robotics domain, an interesting extension
 is to apply dynamic reconfiguration where the applications operate in
 environments that are constantly changing. For instance operating in an environment
