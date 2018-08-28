@@ -86,7 +86,7 @@
 
 \begin{abstract}
 Robotics and IoT applications are perfect candidates that can benefit from
-the functional reactive programming paradigm. Moreover, since the typical
+the functional reactive programming paradigm. Moreover, since a typical
 program can be represented as a dataflow graph, the application can be conceptually
 separated and distributed in different machines and the several graph partitions
 can run in parallel and possibly in different execution stacks. In this paper
@@ -131,7 +131,7 @@ A typical application in robotics or Internet of Things (IoT) needs to timely an
 continuously respond to time-varying external sensory data and, as a result, the
 reactivity of these applications is imperative. Typically, the programmer of such
 applications has to deal with asynchronous callbacks in conventional imperative
-programming languages in order to implement tedious and often error-prone behaviours
+programming languages, in order to implement tedious and often error-prone behaviours
 that should comply with the reactive requirements.
 
 %\paragraph{Why FRP is popular and many systems embrace it}
@@ -139,9 +139,9 @@ A promising and relatively recent proposal for simplifying the implementation of
 reactive applications is \emph{functional reactive programming} (FRP)~\cite{fran}.
 FRP makes heavy use of higher-order functional operators to define, essentially, a
 dataflow network of processing nodes. These high-level abstractions
-alleviates, as intended, the low-level implementation chores. FRP was originally proposed
-though as a framework for developing graphical user interfaces, but fortunately the key
-high-level abstractions are generic enough that other domains can benefit from this
+alleviates, as intended, the low-level implementation chores. Although FRP was originally
+proposed as a framework for developing graphical user interfaces, the key high-level
+abstractions are generic enough that other domains can benefit from this
 approach. As a result of its generality and its increasing popularity several
 general-purpose implementations emerge with different capabilities and prerequisites.
 
@@ -158,8 +158,8 @@ different middlewares and protocols.
 The first steps towards using FRP in robotics was identified in \cite{arrows_robots}
 and realized in Yampa\site{https://wiki.haskell.org/Yampa}, an FRP framework
 developed in Haskell. Yampa provides its functionality through an embedded DSL,
-as it is customary for many of the FRP libraries. Although an interesting proposal,
-there is limited acceptance from the robotics community mainly because it does
+as is customary for many of the FRP libraries. Although an interesting proposal,
+there is limited acceptance from the robotics community, mainly because it does
 not integrate well with existing well-established robotics middlewares such as
 the Robot Operating System (ROS) \cite{ROS}. As a result, legacy algorithms should be
 written from scratch in this new library. Moreover, it does not assume integration
@@ -169,7 +169,7 @@ which is essential for applications that need multiple heterogeneous sources.
 Motivated by the robotics and IoT community we propose \textsc{RHEA}, an abstract
 FRP general-purpose framework that aims to act as a unifying layer that can
 be mapped and executed using different reactive libraries and existing middlewares
-such as ROS and MQTT. The programmer can transparently express complex reactive
+such as ROS and MQTT\site{http://mqtt.org/}. The programmer can transparently express complex reactive
 applications within this framework that may use both sensing from several robots
 and IoT sensors. The framework places the dataflow nodes to computational resources
 and handles the serialization needed between different execution engines.
