@@ -37,7 +37,9 @@
 	  \begin{center}
 	    \input{diagrams/#1.tikz}
 	  \end{center}
+	  \begin{center}
 		#2
+		\end{center}
 		\caption{#3}
 		\label{fig:#1}
 	\end{figure}
@@ -45,7 +47,9 @@
 
 \newcommand\codefigNodiagram[3]{
 	\begin{figure}
+	  \begin{center}
 		#2
+		\end{center}
 		\caption{#3}
 		\label{fig:#1}
 	\end{figure}
@@ -97,6 +101,7 @@
 
 % Source Code
 \usemintedstyle{friendly}
+\newcommand{\java}[1]{\mintinline{java}{#1}}
 \newcommand\mintedfs{0.2cm}
 \newmintedfile[hs]{hs}{frame=lines, framesep=\mintedfs}
 \newmintedfile[hssm]{hs}{fontsize=\footnotesize, frame=lines, framesep=\mintedfs}
@@ -104,7 +109,7 @@
 \newmintedfile[scala]{scala}{frame=lines, framesep=\mintedfs}
 \newmintedfile[scalas]{scala}{fontsize=\footnotesize, frame=lines, framesep=\mintedfs}
 \newmintedfile[scalaxs]{scala}{fontsize=\tiny, frame=lines, framesep=\mintedfs}
-\newmintedfile[lscalaxs]{scala}{linenos, fontsize=\tiny, frame=lines, framesep=\mintedfs}
+\newmintedfile[lscalaxs]{scala}{numberblanklines=false, numbers=right, numbersep=0pt, fontsize=\tiny, frame=lines, framesep=\mintedfs}
 \newmintedfile[jvs]{java}{fontsize=\footnotesize, frame=lines, framesep=\mintedfs}
 \newmintedfile[jvxs]{java}{fontsize=\tiny, frame=lines, framesep=\mintedfs}
-\newmintedfile[ljvxs]{java}{linenos, fontsize=\tiny, frame=lines, framesep=\mintedfs}
+\newmintedfile[ljvxs]{java}{numberblanklines=false, numbers=right, numbersep=0pt, , fontsize=\tiny, frame=lines, framesep=\mintedfs}
