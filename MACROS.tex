@@ -43,6 +43,14 @@
 	\end{figure}
 }
 
+\newcommand\codefigNodiagram[3]{
+	\begin{figure}
+		#2
+		\caption{#3}
+		\label{fig:#1}
+	\end{figure}
+}
+
 \newcommand\codefigg[3]{
 	\begin{figure}
 	  \begin{minipage}{.4\columnwidth}
@@ -96,5 +104,7 @@
 \newmintedfile[scala]{scala}{frame=lines, framesep=\mintedfs}
 \newmintedfile[scalas]{scala}{fontsize=\footnotesize, frame=lines, framesep=\mintedfs}
 \newmintedfile[scalaxs]{scala}{fontsize=\tiny, frame=lines, framesep=\mintedfs}
+\newmintedfile[lscalaxs]{scala}{linenos, fontsize=\tiny, frame=lines, framesep=\mintedfs}
 \newmintedfile[jvs]{java}{fontsize=\footnotesize, frame=lines, framesep=\mintedfs}
 \newmintedfile[jvxs]{java}{fontsize=\tiny, frame=lines, framesep=\mintedfs}
+\newmintedfile[ljvxs]{java}{linenos, fontsize=\tiny, frame=lines, framesep=\mintedfs}

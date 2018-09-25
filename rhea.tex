@@ -1,29 +1,19 @@
-%% Blind, max submission space
-\documentclass[sigplan,screen,review,anonymous]{acmart}
-\settopmatter{printfolios=true,printccs=false,printacmref=false} %% max submission space
-
 %% Camera-ready
-%\documentclass[sigplan,screen]{acmart}
-%\settopmatter{printfolios=true,printccs=true,printacmref=true}
+\documentclass[sigplan,screen,10pt]{acmart}
+\settopmatter{printfolios=true,printccs=true,printacmref=true}
 
 %% Conference information
-\acmConference[REBLS'18]{International Workshop on Reactive and Event-Based Languages \& Systems}{November 04--09, 2018}{Boston, MA, USA}
+\acmConference[REBLS'18]{International Workshop on Reactive and Event-Based Languages \& Systems}{November 04, 2018}{Boston, MA, USA}
 \acmYear{2018}
 \acmISBN{}
 \acmDOI{}
 \startPage{1}
 %% Copyright
-\setcopyright{none}
+\setcopyright{acmcopyright}
 
-%% Recommended packages
-\usepackage{booktabs}   % formal tables
-\usepackage{subcaption} % complex figures with subfigures/subcaptions
-% Math
-\usepackage{amsfonts}
 % Tikz
 \usepackage{tikz}
-\usepackage{smartdiagram}
-\usetikzlibrary{arrows,mindmap,trees,fit,backgrounds,decorations.pathreplacing,calc,positioning}
+\usetikzlibrary{arrows,fit,backgrounds,positioning}
 \usepackage{environ}
 \makeatletter
 \newsavebox{\measure@tikzpicture}
@@ -37,6 +27,23 @@
   \BODY
 }
 \makeatother
+
+% Fonts
+\usepackage{fontspec}
+\setmainfont{LinLibertine}[
+  Extension = .otf,
+  Path = ./fonts/,
+  UprightFont = *_R,
+  BoldFont = *_RB,
+  ItalicFont = *_RI
+]
+\setsansfont{LinBiolinum}[
+  Extension = .otf,
+  Path = ./fonts/,
+  UprightFont = *_R,
+  BoldFont = *_RB,
+  ItalicFont = *_RI
+]
 % Colors
 \usepackage{xcolor}
 \colorlet{myrd}{ACMRed}
@@ -49,18 +56,14 @@
 % Code
 \usepackage{minted}
 % Extra
-\usepackage{enumitem}
-\usepackage{tabularx}
 \usepackage{adjustbox}
 \usepackage{url}
 
-\renewcommand{\comment}[1]{}
-
-\begin{document}%\sloppy
+\begin{document}
+\sloppy % for proper justification (no overflows to the right)
 \input{MACROS.tex}
 
 \title[RHEA]{RHEA: A Reactive, Heterogeneous, Extensible and Abstract Framework for Dataflow Programming}
-%\subtitle{}
 
 %% Orestis
 \author{Orestis Melkonian}
@@ -114,7 +117,6 @@ architectures</concept_desc> <concept_significance>500</concept_significance>
 \ccsdesc[500]{Software and its engineering~Data flow languages}
 %% End of generated code
 
-
 %% Keywords
 \keywords{dataflow programming,
           stream processing,
@@ -139,7 +141,7 @@ A promising and relatively recent proposal for simplifying the implementation of
 reactive applications is \emph{functional reactive programming} (FRP)~\cite{fran}.
 FRP makes heavy use of higher-order functional operators to define, essentially, a
 dataflow network of processing nodes. These high-level abstractions
-alleviates, as intended, the low-level implementation chores. Although FRP was originally
+alleviate, as intended, the low-level implementation chores. Although FRP was originally
 proposed as a framework for developing graphical user interfaces, the key high-level
 abstractions are generic enough that other domains can benefit from this
 approach. As a result of its generality and its increasing popularity several
@@ -234,46 +236,6 @@ machines where each node can be placed in a different machine. A possible
 single-machine implementation could represent edges as in-memory queues,
 whereas a multi-machine one could realize them as channels between TCP sockets,
 allowing communication across the network.
-
-\comment{%
-\subsection{Functional reactive programming}
-
-A relatively recent programming paradigm is \textit{Functional Reactive
-Programming (FRP)}, which provides a conceptual framework for implementing
-reactive (i.e. time-varying and responding to external stimuli) behaviour in
-\textit{hybrid systems} (i.e. containing both continuous and discrete
-components), such as robots, in functional programming languages.
-
-\textit{FRP} first appeared as a composable library for graphic animations
-~\cite{fran}, but quickly evolved into a generic paradigm
-~\cite{survey_frp,pushpull_frp}. Moreover, extensive research has
-investigated \textit{FRP} as a framework for robotics
-~\cite{arrows_robots,lambda_in_motion}.
-
-Although appealing at first, \textit{FRP} was not appropriate for systems  with
-real-time constraints, due to uncontrollable time- and space- leaks
-~\cite{event_frp}. The solution was a generalization of monads called
-\textit{arrows}~\cite{arrows}, which provided the necessary guarantees that the
-aforementioned common errors do not occur.
-
-The main advantages of \textit{FRP} are its close correspondence to
-mathematics~\cite{survey_frp}, which make it an ideal framework for modelling
-real-time systems, and its concise representation of time-varying values via
-\textit{signals}.
-
-\paragraph{The Reactive Streams Standard}
-The \textit{Reactive Streams Standard (RSS)} is an initiative
-to provide a standard for asynchronous stream processing with non-blocking back
-pressure. This encompasses efforts aimed at runtime environments (JVM and
-JavaScript) as well as network protocols~\cite{rss}.
-
-\textit{RSS} defines two minimal interfaces for the roles of \textit{Subscriber}
-and \textit{Publisher}~\cite{rss_docs}.
-A \textit{Subscriber} implementation should define
-reactions to observed values, including normal and erroneous termination,
-whereas a \textit{Publisher} implementation should accept requests from
-\textit{Subscribers} and start emitting values to them.
-}
 
 \subsection{Robotics and IoT Middlewares}
 In the following we briefly present the ROS and MQTT, the de-facto middlewares
@@ -379,7 +341,7 @@ and the implementation process.
 The framework should be also \textit{abstract} in terms of implementation details,
 as it is completely agnostic of any machine-specific requirements. It is designed as a
 unifying conceptual base for further extensions and careful consideration was
-taken not to restrict in any aspect.
+taken not to restrict it in any aspect.
 
 \subsection{Architecture}
 The \textsc{RHEA} framework consists of several clearly separated modules,
@@ -392,7 +354,7 @@ whose interconnection is illustrated in Figure~\ref{fig:architecture}.
     \label{fig:architecture}
 \end{figure*}
 
-A typical workflow of the system has as follows. The user writes a program in
+A typical workflow of the system is as follows. The user writes a program in
 the provided domain-specific language, which constructs an internal representation
 of the dataflow graph. Afterwards, using information about the available
 resources in the network, the constructed graph is optimized and partitions of the
@@ -433,7 +395,7 @@ optimizers. Therefore, an application developer only needs to work with the
 
 Source nodes are constructed using built-in functions of the \texttt{Stream} type.
 For instance, \texttt{Stream.just(1,2,3)} produces the stream that emits just
-the values 1, 2 and 3. The return variable of these creation function is an
+the values 1, 2 and 3. The return variable of this creation function is an
 object of type \texttt{Stream}.
 
 Processing nodes can be divided into two classes: \textit{single input} ones and
@@ -602,8 +564,8 @@ This section describes three stages of optimization that the dataflow graph goes
 through before being evaluated:
 \begin{itemize}
   \item proactive filtering that places filtering operations as soon as possible;
-  \item granularity adjustment that combines adjucent operation into a single more efficient operation;
-  \item and node placement that places nodes that should be colocated to the same machine.
+  \item granularity adjustment that combines adjacent operation into a single more efficient operation;
+  \item and node placement that places nodes that should be collocated to the same machine.
 \end{itemize}
 The optimization phases run sequentially, that is the output of one phase becomes
 input of the next. The main purpose of the optimization graph is to achieve better
@@ -622,7 +584,7 @@ graph transformation.
 \optimization{3}{concatdistinct}{Filter/distinct before concat/merge}
 
 \subsection{Granularity adjustment}
-Different nodes of the dataflow graph will be executed on a separate
+Each different node of the dataflow graph will be executed on a separate
 thread/process. The fact that graphs can grow very big, for instance when
 programming a swarm of robots, poses a problem when available
 computational resources are limited. For this reason, the second optimization
@@ -680,7 +642,7 @@ dataflow solution to the above problem, borrowed from the book of Lucid~\cite{lu
 Figure~\ref{fig:hamming} shows the dataflow graph with its corresponding \textsc{RHEA}
 code.
 %
-\codefig{hamming}{\scalaxs{code/hamming.scala}}{Hamming numbers}
+\codefig{hamming}{\lscalaxs{code/hamming.scala}}{Hamming numbers}
 %
 The code is written in Scala and utilizes the ``Pimp my library'' design
 pattern~\cite{pimp}. In the example above, we define two new Stream operators,
@@ -709,7 +671,7 @@ show-case the framework's ability for simulation. Figure~\ref{fig:control_panel}
 illustrates the dataflow solution to the above problem and its corresponding
 \textsc{RHEA} code.
 %
-\codefig{control_panel}{\jvxs{code/control_panel.java}}{Robot control panel}
+\codefig{control_panel}{\ljvxs{code/control_panel.java}}{Robot control panel}
 
 The implementation details (i.e. the visualization class and methods
 \texttt{faceDetect} (line 6), \texttt{embedLaser} (line 7) and
@@ -737,16 +699,15 @@ graph acts as a stream transformation from beacon information to velocity
 commands to the robot. Figure~\ref{fig:hospital} shows the dataflow graph with
 its corresponding \textsc{RHEA} code.
 
-\codefig{hospital}{\jvxs{code/hospital.java}}{Robot hospital guide}
+\codefig{hospital}{\ljvxs{code/hospital.java}}{Hospital guide: Robot control}
 
-The second module just uses the library \textit{ReactiveBeacons}\footnote{\url{http://github.com/ 1083 pwittchen/ReactiveBeacons}}
+The second module (Fig.~\ref{fig:rxbeacon}) uses the library
+\textit{ReactiveBeacons}\footnote{\url{http://github.com/pwittchen/ReactiveBeacons}}
 to get a stream of beacon data via RxJava, and then publishes it to a MQTT topic,
-which is the input of the first module. The corresponding \textsc{RHEA} code
-follows:
-\jvxs{code/rxbeacon.java}
+which is the input of the first module. This example showcases the framework's ability
+to combine different technologies and act as a high-level, declarative unified layer.
 
-The aforementioned example showcases the framework's ability to combine different
-technologies and act as a high-level, declarative unified layer.
+\codefigNodiagram{rxbeacon}{\ljvxs{code/rxbeacon.java}}{Hospital guide: RxJava-MQTT integration}
 
 \section{Related Work} \label{sec:related}
 
@@ -779,13 +740,13 @@ Apache Beam~\cite{DBLP:journals/pvldb/AkidauBCCFLMMPS15}, formerly known as Clou
 Apache Beam shares the same key idea with \textsc{RHEA} namely they provide a
 unified abstract programming layer for batch and stream processing that can use
 multiple executors. They provide, for instance, an Apache Spark and an Apache Flink
-executor. However, the assume that the cluster is homogeneous and thus the whole
+executor. However, we assume that the cluster is homogeneous and thus the whole
 program is executed using a single executor. Another framework that shares the
 same similarities with Apache Beam and RHEA is dispel4py~\cite{dispel4py}, a Python
 framework that focuses on scientific workflows. It provides the ability
 to describe abstract workflows for distributed data-intensive applications.
-Similar to \textsc{RHEA} evaluation strategy concept, it allows different mappings
-to enactment systems, such as MPI and Apache Storm. However, it does not tackles
+Similar to the \textsc{RHEA} evaluation strategy concept, it allows different mappings
+to enactment systems, such as MPI and Apache Storm. However, it does not tackle
 heterogeneity issues and simultaneously executing graph partitions to different
 enactment systems.
 
@@ -890,14 +851,14 @@ devised in such situations. Morever, these environments give rise to fault-toler
 execution and it is certainly challenging to propose methods for graceful recovery.
 
 Lastly, another interesting future direction is alternative techniques regarding
-node placement. It is worth investinating techniques that use reinforcement learning
+node placement. It is worth investigating techniques that use reinforcement learning
 to decide a reasonably efficient node placement. Similar techniques have been
 recently proposed in~\cite{DBLP:conf/icml/MirhoseiniPLSLZ17}.
 
 %% Bibliography style
 \bibliographystyle{ACM-Reference-Format}
 %% Citation style
-\citestyle{acmnumeric}  % acmauthoryear
+\citestyle{acmnumeric}
 %% Bibliography
 \bibliography{rhea}
 
