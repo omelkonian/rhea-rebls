@@ -64,7 +64,8 @@
 \sloppy % for proper justification (no overflows to the right)
 \input{MACROS.tex}
 
-\title[RHEA]{RHEA: A Reactive, Heterogeneous, Extensible and Abstract Framework for Dataflow Programming}
+\title[RHEA: A Reactive, Heterogeneous, Extensible, and Abstract Framework ...]
+      {RHEA: A Reactive, Heterogeneous, Extensible, and Abstract Framework for Dataflow Programming}
 
 %% Orestis
 \author{Orestis Melkonian}
@@ -571,7 +572,7 @@ The optimization phases run sequentially, that is the output of one phase become
 input of the next. The main purpose of the optimization graph is to achieve better
 performance and better utilization of the available resources.
 
-\subsection{Proactive filtering}
+\subsection{Proactive Filtering}
 The first optimization stage is a heuristic one, based on the fact that if a
 filter operation can be moved earlier (i.e. closer to source nodes) while
 preserving the original semantics, then there will be benefit concerning
@@ -583,7 +584,7 @@ graph transformation.
 \optimization{1}{mapfilter}{Filter before map}
 \optimization{3}{concatdistinct}{Filter/distinct before concat/merge}
 
-\subsection{Granularity adjustment}
+\subsection{Granularity Adjustment}
 Each different node of the dataflow graph will be executed on a separate
 thread/process. The fact that graphs can grow very big, for instance when
 programming a swarm of robots, poses a problem when available
@@ -610,7 +611,7 @@ involved to decrease the number of nodes. Lastly, in Figures \ref{fig:combmapzip
 \ref{fig:combzipmap} we utilize function composition to embed \java{map}
 operations into \java{zip} operations.
 
-\subsection{Node placement}
+\subsection{Node Placement}
 
 After the first two passes, we have an optimized dataflow graph with fine-tuned
 granularity. At this stage, nodes are mapped to tasks and are deployed across
@@ -637,7 +638,7 @@ the expressiveness of our DSL.
 While we have not deployed the code to actual robotic/IoT devices, we have tested
 them against real-time recorded data, which realistically emulate these devices.
 
-\subsection{Robot control panel}
+\subsection{Robot Control Panel}
 
 This application concerns real-time monitoring of a robot, that is publishing
 its information and sensor-data to ROS topics, through a
@@ -666,7 +667,7 @@ that this model of programming encourages a clean separation of concerns between
 individual components, namely between the sensor data manipulation and the
 actual visualization on the GUI.
 
-\subsection{Robot hospital guide}
+\subsection{Robot Hospital Guide}
 
 As a final example, we will examine a combined application that involve both robotics and IoT.
 Consider a robot that guides patients to different parts of a hospital, such as the gym or
@@ -697,7 +698,7 @@ to combine different technologies and act as a high-level, declarative unified l
 
 \section{Related Work} \label{sec:related}
 
-\subsection{Dataflow systems}
+\subsection{Dataflow Systems}
 
 The necessity for implicit parallelism and distribution of more and more
 applications, dealing with huge and/or complex data, has brought increasingly
@@ -814,7 +815,7 @@ as abstract as possible was made.
 
 The applications demonstrated the framework's ability to provide a higher level
 of abstraction, where the language only specifies how different components
-coordinate, without knowledge of the implementation details. 
+coordinate, without knowledge of the implementation details.
 Like \textit{Ziria}, our belief is that certain domains have
 fixated their methods on low-level programming, whereas more satisfactory
 paradigms can solve many shortcomings.
